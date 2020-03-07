@@ -1,0 +1,19 @@
+.body{
+    background-color: darkslateblue;
+    padding: 50px;
+
+    &_top{
+        background-color: white;
+        padding: 20px 5px;
+    }
+    &_bottom{
+        margin-top: 20px;
+        background-color: white;
+        padding: 20px 5px;
+        height: 400px;
+        overflow: auto;
+    }
+
+}
+
+

@@ -10952,6 +10952,10 @@ a.text-dark:focus {
   padding: 50px;
 }
 
+.body_search-panel {
+  background-color: green;
+}
+
 .body_top {
   background-color: white;
   padding: 20px 5px;
@@ -10961,8 +10965,7 @@ a.text-dark:focus {
   margin-top: 20px;
   background-color: white;
   padding: 20px 5px;
-  height: 400px;
-  overflow: auto;
+  height: 500px;
 }
 
 .body table {

@@ -15,6 +15,11 @@ class DivisionController extends Controller
         ]);
     }
 
+    public function add()
+    {
+        return 'Hello world';
+    }
+
     public function show($id)
     {
         $division = DB::table('ada_division')->where('DivisionCode','=',$id)->get();

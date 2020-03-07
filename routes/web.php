@@ -19,6 +19,8 @@ Route::get('/', function () {
 
 Route::get('/division', 'DivisionController@index');
 Route::get('/division/{id}', 'DivisionController@show');
+Route::post('/division/{id}', 'DivisionController@add');
+Route::delete('/division/{id}', 'DivisionController@add');
 
 
 

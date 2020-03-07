@@ -3,6 +3,13 @@
 @section('title','Admin')
 @section('table')
 
+
+    {{--***************************
+            @ Table data
+     ***************************** --}}
+    <div class="row body_search-panel">
+    </div>
+
     <table>
         <tr>
             <th>ক্রমিক</th>
@@ -36,6 +43,10 @@
 
     @endsection
 
+{{--***************************
+        @ Sub Table data
+ ***************************** --}}
+
 
 @section('sub_table')
 
@@ -54,9 +65,18 @@
                 axios.get('/division/'+key).then((response)=>{
 
                     var division = response.data;
-
                     var table = '';
-    table+=`<div class="row body_top mt-5">
+                    table += addDivision(division[0].DivisionId,division[0].DivisionCode,division[0].DivisionNameEnglish,division[0].DivisionNameBangla,division[0].Note,division[0].RecordStatus,division[0].RecordVersion);
+
+                   $('#sub_input').html(table);
+                })
+            })
+        })
+
+
+
+function addDivision(divisionId,divisionCode,divisionNameEng,divisionNameBan,note,status,version) {
+return  `<div class="row body_top mt-5">
         <div class="col-4">Status</div>
         <div class="col-8">District</div>
     </div>
@@ -65,41 +85,37 @@
         <table>
            <tr>
                 <th>বিভাগ আই ডি</th>
-                <td>${division[0].DivisionId}</td>
+                <td>${divisionId}</td>
             </tr>
             <tr>
                 <th>বিভাগ কোড</th>
-                <td>${division[0].DivisionCode}</td>
+                <td>${divisionCode}</td>
             </tr>
             <tr>
                 <th>বিভাগ নাম (ইংলিশ)</th>
-                <td>${division[0].DivisionNameEnglish}</td>
+                <td>${divisionNameEng}</td>
             </tr>
             <tr>
                 <th>বিভাগ নাম (বাংলা)</th>
-                <td>${division[0].DivisionNameBangla}</td>
+                <td>${divisionNameBan}</td>
             </tr>
             <tr>
                 <th>নোট</th>
-                <td>${division[0].Note}</td>
+                <td>${note}</td>
             </tr>
             <tr>
                 <th>স্ট্যাটাস</th>
-                <td>${division[0].RecordStatus}</td>
+                <td>${status}</td>
             </tr>
             <tr>
-                <th>??????</th>
-                <td>${division[0].RecordVersion}</td>
+                <th>?????</th>
+                <td>${version}</td>
             </tr>
         </table>
 
-    </div>`;
-                   $('#sub_input').html(table);
-                })
-            })
-        })
-
-
+    </div>
+<div>`
+}
 
     </script>
     @endpush

@@ -1,14 +1,14 @@
-.body{
+.body_bottom{
+    padding: 30px;
     & table{
         width: 100%;
-        margin: 10px;
-        border: 2px solid black;
+        border: 1px solid $tableLine;
         border-collapse: collapse;
         text-align: center;
 
     }
     & table th,td{
-        border: 2px solid black;
+        border: 1px solid $tableLine;
 
     }
     & table th{

@@ -1,121 +1,223 @@
-@extends('layouts.admin')
+@extends('layouts.adminLayout')
 
 @section('title','Admin')
-@section('table')
+@section('body')
 
 
     {{--***************************
             @ Table data
      ***************************** --}}
+    <div class="row body_top">
+        <div class="col-2"><h3>প্রশাসনিক</h3> </div>
+        <div class="col-1 clone">:</div>
+        <div class="col-8"><h3>District</h3></div>
+    </div>
     <div class="row body_search-panel">
+        <div class="col-8"></div>
+        <div class="col-4">
+            <input type="text">
+            <input type="text">
+            <span class="dropdownIcon">...</span>
+        </div>
     </div>
 
-    <table>
-        <tr>
-            <th>ক্রমিক</th>
-            <th>আই ডি</th>
-            <th>কোড</th>
-            <th>নাম (ইংলিশ)</th>
-            <th>নাম (বাংলা)</th>
-            <th>নোট</th>
-            <th>স্ট্যাটাস</th>
-            <th>?????</th>
-            <th>দেখা</th>
-        </tr>
-<?php $i = 0 ?>
-        @foreach($division as $d)
-            <?php $i++ ?>
-            <tr id="divi-table-{{$i}}" class="divi-table"><td>{{$i}}</td>
-                <td>{{$d->DivisionId}}</td>
-                <td>{{$d->DivisionCode}}</td>
-                <td>{{$d->DivisionNameEnglish}}</td>
-                <td>{{$d->DivisionNameBangla}}</td>
-                <td>{{$d->Note}}</td>
-                <td>{{$d->RecordStatus}}</td>
-                <td>{{$d->RecordVersion}}</td>
-                <td>
-                    <button id="divi-but-{{$i}}" key="{{$d->DivisionCode}}">Click</button></td>
+    <div class="row body_bottom">
+        <table>
+            <tr>
+                <th>ক্রমিক</th>
+                <th>আই ডি</th>
+                <th>কোড</th>
+                <th>নাম (ইংলিশ)</th>
+                <th>নাম (বাংলা)</th>
+                <th>নোট</th>
+                <th>রেকর্ড স্ট্যাটাস</th>
+                <th>রেকর্ড ভার্সন</th>
+                <th>দেখা</th>
             </tr>
+            <?php $i = 0 ?>
+            @foreach($division as $d)
+                <?php $i++ ?>
+                <tr id="divi-table-{{$i}}" class="divi-table"><td>{{$i}}</td>
+                    <td>{{$d->DivisionId}}</td>
+                    <td>{{$d->DivisionCode}}</td>
+                    <td>{{$d->DivisionNameEnglish}}</td>
+                    <td>{{$d->DivisionNameBangla}}</td>
+                    <td>{{$d->Note}}</td>
+                    <td>{{$d->RecordStatus}}</td>
+                    <td>{{$d->RecordVersion}}</td>
+                    <td>
+                        <i id="divi-but-{{$i}}" key="{{$d->DivisionCode}}" class="fas fa-eye"></i></td>
+                    </tr>
 
-        @endforeach
+            @endforeach
 
-    </table>
+        </table>
+    </div>
 
+    <div class="row body_pagination">
+        <div class="col-8"></div>
+        <div class="col-4">
+            <button>Add</button>
+        </div>
+    </div>
+
+    {{--***************************
+        @ Sub Table Body
+    ***************************** --}}
+
+    <div id="sub_input"></div>
     @endsection
 
 {{--***************************
         @ Sub Table data
  ***************************** --}}
 
-
-@section('sub_table')
-
-    <div id="sub_input"></div>
-
-@endsection
-
 @push('customJs')
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(document).ready(function () {
 
-            $('.divi-table button').on('click',function(){
+            $('.divi-table i').on('click',function(){
                 var key = $(this).attr('key');
                 axios.get('/division/'+key).then((response)=>{
 
                     var division = response.data;
                     var table = '';
-                    table += addDivision(division[0].DivisionId,division[0].DivisionCode,division[0].DivisionNameEnglish,division[0].DivisionNameBangla,division[0].Note,division[0].RecordStatus,division[0].RecordVersion);
+                    table+=`<div class="row body_top">
+                                <div class="col-2"><h3>প্রশাসনিক</h3></div>
+                                <div class="col-1 clone">:</div>
+                                <div class="col-8"><h3>District</h3></div>
+                            </div>
 
-                   $('#sub_input').html(table);
+                            <div class="row sub_table-body">
+                                <table>
+                                    <tr>
+                                        <th>বিভাগ আই ডি</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].DivisionId}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ কোড</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].DivisionCode}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ নাম (ইংলিশ)</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].DivisionNameEnglish}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ নাম (বাংলা)</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].DivisionNameBangla}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>নোট</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].Note}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>রেকর্ড স্ট্যাটাস</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].RecordStatus}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>রেকর্ড ভার্সন</th>
+                                        <td class="clone">:</td>
+                                        <td>${division[0].RecordVersion}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class=" row sub_table-bottom">
+                                <div class="row sub_table-button">
+                                <div class="col-8"><p>Message: <span id="errMessage"></span></p></div>
+                                <div class="col-4">
+                                    <button id="editDivision">Edit</button>
+                                    <button id="deleteDivision">Delete</button></div>
+                                </div>
+                            </div>
+                            <div>`;
+                    $('#sub_input').html(table);
+                    $('#editDivision').click(function () {
+                        var table = '';
+                        table+=`<div class="row body_top">
+                                <div class="col-2"><h3>প্রশাসনিক</h3></div>
+                                <div class="col-1 clone">:</div>
+                                <div class="col-8"><h3>District</h3></div>
+                            </div>
+<form id="saveDivision" action="">
+                            <div class="row sub_table-body">
+                                <table>
+                                    <tr>
+                                        <th>বিভাগ আই ডি</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionId" value="${division[0].DivisionId}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ কোড</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionCode" value="${division[0].DivisionCode}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ নাম (ইংলিশ)</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionNameEnglish" value="${division[0].DivisionNameEnglish}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ নাম (বাংলা)</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionNameBangla" value="${division[0].DivisionNameBangla}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>নোট</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="Note" value="${division[0].Note}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>রেকর্ড স্ট্যাটাস</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="RecordStatus" value="${division[0].RecordStatus}"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>রেকর্ড ভার্সন</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="RecordVersion" value="${division[0].RecordVersion}"></td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            <div class=" row sub_table-bottom">
+                                <div class="row sub_table-button">
+                                <div class="col-8"><p>Messages: <span id="errMessage"></span></p></div>
+                                <div class="col-4">
+                                    <input type="submit" name="submit" value="Save">
+                                </div>
+                            </div>
+                            <div>
+</form>`;
+                        $('#sub_input').html(table);
+
+                        $('#saveDivision').submit(function (event) {
+                            event.preventDefault();
+                            var info = {};
+                            var name = '';
+                            var value ='';
+                            $("#saveDivision input").each(function(index,element){
+                                name =$(element).attr('name');
+                                value=$(element).attr('value');
+                                info[name]= value;
+                            });
+                            axios.patch('/division/'+info.DivisionCode,info).then((response)=>{
+                                console.log(response.data)
+                            }).catch((error)=>{
+                                console.log(error)
+                            })
+                        })
+                    })
                 })
             })
         })
 
-
-
-function addDivision(divisionId,divisionCode,divisionNameEng,divisionNameBan,note,status,version) {
-return  `<div class="row body_top mt-5">
-        <div class="col-4">Status</div>
-        <div class="col-8">District</div>
-    </div>
-
-    <div class="row body_bottom sub_table-body">
-        <table>
-           <tr>
-                <th>বিভাগ আই ডি</th>
-                <td>${divisionId}</td>
-            </tr>
-            <tr>
-                <th>বিভাগ কোড</th>
-                <td>${divisionCode}</td>
-            </tr>
-            <tr>
-                <th>বিভাগ নাম (ইংলিশ)</th>
-                <td>${divisionNameEng}</td>
-            </tr>
-            <tr>
-                <th>বিভাগ নাম (বাংলা)</th>
-                <td>${divisionNameBan}</td>
-            </tr>
-            <tr>
-                <th>নোট</th>
-                <td>${note}</td>
-            </tr>
-            <tr>
-                <th>স্ট্যাটাস</th>
-                <td>${status}</td>
-            </tr>
-            <tr>
-                <th>?????</th>
-                <td>${version}</td>
-            </tr>
-        </table>
-
-    </div>
-<div>`
-}
-
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     @endpush

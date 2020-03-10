@@ -1,0 +1,29 @@
+.body{
+    &_search-panel{
+        text-align: right;
+        padding: 20px 20px 0 0;
+        background-color: white;
+    }
+
+    &_top{
+        background-color: white;
+        padding: 20px 5px;
+        margin-bottom: 20px;
+        margin-top: 40px;
+    }
+    &_bottom{
+        background-color: white;
+        padding: 0px 5px;
+        height: 370px;
+    }
+    &_pagination{
+        text-align: center;
+        padding: 20px;
+        background-color: white;
+    }
+}
+
+.dropdownIcon{
+    padding: 4px;
+    border: .5px solid darkgray;
+}

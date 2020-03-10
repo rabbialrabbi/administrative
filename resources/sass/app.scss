@@ -6,8 +6,10 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+@import "global";
 @import "adminl_layout/adminTop";
 @import "adminl_layout/sideBar";
 @import "adminl_layout/bodyFrame";
+@import "body/body";
 @import "body/table";
 @import "body/sub_table";

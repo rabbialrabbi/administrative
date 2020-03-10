@@ -5,6 +5,9 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {{--    font awesome CDN--}}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <title>@yield('title')</title>
 </head>
@@ -60,19 +63,7 @@
         ***************************** --}}
 
         <div class="col-10 body">
-            <div class="row body_top">
-                <div class="col-4">প্রশাসনিক </div>
-                <div class="col-8">District</div>
-            </div>
-            <div class="row body_bottom">
-                @yield('table')
-            </div>
-
-            {{--***************************
-                @ Sub Table Body
-            ***************************** --}}
-
-            @yield('sub_table')
+            @yield('body')
         </div>
     </div>
 </div>

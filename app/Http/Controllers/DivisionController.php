@@ -20,6 +20,27 @@ class DivisionController extends Controller
         return 'Hello world';
     }
 
+    public function edit($id)
+    {
+
+        $response = DB::table('ada_division')
+            ->where('DivisionCode', $id)
+            ->update([
+                'DivisionId'=>request()->DivisionId,
+                'DivisionCode'=>request()->DivisionCode,
+                'DivisionNameEnglish'=>request()->DivisionNameEnglish,
+                'DivisionNameBangla'=>request()->DivisionNameBangla,
+                'DivisionImage1'=>'Default',
+                'DivisionImage2'=>'Default',
+                'Note'=>request()->Note,
+                'RecordStatus'=>request()->RecordStatus,
+                'RecordVersion'=>request()->RecordVersion,
+                'UserAcess'=>'Default',
+                'AccessDate'=>now(),
+            ]);
+        return $response;
+    }
+
     public function show($id)
     {
         $division = DB::table('ada_division')->where('DivisionCode','=',$id)->get();

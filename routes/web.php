@@ -18,8 +18,9 @@ Route::get('/', function () {
 });
 
 Route::get('/division', 'DivisionController@index');
+Route::get('/division/create', 'DivisionController@add');
 Route::get('/division/{id}', 'DivisionController@show');
-Route::post('/division/{id}', 'DivisionController@add');
+Route::patch('/division/{id}', 'DivisionController@edit');
 Route::delete('/division/{id}', 'DivisionController@add');
 
 

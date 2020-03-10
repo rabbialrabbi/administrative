@@ -17,15 +17,17 @@ class DivisionController extends Controller
 
     public function add()
     {
-        return 'Hello world';
-    }
+        $validation = request()->validate([
+            'DivisionId'=>'required',
+            'DivisionCode'=>'required',
+            'DivisionNameEnglish'=>'required',
+            'DivisionNameBangla'=>'required',
+            'Note'=>'required',
+            'RecordStatus'=>'required',
+            'RecordVersion'=>'required',
+        ]);
 
-    public function edit($id)
-    {
-
-        $response = DB::table('ada_division')
-            ->where('DivisionCode', $id)
-            ->update([
+     $response = DB::table('ada_division')->insert([
                 'DivisionId'=>request()->DivisionId,
                 'DivisionCode'=>request()->DivisionCode,
                 'DivisionNameEnglish'=>request()->DivisionNameEnglish,
@@ -35,10 +37,36 @@ class DivisionController extends Controller
                 'Note'=>request()->Note,
                 'RecordStatus'=>request()->RecordStatus,
                 'RecordVersion'=>request()->RecordVersion,
-                'UserAcess'=>'Default',
+                'UserAccess'=>'Default',
                 'AccessDate'=>now(),
             ]);
-        return $response;
+
+     return 'Input Successful';
+    }
+
+    public function edit()
+    {
+        $response = DB::table('ada_division')
+            ->where('DivisionCode', request()->DivisionCode)
+            ->update([
+                'DivisionId'=>request()->DivisionId,
+                'DivisionNameEnglish'=>request()->DivisionNameEnglish,
+                'DivisionNameBangla'=>request()->DivisionNameBangla,
+                'DivisionImage1'=>'Default',
+                'DivisionImage2'=>'Default',
+                'Note'=>request()->Note,
+                'RecordStatus'=>request()->RecordStatus,
+                'RecordVersion'=>request()->RecordVersion,
+                'UserAccess'=>'Default',
+                'AccessDate'=>now(),
+            ]);
+        return 'Update Successful';
+    }
+
+    public function destroy($id)
+    {
+        DB::table('ada_division')->where('DivisionCode', '=', $id)->delete();
+        return 'Delete Successful';
     }
 
     public function show($id)

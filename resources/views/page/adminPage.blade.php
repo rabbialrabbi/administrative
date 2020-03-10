@@ -57,7 +57,7 @@
     <div class="row body_pagination">
         <div class="col-8"></div>
         <div class="col-4">
-            <button>Add</button>
+            <button id="addDivision">Add</button>
         </div>
     </div>
 
@@ -130,14 +130,23 @@
                             </div>
                             <div class=" row sub_table-bottom">
                                 <div class="row sub_table-button">
-                                <div class="col-8"><p>Message: <span id="errMessage"></span></p></div>
+                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <button id="editDivision">Edit</button>
-                                    <button id="deleteDivision">Delete</button></div>
+                                    <button id="deleteDivision" key=${division[0].DivisionCode}>Delete</button></div>
                                 </div>
                             </div>
                             <div>`;
                     $('#sub_input').html(table);
+
+                    $('#deleteDivision').click(function () {
+                        key = $(this).attr('key');
+                        axios.delete('/division/'+key).then((response)=>{
+                            $('#message').html(response.data)
+                        }).catch((error)=>{
+                            $('#message').html(error)
+                        })
+                    })
                     $('#editDivision').click(function () {
                         var table = '';
                         table+=`<div class="row body_top">
@@ -145,7 +154,7 @@
                                 <div class="col-1 clone">:</div>
                                 <div class="col-8"><h3>District</h3></div>
                             </div>
-<form id="saveDivision" action="">
+                            <form id="saveDivision" action="">
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
@@ -188,7 +197,7 @@
                             </div>
                             <div class=" row sub_table-bottom">
                                 <div class="row sub_table-button">
-                                <div class="col-8"><p>Messages: <span id="errMessage"></span></p></div>
+                                <div class="col-8"><p>Messages: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <input type="submit" name="submit" value="Save">
                                 </div>
@@ -199,23 +208,87 @@
 
                         $('#saveDivision').submit(function (event) {
                             event.preventDefault();
-                            var info = {};
-                            var name = '';
-                            var value ='';
-                            $("#saveDivision input").each(function(index,element){
-                                name =$(element).attr('name');
-                                value=$(element).attr('value');
-                                info[name]= value;
-                            });
-                            axios.patch('/division/'+info.DivisionCode,info).then((response)=>{
-                                console.log(response.data)
+                            var info = $('#saveDivision').serialize();
+                            axios.patch('/division/edit',info).then((response)=>{
+                                $('#message').html(response.data)
                             }).catch((error)=>{
-                                console.log(error)
+                                $('#message').html(error)
                             })
                         })
                     })
                 })
+            });
+            $('#addDivision').click(function () {
+                var table = '';
+                table+=`<div class="row body_top">
+                                <div class="col-2"><h3>প্রশাসনিক</h3></div>
+                                <div class="col-1 clone">:</div>
+                                <div class="col-8"><h3>District</h3></div>
+                            </div>
+                            <form id="addDivisionForm">
+                            <div class="row sub_table-body">
+                                <table>
+                                    <tr>
+                                        <th>বিভাগ আই ডি</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionId" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ কোড</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionCode"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ নাম (ইংলিশ)</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionNameEnglish"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>বিভাগ নাম (বাংলা)</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="DivisionNameBangla"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>নোট</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="Note"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>রেকর্ড স্ট্যাটাস</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="RecordStatus"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>রেকর্ড ভার্সন</th>
+                                        <td class="clone">:</td>
+                                        <td><input type="text" name="RecordVersion"></td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            <div class=" row sub_table-bottom">
+                                <div class="row sub_table-button">
+                                <div class="col-8"><p>Messages: <span id="message"></span></p></div>
+                                <div class="col-4">
+                                    <input id='addDivisionSubmit' type="submit" name="submit" placeholder="Save">
+                                </div>
+                            </div>
+                            <div>
+                          </form>`;
+                $('#sub_input').html(table);
+
+                $('#addDivisionForm').submit(function (event) {
+                    event.preventDefault();
+                    var info = $('#addDivisionForm').serialize();
+                    axios.post('/division/create',info).then((response)=>{
+                        $('#message').html(response.data)
+                    }).catch((error)=>{
+                        $('#message').html(error)
+                    })
+                })
             })
+
+
         })
 
     </script>

@@ -14,7 +14,8 @@
     &_bottom{
         background-color: white;
         padding: 0px 5px;
-        height: 370px;
+        max-height: 500px;
+        overflow: auto;
     }
     &_pagination{
         text-align: center;

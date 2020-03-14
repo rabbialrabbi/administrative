@@ -17,12 +17,17 @@ Route::get('/', function () {
     return redirect('/division');
 });
 
-Route::get('/division', 'DivisionController@index');
+Route::get('/district','DistrictController@index');
+
+Route::view('/division', 'page.divisionPage');
+Route::get('/division/view', 'DivisionController@index');
 Route::post('/division/create', 'DivisionController@add');
 Route::get('/division/{id}', 'DivisionController@show');
 Route::patch('/division/edit', 'DivisionController@edit');
 Route::delete('/division/{id}', 'DivisionController@destroy');
 
+
+Route::view('/pagination','pagination');
 
 
 Auth::routes();

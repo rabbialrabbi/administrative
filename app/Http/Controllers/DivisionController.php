@@ -10,9 +10,7 @@ class DivisionController extends Controller
     public function index()
     {
         $division = DB::table('ada_division')->get();
-        return view('page.adminPage', [
-            'division' => $division
-        ]);
+        return $division;
     }
 
     public function add()

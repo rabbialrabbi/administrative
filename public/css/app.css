@@ -10974,7 +10974,8 @@ a.text-dark:focus {
 .body_bottom {
   background-color: white;
   padding: 0px 5px;
-  height: 370px;
+  max-height: 500px;
+  overflow: auto;
 }
 
 .body_pagination {

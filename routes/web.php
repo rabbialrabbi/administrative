@@ -20,7 +20,7 @@ Route::get('/', function () {
 Route::get('/district','DistrictController@index');
 
 Route::view('/division', 'page.divisionPage');
-Route::get('/division/view', 'DivisionController@index');
+Route::get('/division/{currentPage}', 'DivisionController@index');
 Route::post('/division/create', 'DivisionController@add');
 Route::get('/division/{id}', 'DivisionController@show');
 Route::patch('/division/edit', 'DivisionController@edit');

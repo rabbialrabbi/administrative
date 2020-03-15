@@ -26,7 +26,7 @@
     </div>
 
     <div class="row body_pagination">
-        <div class="col-8"></div>
+        <div class="col-8 paginator js-paginator"></div>
         <div class="col-4">
             <button id="addDivision">অ্যাড</button>
         </div>
@@ -45,11 +45,20 @@
 
 @push('customJs')
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="{{asset('js/pagination.js')}}"></script>
     <script>
+        let bypass = false;
+
         $(document).ready(function () {
 
             /* Load data to main table with relevant click event*/
             mainTableInsert();
+
+            loadPagination();
+
+            console.log($('.paginator'))
+
+
 
             /* Add division field to sub table*/
             $('#addDivision').click(function () {
@@ -76,33 +85,50 @@
             })
         })
 
-        {{--************************************************************
+        function loadPagination() {
+            axios.get('/division/1').then((response)=>{
+                paginator.initPaginator({
+                    'previousPage': 'Next Page',
+                    'nextPage': 'Previous Page',
+                    'totalPage': response.data['count'],
+                    'triggerFunc': test,
+                    'paginationClass': 'paginatorCustomClass'
+                });
+
+                function test() {
+                    var currentPage = $('.js-paginator').data('pageSelected');
+                    mainTableInsert(currentPage)
+                }
+            })
+        }
+
+        {{--*******************************************************************
                     @  This function Run ajex call for input main table data
                     @ Input Receive data to main Table
                     @ Includes Click Event To Show Details in sub Table
-            ************************************************************ --}}
-        function mainTableInsert(){
+            ******************************************************************* --}}
+        function mainTableInsert(currentPage=0){
 
             /* Ajex Call with Axios */
-            axios.get('/division/view').then((response)=>{
+            axios.get('/division/'+currentPage).then((response)=>{
 
-                let info = response.data;
+                let info = response.data['tableData'];
                 let table="";
                 let i=0;
 
                 table+=`
                 <table>
-            <tr>
-                <th>ক্রমিক</th>
-                <th>আই ডি</th>
-                <th>কোড</th>
-                <th>নাম (ইংলিশ)</th>
-                <th>নাম (বাংলা)</th>
-                <th>নোট</th>
-                <th>রেকর্ড স্ট্যাটাস</th>
-                <th>রেকর্ড ভার্সন</th>
-                <th>দেখা</th>
-            </tr>`;
+                    <tr>
+                        <th>ক্রমিক</th>
+                        <th>আই ডি</th>
+                        <th>কোড</th>
+                        <th>নাম (ইংলিশ)</th>
+                        <th>নাম (বাংলা)</th>
+                        <th>নোট</th>
+                        <th>রেকর্ড স্ট্যাটাস</th>
+                        <th>রেকর্ড ভার্সন</th>
+                        <th>দেখা</th>
+                    </tr>`;
 
                    info.forEach((data)=>{
                        i++;
@@ -121,8 +147,11 @@
                    });
                table+=`</table>`;
 
+                   $('#indexData').html(table);
+
+
                /* Insert Data to main table*/
-               $('#indexData').html(table);
+
 
                /* Click Event for show Details in sub Table*/
                 $('.divi-table i').on('click',function(){

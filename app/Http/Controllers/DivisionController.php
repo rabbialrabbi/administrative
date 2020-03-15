@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\DB;
 
 class DivisionController extends Controller
 {
-    public function index()
+    public function index($currentPage)
     {
-        $division = DB::table('ada_division')->get();
+        $currentPage = $currentPage -1 ;
+        $dataPerPage = 3;
+        $firstData = $currentPage * $dataPerPage;
+        $division['tableData'] = DB::table('ada_division')->offset($firstData)->limit($dataPerPage)->get();
+        $division['count']= round(DB::table('ada_division')->count()/$dataPerPage);
         return $division;
     }
 

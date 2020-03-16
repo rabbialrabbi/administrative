@@ -9,11 +9,23 @@ class DivisionController extends Controller
 {
     public function index($currentPage)
     {
-        $currentPage = $currentPage -1 ;
-        $dataPerPage = 3;
-        $firstData = $currentPage * $dataPerPage;
-        $division['tableData'] = DB::table('ada_division')->offset($firstData)->limit($dataPerPage)->get();
-        $division['count']= round(DB::table('ada_division')->count()/$dataPerPage);
+        $dataPerPage = 10;
+        $total = DB::table('ada_division')->count();
+        $checkFraction = $total%$dataPerPage;
+
+        if($currentPage == 'lastPage'){
+            $currentPage = floor($total/$dataPerPage);
+            $firstData = $currentPage * $dataPerPage;
+            if($checkFraction){
+                $dataPerPage = $checkFraction;
+            }
+        }else{
+            $currentPage = $currentPage -1 ;
+            $firstData = $currentPage * $dataPerPage;
+        }
+
+        $division['tableData'] = DB::table('ada_division')->orderBy('DivisionId','asc')->offset($firstData)->limit($dataPerPage)->get();
+        $division['count']= ceil(DB::table('ada_division')->count()/$dataPerPage);
         return $division;
     }
 
@@ -46,7 +58,7 @@ class DivisionController extends Controller
      return 'Input Successful';
     }
 
-    public function edit()
+    public function update()
     {
         $response = DB::table('ada_division')
             ->where('DivisionCode', request()->DivisionCode)

@@ -23,7 +23,11 @@
         background-color: white;
     }
 }
-
+.selected span{
+    color: white;
+    font-weight: bold;
+    background-color: #1b4b72;
+}
 .dropdownIcon{
     padding: 4px;
     border: .5px solid darkgray;

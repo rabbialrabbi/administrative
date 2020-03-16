@@ -3,7 +3,6 @@
 @section('title','Admin')
 @section('body')
 
-
     {{--***************************
             @ Table data
      ***************************** --}}
@@ -21,81 +20,66 @@
         </div>
     </div>
 
+    {{--****************************************************************
+            @ data from database will fetch with ajex and append here
+     ******************************************************************* --}}
     <div id="indexData" class="row body_bottom">
-
     </div>
 
+    {{--****************************************************************
+            @ Below div containt pageination and button
+     ******************************************************************* --}}
     <div class="row body_pagination">
-        <div class="col-8 paginator js-paginator"></div>
+        <div class="col-8 paginator js-paginator d-flex justify-content-center"></div>
         <div class="col-4">
             <button id="addDivision">অ্যাড</button>
         </div>
     </div>
 
-    {{--***************************
+    {{--**********************************************************
         @ Sub Table Body
-    ***************************** --}}
-
+        @ data from database will fetch with ajex and append here
+    *************************************************************** --}}
     <div id="sub_input"></div>
-    @endsection
 
-{{--***************************
-        @ Sub Table data
- ***************************** --}}
+    @endsection
 
 @push('customJs')
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
     <script src="{{asset('js/pagination.js')}}"></script>
     <script>
-        let bypass = false;
 
         $(document).ready(function () {
 
             /* Load data to main table with relevant click event*/
             mainTableInsert();
 
+            /* Load pagination */
             loadPagination();
-
-            console.log($('.paginator'))
-
-
 
             /* Add division field to sub table*/
             $('#addDivision').click(function () {
-                var table = '';
-                table+= insertHeader();
-                table+=inputFormField();
+                inputFormField()
 
-                /* Insert Data to main table*/
-                $('#sub_input').html(table);
-
-                /* Ajex call for add data to database*/
-                $('#addDivisionForm').submit(function (event) {
-                    event.preventDefault();
-                    var info = $('#addDivisionForm').serialize();
-                    axios.post('/division/create',info).then((response)=>{
-                        $('#message').html(response.data);
-                        mainTableInsert();
-                        $('#sub_input').html(table);
-
-                    }).catch((error)=>{
-                        $('#message').html(error)
-                    })
-                })
             })
-        })
+        });
 
+        {{--*******************************************************************
+                    @ This function load pagination
+                    @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
+                    @ Includes Click Event To Show Details in sub Table
+            ******************************************************************* --}}
         function loadPagination() {
             axios.get('/division/1').then((response)=>{
                 paginator.initPaginator({
-                    'previousPage': 'Next Page',
-                    'nextPage': 'Previous Page',
+                    'previousPage': 'পূর্বের পাতা',
+                    'nextPage': 'পরের পাতা',
                     'totalPage': response.data['count'],
-                    'triggerFunc': test,
-                    'paginationClass': 'paginatorCustomClass'
+                    'triggerFunc': loadTable,
+                    'paginationClass': 'custom-paginator'
                 });
 
-                function test() {
+                function loadTable() {
                     var currentPage = $('.js-paginator').data('pageSelected');
                     mainTableInsert(currentPage)
                 }
@@ -110,59 +94,54 @@
         function mainTableInsert(currentPage=0){
 
             /* Ajex Call with Axios */
+            window.currentPage = currentPage;
             axios.get('/division/'+currentPage).then((response)=>{
 
                 let info = response.data['tableData'];
                 let table="";
                 let i=0;
+                table+=`<table>
+                            <tr>
+                                <th>ক্রমিক</th>
+                                <th>আই ডি</th>
+                                <th>কোড</th>
+                                <th>নাম (ইংলিশ)</th>
+                                <th>নাম (বাংলা)</th>
+                                <th>নোট</th>
+                                <th>রেকর্ড স্ট্যাটাস</th>
+                                <th>রেকর্ড ভার্সন</th>
+                                <th>দেখা</th>
+                            </tr>`;
 
-                table+=`
-                <table>
-                    <tr>
-                        <th>ক্রমিক</th>
-                        <th>আই ডি</th>
-                        <th>কোড</th>
-                        <th>নাম (ইংলিশ)</th>
-                        <th>নাম (বাংলা)</th>
-                        <th>নোট</th>
-                        <th>রেকর্ড স্ট্যাটাস</th>
-                        <th>রেকর্ড ভার্সন</th>
-                        <th>দেখা</th>
-                    </tr>`;
-
-                   info.forEach((data)=>{
-                       i++;
-                      table +=`
-                       <tr id="divi-table-${i}" class="divi-table">
-                       <td>${i}</td>
-                           <td>${data.DivisionId}</td>
-                           <td>${data.DivisionCode}</td>
-                           <td>${data.DivisionNameEnglish}</td>
-                          <td>${data.DivisionNameBangla}</td>
-                          <td>${data.Note}</td>
-                          <td>${data.RecordStatus}</td>
-                          <td>${data.RecordVersion}</td>
-<td><i id="divi-but-${i}" key="${data.DivisionCode}" class="fas fa-eye"></i></td></td>
-                      </tr>`
-                   });
+                           info.forEach((data)=>{
+                               i++;
+                              table +=`
+                               <tr id="divi-table-${i}" class="divi-table">
+                               <td>${i}</td>
+                                   <td>${data.DivisionId}</td>
+                                   <td>${data.DivisionCode}</td>
+                                   <td>${data.DivisionNameEnglish}</td>
+                                  <td>${data.DivisionNameBangla}</td>
+                                  <td>${data.Note}</td>
+                                  <td>${data.RecordStatus}</td>
+                                  <td>${data.RecordVersion}</td>
+                                  <td><i id="divi-but-${i}" key="${data.DivisionCode}" class="fas fa-eye"></i></td></td>
+                              </tr>`
+                            });
                table+=`</table>`;
 
-                   $('#indexData').html(table);
-
-
-               /* Insert Data to main table*/
-
+                /* Insert Data to main table*/
+                $('#indexData').html(table);
 
                /* Click Event for show Details in sub Table*/
                 $('.divi-table i').on('click',function(){
                     var key = $(this).attr('key');
-                    axios.get('/division/'+key).then((response)=>{
+                    axios.get('/division/show/'+key).then((response)=>{
 
                         var division = response.data;
                         var table = '';
                         table+= insertHeader();
-                        table+=`
-                            <div class="row sub_table-body">
+                        table+=`<div class="row sub_table-body">
                                 <table>
                                     <tr>
                                         <th>বিভাগ আই ডি</th>
@@ -217,20 +196,23 @@
                         /* Ajex call for Delete record*/
                         $('#deleteDivision').click(function () {
                             key = $(this).attr('key');
-                            axios.delete('/division/'+key).then((response)=>{
-                                $('#message').html(response.data)
-                                mainTableInsert();
-                            }).catch((error)=>{
-                                $('#message').html(error)
-                            })
+                            if(confirm("Want to delete table")){
+                                axios.delete('/division/'+key).then((response)=>{
+                                    $('#message').html(response.data)
+                                    mainTableInsert(window.currentPage);
+                                    $('#sub_input').html('');
+                                }).catch((error)=>{
+                                    $('#message').html(error)
+                                    console.log(error)
+                                })
+                            }
                         });
 
                         /* Click Event for Edit record*/
                         $('#editDivision').click(function () {
                             var table = '';
                             table+= insertHeader();
-                            table+=`
-                            <form id="saveDivision" action="">
+                            table+=`<form id="saveDivision" action="">
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
@@ -270,12 +252,12 @@
                                     </tr>
                                 </table>
                             </div>
-
                             <div class=" row sub_table-bottom">
                                 <div class="row sub_table-button">
                                 <div class="col-8"><p>Messages: <span id="message"></span></p></div>
                                 <div class="col-4">
-                                    <input type="submit" name="submit" value="অ্যাড">
+                                    <input type="submit" name="submit" value="আপডেট">
+                                    <button onclick="clearSubTable(event)">পিছনে</button>
                                 </div>
                             </div>
                             <div>
@@ -288,18 +270,23 @@
                             $('#saveDivision').submit(function (event) {
                                 event.preventDefault();
                                 var info = $('#saveDivision').serialize();
-                                axios.patch('/division/edit',info).then((response)=>{
+                                axios.patch('/division/update',info).then((response)=>{
                                     $('#message').html(response.data)
-                                    mainTableInsert();
+                                    mainTableInsert(window.currentPage);
                                 }).catch((error)=>{
-                                    $('#message').html(error)
+                                    $('#message').html(error);
+                                    console.log(error)
                                 })
-                            })
+                            });
+
                         })
+                    }).catch((error)=>{
+                        console.log(error);
                     })
                 });
             }).catch((error)=>{
                 $('#indexData').html("Ajex Call for load table data");
+                console.log(error)
             });
         }
 
@@ -314,12 +301,13 @@
                             </div>`
         }
 
-
         {{--************************************************************
                     @ This function return imput form Field
             ************************************************************ --}}
         function inputFormField() {
-            return `<form id="addDivisionForm">
+            var table = '';
+            table+= insertHeader();
+            table+= `<form id="addDivisionForm">
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
@@ -365,11 +353,37 @@
                                 <div class="col-8"><p>Messages: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <input id='addDivisionSubmit' type="submit" name="submit" value="অ্যাড">
+                                    <button onclick="clearSubTable(event)">পিছনে</button>
                                 </div>
                             </div>
                             <div>
-                          </form>`
+                          </form>`;
+
+            /* Insert Data to main table*/
+            $('#sub_input').html(table);
+
+
+            /* Ajex call for add data to database*/
+            $('#addDivisionForm').submit(function (event) {
+                event.preventDefault();
+                var info = $('#addDivisionForm').serialize();
+                axios.post('/division/create',info).then((response)=>{
+                    mainTableInsert('lastPage');
+                    inputFormField();
+                    $('#message').html(response.data);
+
+                }).catch((error)=>{
+                    $('#message').html(error);
+                    console.log(error)
+                })
+            })
         }
+
+        function clearSubTable(e) {
+            e.preventDefault();
+            $('#sub_input').html('');
+        }
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     @endpush

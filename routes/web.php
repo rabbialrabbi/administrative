@@ -27,6 +27,16 @@ Route::prefix('division')->group(function () {
     Route::delete('/{id}', 'DivisionController@destroy');
 });
 
+Route::prefix('district')->group(function () {
+    Route::view('/', 'page.districtPage');
+    Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
+    Route::get('/filter/{key}','DistrictController@filter');
+    Route::post('/create', 'DistrictController@add');
+    Route::get('/{id}', 'DistrictController@show');
+    Route::patch('/update', 'DistrictController@update');
+    Route::delete('/{id}', 'DistrictController@destroy');
+});
+
 
 
 

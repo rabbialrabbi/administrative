@@ -25,7 +25,7 @@ class DivisionController extends Controller
         }
 
         $division['tableData'] = DB::table('ada_division')->orderBy('DivisionId','asc')->offset($firstData)->limit($dataPerPage)->get();
-        $division['count']= ceil(DB::table('ada_division')->count()/$dataPerPage);
+        $division['count']= ceil($total/$dataPerPage);
         return $division;
     }
 

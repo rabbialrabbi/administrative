@@ -13,10 +13,37 @@
     }
     &_bottom{
         background-color: white;
-        padding: 0px 5px;
         max-height: 500px;
         overflow: auto;
+        padding: 30px;
+        & table{
+            width: 100%;
+            border: 1px solid $tableLine;
+            border-collapse: collapse;
+            text-align: center;
+
+            & tr:nth-child(odd){
+                background-color: lightgrey;
+            }
+
+            & th,td{
+                border: 1px solid $tableLine;
+
+            }
+            & th{
+                font-size: 18px;
+                padding: 5px 5px 5px 15px;
+                font-weight: bolder;
+            }
+            & td{
+                padding: 5px 5px 5px 15px;
+                font-weight: bold;
+            }
+
+        }
+
     }
+
     &_pagination{
         text-align: center;
         padding: 20px;

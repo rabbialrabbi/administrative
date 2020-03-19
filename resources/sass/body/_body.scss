@@ -59,3 +59,10 @@
     padding: 4px;
     border: .5px solid darkgray;
 }
+#dist_filter-button{
+    background-color: lightgrey;
+    padding: 8px;
+    & option{
+        background-color: white;
+    }
+}

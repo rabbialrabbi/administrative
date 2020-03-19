@@ -78,22 +78,24 @@ class DistrictController extends Controller
     public function add()
     {
         $validation = request()->validate([
-            'DivisionId'=>'required',
+            'DistrictId'=>'required',
             'DivisionCode'=>'required',
-            'DivisionNameEnglish'=>'required',
-            'DivisionNameBangla'=>'required',
+            'DistrictCode'=>'required',
+            'DistrictNameEnglish'=>'required',
+            'DistrictNameBangla'=>'required',
             'Note'=>'required',
             'RecordStatus'=>'required',
             'RecordVersion'=>'required',
         ]);
 
-        $response = DB::table('ada_division')->insert([
-            'DivisionId'=>request()->DivisionId,
+        $response = DB::table('ada_district')->insert([
+            'DistrictId'=>request()->DistrictId,
             'DivisionCode'=>request()->DivisionCode,
-            'DivisionNameEnglish'=>request()->DivisionNameEnglish,
-            'DivisionNameBangla'=>request()->DivisionNameBangla,
-            'DivisionImage1'=>'Default',
-            'DivisionImage2'=>'Default',
+            'DistrictCode'=>request()->DistrictCode,
+            'DistrictNameEnglish'=>request()->DistrictNameEnglish,
+            'DistrictNameBangla'=>request()->DistrictNameBangla,
+            'DistrictImage1'=>'Default',
+            'DistrictImage2'=>'Default',
             'Note'=>request()->Note,
             'RecordStatus'=>request()->RecordStatus,
             'RecordVersion'=>request()->RecordVersion,
@@ -101,7 +103,7 @@ class DistrictController extends Controller
             'AccessDate'=>now(),
         ]);
 
-        return 'Input Successful';
+        return "Input successful";
     }
 
     public function update()

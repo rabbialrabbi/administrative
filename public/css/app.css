@@ -11022,6 +11022,15 @@ a.text-dark:focus {
   border: 0.5px solid darkgray;
 }
 
+#dist_filter-button {
+  background-color: lightgrey;
+  padding: 8px;
+}
+
+#dist_filter-button option {
+  background-color: white;
+}
+
 .sub_table-body {
   background-color: white;
 }
@@ -11068,5 +11077,10 @@ a.text-dark:focus {
 .sub_table-button p {
   padding-left: 20px;
   font-weight: bolder;
+}
+
+#addDivisionList {
+  padding: 3px;
+  width: 160px;
 }
 

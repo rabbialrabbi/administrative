@@ -37,6 +37,12 @@ Route::prefix('district')->group(function () {
     Route::delete('/{id}', 'DistrictController@destroy');
 });
 
+Route::prefix('data')->group(function (){
+    Route::get('/divisionList/{start?}/{end?}','DataController@divisionList');
+
+});
+
+Route::get('/test','DistrictController@add');
 
 
 

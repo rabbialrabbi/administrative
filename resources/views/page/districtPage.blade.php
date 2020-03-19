@@ -51,15 +51,15 @@
 
         $(document).ready(function () {
 
-            /* Load data to main table with relevant click event*/
-            // mainTableInsert();
 
-            /* Load pagination */
             loadPagination();
 
             /* Add district field to sub table*/
             $('#addDivision').click(function () {
-                inputFormField()
+
+                inputFormField();
+
+
 
             })
         });
@@ -74,6 +74,7 @@
             let currentPage = 0;
             axios.get('/district/'+currentPage+'/'+value,{
             }).then((response)=>{
+
                 paginator.initPaginator({
                     'previousPage': 'পূর্বের পাতা',
                     'nextPage': 'পরের পাতা',
@@ -82,7 +83,8 @@
                     'paginationClass': 'custom-paginator'
                 });
 
-                mainTableInsert(currentPage,value);
+                    mainTableInsert(currentPage,value);
+
                 function loadTable() {
                     var currentPage = $('.js-paginator').data('pageSelected');
                     mainTableInsert(currentPage,value)
@@ -102,11 +104,15 @@
                             <tr >
                                 <th>ক্রমিক</th>
                                 <th>
-                                <select name="division" onchange="loadPagination(this.value)"`;
+                                <select id='dist_filter-button' name="division" onchange="loadPagination(this.value)">\n`;
 
-                divisionName.forEach((data)=>{
-                    table+= `<option value="${data}">${data}</option>`
+                table+= `<option value="0">District</option>\n`;
+
+       divisionName.forEach((data)=>{
+                table+= `<option value="${data}">${data}</option>\n`
                 }) ;
+
+                table+= `<option value="0">All</option>`;
 
                 table += `</select>
                                 </th>
@@ -133,7 +139,7 @@
                                    <td>${data.Note}</td>
                                    <td>${data.RecordStatus}</td>
                                    <td>${data.RecordVersion}</td>
-                                   <td><i id="divi-but-${i}" key="${data.DistrictCode}" class="fas fa-eye"></i></td></td>
+                                   <td><i id="divi-but-${i}" key="${data.DistrictId}" class="fas fa-eye"></i></td></td>
                               </tr>`;
 
 
@@ -153,6 +159,7 @@
             axios.get('/district/'+currentPage+'/'+filterKey,{
                 filterKey:filterKey
             }).then((response)=>{
+                loadWindowsData(response);
 
                 filterDistrict(response);
 
@@ -302,7 +309,6 @@
                                     console.log(error)
                                 })
                             });
-
                         })
                     }).catch((error)=>{
                         console.log(error);
@@ -329,30 +335,43 @@
                     @ This function return imput form Field
             ************************************************************ --}}
         function inputFormField() {
-            var table = '';
-            table+= insertHeader();
-            table+= `<form id="addDivisionForm">
+            axios.get('/data/divisionList').then((response)=>{
+                let DistrictList = response.data;
+                var table = '';
+
+                table+= insertHeader();
+                table+= `<form id="addDivisionForm">
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
                                         <th>জেলা আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionId" ></td>
+                                        <td><input type="text" name="DistrictId" ></td>
+                                    </tr>
+                                    <tr>
+                                        <th>District কোড</th>
+                                        <td class="clone">:</td>
+                                        <td><select name="DivisionCode" id="addDivisionList">`
+                DistrictList.forEach((data)=>{
+                    table+=`<option value="${data.DivisionCode}">${data.DivisionNameBangla}</option>`
+                });
+
+                table+=`</select></td>
                                     </tr>
                                     <tr>
                                         <th>জেলা কোড</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionCode"></td>
+                                        <td><input type="text" name="DistrictCode"></td>
                                     </tr>
                                     <tr>
                                         <th>জেলা নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameEnglish"></td>
+                                        <td><input type="text" name="DistrictNameEnglish"></td>
                                     </tr>
                                     <tr>
                                         <th>জেলা নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameBangla"></td>
+                                        <td><input type="text" name="DistrictNameBangla"></td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
@@ -383,29 +402,36 @@
                             <div>
                           </form>`;
 
-            /* Insert Data to main table*/
-            $('#sub_input').html(table);
+                /* Insert Data to main table*/
+                $('#sub_input').html(table);
 
 
-            /* Ajex call for add data to database*/
-            $('#addDivisionForm').submit(function (event) {
-                event.preventDefault();
-                var info = $('#addDivisionForm').serialize();
-                axios.post('/district/create',info).then((response)=>{
-                    mainTableInsert('lastPage');
-                    inputFormField();
-                    $('#message').html(response.data);
+                /* Ajex call for add data to database*/
+                $('#addDivisionForm').submit(function (event) {
+                    event.preventDefault();
+                    var info = $('#addDivisionForm').serialize();
+                    axios.post('/district/create',info).then((response)=>{
+                        console.log(response.data)
+                        // mainTableInsert('lastPage');
+                        // inputFormField();
+                        $('#message').html(response.data);
 
-                }).catch((error)=>{
-                    $('#message').html(error);
-                    console.log(error)
+                    }).catch((error)=>{
+                        $('#message').html(error);
+                        console.log(error)
+                    })
                 })
             })
+
         }
 
         function clearSubTable(e) {
             e.preventDefault();
             $('#sub_input').html('');
+        }
+
+        function loadWindowsData(response) {
+            window.divisionList = response.data['DivisionName'];
         }
 
     </script>

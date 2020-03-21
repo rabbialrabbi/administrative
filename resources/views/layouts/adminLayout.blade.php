@@ -48,8 +48,8 @@
         <div class="col-2 ">
             <div class="side-bar">
                 <h4>পরামর্শ ব্যবস্থাপনা </h4>
-                <a href="#"><p>ড্যশবোর্ড</p></a>
-                <a href="#"><p>পরামর্শ</p></a>
+                <a href="/division"><p>ড্যশবোর্ড (Division)</p></a>
+                <a href="/district"><p>পরামর্শ (District)</p></a>
                 <a href="#"><p>ফিডব্যাক সার্ভিস</p></a>
                 <a href="#"><p>এসএএও</p></a>
                 <a href="#"><p>সেটিংস</p></a>

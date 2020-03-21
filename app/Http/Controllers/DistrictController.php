@@ -13,15 +13,11 @@ class DistrictController extends Controller
         $filterKey = $request->filterKey;
         $currentPage = $request->currentPage;
 
-        $data =  DB::table('ada_district')
-            ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla');
-
         if($filterKey){
 
             $filterData = DB::table('ada_district')
                 ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-                ->select('ada_district.*', 'ada_division.DivisionNameBangla')->where('DivisionNameBangla',$filterKey);
+                ->select('ada_district.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode')->where('DivisionNameBangla',$filterKey);
             $total = $filterData->count();
             $currentPage = $request->currentPage -1 ;
             $firstData = $currentPage * $dataPerPage;
@@ -49,7 +45,9 @@ class DistrictController extends Controller
                 $currentPage = $currentPage -1 ;
                 $firstData = $currentPage * $dataPerPage;
             }
-            $district['tableData'] = $data
+            $district['tableData'] = DB::table('ada_district')
+                ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
+                ->select('ada_district.*', 'ada_division.DivisionNameBangla')
                 ->orderBy('DistrictId','asc')
                 ->offset($firstData)
                 ->limit($dataPerPage)
@@ -108,14 +106,15 @@ class DistrictController extends Controller
 
     public function update()
     {
-        $response = DB::table('ada_division')
-            ->where('DivisionCode', request()->DivisionCode)
+        $response = DB::table('ada_district')
+            ->where('DistrictCode', request()->DistrictCode)
             ->update([
-                'DivisionId'=>request()->DivisionId,
-                'DivisionNameEnglish'=>request()->DivisionNameEnglish,
-                'DivisionNameBangla'=>request()->DivisionNameBangla,
-                'DivisionImage1'=>'Default',
-                'DivisionImage2'=>'Default',
+                'DistrictId'=>request()->DistrictId,
+                'DivisionCode'=>request()->DivisionCode,
+                'DistrictNameEnglish'=>request()->DistrictNameEnglish,
+                'DistrictNameBangla'=>request()->DistrictNameBangla,
+                'DistrictImage1'=>'Default',
+                'DistrictImage2'=>'Default',
                 'Note'=>request()->Note,
                 'RecordStatus'=>request()->RecordStatus,
                 'RecordVersion'=>request()->RecordVersion,
@@ -127,7 +126,7 @@ class DistrictController extends Controller
 
     public function destroy($id)
     {
-        DB::table('ada_division')->where('DivisionCode', '=', $id)->delete();
+        DB::table('ada_district')->where('DistrictCode', '=', $id)->delete();
         return 'Delete Successful';
     }
 

@@ -66,8 +66,8 @@
                     @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function loadPagination(currentPage=0 ,value=0) {
-
+        function loadPagination(value=0) {
+            let currentPage=0;
             axios.get('/district/'+currentPage+'/'+value,{
             }).then((response)=>{
 
@@ -100,7 +100,7 @@
                             <tr >
                                 <th>ক্রমিক</th>
                                 <th>
-                                <select id='dist_filter-button' name="division" onchange="loadPagination(this.value)">\n`;
+                                <select id='dist_filter-button' name="division" onchange="loadPagination(this.value)">`;
 
                 table+= `<option value="0">District</option>\n`;
 
@@ -160,7 +160,7 @@
         function mainTableInsert(currentPage=0,filterKey=0){
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-            window.filterKey = filterKey;
+            window.filterKey = filterKey
             axios.get('/district/'+currentPage+'/'+filterKey,{
                 filterKey:filterKey
             }).then((response)=>{

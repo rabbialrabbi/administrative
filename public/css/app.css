@@ -11079,7 +11079,7 @@ a.text-dark:focus {
   font-weight: bolder;
 }
 
-#addDivisionList {
+#addDivisionForm select {
   padding: 3px;
   width: 160px;
 }

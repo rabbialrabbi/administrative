@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * User: Rabbi
+ * Email: rabbialrabbi@gmail.com
+ * Date: 3/21/2020
+ * Time: 7:58 PM
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +25,7 @@ Route::get('/', function () {
 
 
 Route::prefix('division')->group(function () {
-    Route::view('/', 'page.divisionPage');
+    Route::view('/', 'pages.divisionPage');
     Route::get('/{currentPage}', 'DivisionController@index');
     Route::post('/create', 'DivisionController@add');
     Route::get('/show/{id}', 'DivisionController@show');
@@ -28,7 +34,7 @@ Route::prefix('division')->group(function () {
 });
 
 Route::prefix('district')->group(function () {
-    Route::view('/', 'page.districtPage');
+    Route::view('/', 'pages.districtPage');
     Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
     Route::get('/filter/{key}','DistrictController@filter');
     Route::post('/create', 'DistrictController@add');
@@ -37,12 +43,27 @@ Route::prefix('district')->group(function () {
     Route::delete('/{id}', 'DistrictController@destroy');
 });
 
+Route::prefix('upazila')->group(function () {
+    Route::view('/', 'pages.upazilaPage');
+    Route::get('/{currentPage}/{filterKey}', 'UpazilaController@index');
+    Route::get('/filter/{key}','UpazilaController@filter');
+    Route::post('/create', 'UpazilaController@add');
+    Route::get('/{id}', 'UpazilaController@show');
+    Route::patch('/update', 'UpazilaController@update');
+    Route::delete('/{id}', 'UpazilaController@destroy');
+});
+
 Route::prefix('data')->group(function (){
     Route::get('/divisionList/{start?}/{end?}','DataController@divisionList');
+    Route::get('/all','DataController@dataList');
+    Route::get('/section','DataController@sectionalDataList');
 
 });
 
-Route::get('/test','DistrictController@add');
+Route::get('/test/show',function (){
+    return view('home');
+});
+//Route::post('/test','DataController@test');
 
 
 

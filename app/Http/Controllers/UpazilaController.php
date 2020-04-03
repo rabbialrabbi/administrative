@@ -9,15 +9,22 @@ class UpazilaController extends Controller
 {
     public function index(Request $request)
     {
+
         $dataPerPage = 10;
-        $filterKey = $request->filterKey;
+        $filterKey = json_decode($request->filterKey);
         $currentPage = $request->currentPage;
-        if($filterKey){
+
+        if($filterKey->DivisionNameBangla){
+            foreach($filterKey as $key=>$r){
+                if($r){
+                    $where[]= [$key,'=',$r];
+                }
+            }
 
             $filterData = DB::table('ada_upazila')
                 ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
                 ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
-                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')->where([['DivisionNameBangla','=',$filterKey],['DistrictNameBangla','=','বরগুনা']]);
+                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')->where($where);
             $total = $filterData->count();
             $currentPage = $request->currentPage  ;
             $firstData = $currentPage * $dataPerPage;

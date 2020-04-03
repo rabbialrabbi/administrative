@@ -60,8 +60,13 @@ Route::prefix('data')->group(function (){
 
 });
 
-Route::get('/test/show',function (){
-    return view('home');
+Route::get('/test/{show}',function (\Illuminate\Http\Request $request){
+//    $result = $request->all();
+//    foreach($result as $key=>$r){
+//        $where[]= [$key,'=',$r];
+//    }
+//    $where2 = [['Name','=','Rabbial'],['Address','=','Shibgronj']];
+    return $request->name;
 });
 //Route::post('/test','DataController@test');
 

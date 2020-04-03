@@ -42,14 +42,42 @@
     *************************************************************** --}}
     <div id="sub_input"></div>
 
+    <div id="test" style="background-color: white;padding: 20px;margin: 5px">
+        <ul id="testShow"></ul>
+        <button id="testBtn">Click Me</button>
+
+    </div>
+
 @endsection
 
 @push('customJs')
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
     <script src="{{asset('js/pagination.js')}}"></script>
     <script>
-
         $(document).ready(function () {
+
+            $('#testBtn').click(function () {
+                var info= ['Data 1','Data 2','Data 3'];
+                var anotherInfo= 'Another Informaion';
+
+                testFunc(info,anotherInfo)
+            })
+
+            function testFunc(info,anotherInfo){
+
+                axios.get('test/show',{
+                    params:{
+                        name:{firstName:'Rabbial',lastName:'Anower'},
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    // var table = '';
+                    // response.data.forEach(data =>{
+                    //     table+= `<li>${data}</li>`
+                    // });
+                    // $('#testShow').html(table)
+                })
+            }
 
             loadPagination();
 
@@ -66,9 +94,27 @@
                     @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function loadPagination(value=0) {
+        function loadPagination(info) {
+
+            if(info && info.DivisionKey){
+                window.DivisionKey = info.DivisionKey
+                window.DistrictKey = 0
+            }else if(info && info.DistrictKey){
+                window.DistrictKey = info.DistrictKey
+            }else{
+                window.DivisionKey = 0;
+                window.DistrictKey = 0;
+            }
+            console.log(window.DivisionKey);
             let currentPage=0;
+            let value = 0;
             axios.get('/upazila/'+currentPage+'/'+value,{
+                params:{
+                    filterKey:{
+                        DivisionNameBangla: window.DivisionKey,
+                        DistrictNameBangla: window.DistrictKey
+                    }
+                }
             }).then((response)=>{
 
                 paginator.initPaginator({
@@ -97,30 +143,36 @@
                     @ Input Receive data to main Table
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function mainTableInsert(currentPage=0,filterKey=0){
+        function mainTableInsert(currentPage=0,value=0){
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-            window.filterKey = filterKey;
-            axios.get('/upazila/'+currentPage+'/'+filterKey,{
-                filterKey:filterKey
+
+            window.DistrictKey = 0;
+            axios.get('/upazila/'+currentPage+'/'+value,{
+                params:{
+                    filterKey:{
+                        DivisionNameBangla: window.DivisionKey,
+                        DistrictNameBangla: window.DistrictKey
+                    }
+                }
             }).then((response)=>{
 
-
+                console.log(response.data)
                 filterDistrict(response);
 
 
                 $('.divi-table i').on('click',function(){
-                    let UpazilaId = $(this).attr('UpazilaId')
-                    let UpazilaCode = $(this).attr('UpazilaCode')
-                    let DistrictCode = $(this).attr('DistrictCode')
-                    let DivisionCode = $(this).attr('DivisionCode')
-                    let DivisionNameBangla = $(this).attr('DivisionNameBangla')
-                    let DistrictNameBangla = $(this).attr('DistrictNameBangla')
-                    let UpazilaNameEnglish = $(this).attr('UpazilatNameEnglish')
-                    let UpazilaNameBangla = $(this).attr('UpazilaNameBangla')
-                    let Note = $(this).attr('Note')
-                    let RecordStatus = $(this).attr('RecordStatus')
-                    let RecordVersion = $(this).attr('RecordVersion')
+                    let UpazilaId = $(this).attr('UpazilaId');
+                    let UpazilaCode = $(this).attr('UpazilaCode');
+                    let DistrictCode = $(this).attr('DistrictCode');
+                    let DivisionCode = $(this).attr('DivisionCode');
+                    let DivisionNameBangla = $(this).attr('DivisionNameBangla');
+                    let DistrictNameBangla = $(this).attr('DistrictNameBangla');
+                    let UpazilaNameEnglish = $(this).attr('UpazilatNameEnglish');
+                    let UpazilaNameBangla = $(this).attr('UpazilaNameBangla');
+                    let Note = $(this).attr('Note');
+                    let RecordStatus = $(this).attr('RecordStatus');
+                    let RecordVersion = $(this).attr('RecordVersion');
 
                     var district = response.data;
                     var table = '';
@@ -300,6 +352,7 @@
         function filterDistrict(response) {
             let currentPage = window.currentPage;
             var table = '';
+            var arr = [];
             let i = '';
             let info = response.data['tableData'];
             let divisionName = response.data['DivisionName'];
@@ -308,7 +361,7 @@
                             <tr >
                                 <th>ক্রমিক</th>
                                 <th>
-                                    <select id='dist_filter-button' name="division" onchange="loadPagination(this.value)">`;
+                                    <select id='dist_filter-button' name="division" onchange="loadPagination({'DivisionKey':this.value})">`;
                                     table+= `<option value="0">বিভাগ</option>`;
 
                                     divisionName.forEach((data)=>{
@@ -320,7 +373,7 @@
                                 </th>`;
 
                         table+=`<th>
-                                    <select id='dist_filter-button' name="division" onchange="loadPagination(this.value)">`;
+                                    <select id='dist_filter-button' name="division" onchange="loadPagination({'DistrictKey':this.value})">`;
                                     table+= `<option value="0">জেলা</option>\n`;
 
                                         divisionName.forEach((data)=>{

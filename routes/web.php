@@ -53,12 +53,24 @@ Route::prefix('upazila')->group(function () {
     Route::delete('/{id}', 'UpazilaController@destroy');
 });
 
+Route::prefix('areatype')->group(function () {
+    Route::view('/', 'pages.areaType');
+    Route::get('/{currentPage}', 'AreaTypeController@index');
+    Route::post('/create', 'AreaTypeController@add');
+    Route::get('/show/{id}', 'AreaTypeController@show');
+    Route::patch('/update', 'AreaTypeController@update');
+    Route::delete('/{id}', 'AreaTypeController@destroy');
+});
+
+
 Route::prefix('data')->group(function (){
     Route::get('/divisionList/{start?}/{end?}','DataController@divisionList');
     Route::get('/all','DataController@dataList');
     Route::get('/section','DataController@sectionalDataList');
 
 });
+
+
 
 Route::get('/test/{show}',function (\Illuminate\Http\Request $request){
 //    $result = $request->all();

@@ -9,7 +9,7 @@
     <div class="row body_top">
         <div class="col-2"><h3>প্রশাসনিক</h3> </div>
         <div class="col-1 clone">:</div>
-        <div class="col-8"><h3>জেলা</h3></div>
+        <div class="col-8"><h3>এলাকা</h3></div>
     </div>
     <div class="row body_search-panel">
         <div class="col-8"></div>
@@ -51,12 +51,15 @@
 
         $(document).ready(function () {
 
+            /* Load data to main table with relevant click event*/
+            mainTableInsert();
+
+            /* Load pagination */
             loadPagination();
 
-            /* Add district field to sub table*/
+            /* Add division field to sub table*/
             $('#addDivision').click(function () {
-
-                inputFormField();
+                inputFormField()
 
             })
         });
@@ -66,11 +69,8 @@
                     @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function loadPagination(value=0) {
-            let currentPage=0;
-            axios.get('/district/'+currentPage+'/'+value,{
-            }).then((response)=>{
-
+        function loadPagination() {
+            axios.get('/areatype/1').then((response)=>{
                 paginator.initPaginator({
                     'previousPage': 'পূর্বের পাতা',
                     'nextPage': 'পরের পাতা',
@@ -79,39 +79,30 @@
                     'paginationClass': 'custom-paginator'
                 });
 
-                    mainTableInsert(currentPage,value);
-
                 function loadTable() {
                     var currentPage = $('.js-paginator').data('pageSelected');
-                    mainTableInsert(currentPage,value)
+                    mainTableInsert(currentPage)
                 }
-
             })
         }
 
-        function filterDistrict(response) {
-            let currentPage = window.currentPage;
-            var table = '';
-            let i = '';
-            let info = response.data['tableData'];
-            let divisionName = response.data['DivisionName'];
+        {{--*******************************************************************
+                    @  This function Run ajex call for input main table data
+                    @ Input Receive data to main Table
+                    @ Includes Click Event To Show Details in sub Table
+            ******************************************************************* --}}
+        function mainTableInsert(currentPage=0){
 
+            /* Ajex Call with Axios */
+            window.currentPage = currentPage;
+            axios.get('/areatype/'+currentPage).then((response)=>{
+
+                let info = response.data['tableData'];
+                let table="";
+                let i=0;
                 table+=`<table>
-                            <tr >
+                            <tr>
                                 <th>ক্রমিক</th>
-                                <th>
-                                <select id='dist_filter-button' name="division" onchange="loadPagination(this.value)">`;
-
-                table+= `<option value="0">District</option>\n`;
-
-       divisionName.forEach((data)=>{
-                table+= `<option value="${data}">${data}</option>\n`
-                }) ;
-
-                table+= `<option value="0">All</option>`;
-
-                table += `</select>
-                                </th>
                                 <th>আই ডি</th>
                                 <th>কোড</th>
                                 <th>নাম (ইংলিশ)</th>
@@ -120,111 +111,72 @@
                                 <th>রেকর্ড স্ট্যাটাস</th>
                                 <th>রেকর্ড ভার্সন</th>
                                 <th>দেখা</th>
-                            </tr>
-                            `;
+                            </tr>`;
+
                 info.forEach((data)=>{
                     i++;
                     table +=`
                                <tr id="divi-table-${i}" class="divi-table">
                                <td>${i}</td>
-                                   <td>${data.DivisionNameBangla} <span></span></td>
-                                   <td>${data.DistrictId}</td>
-                                   <td>${data.DistrictCode}</td>
-                                   <td>${data.DistrictNameEnglish}</td>
-                                   <td>${data.DistrictNameBangla}</td>
-                                   <td>${data.Note}</td>
-                                   <td>${data.RecordStatus}</td>
-                                   <td>${data.RecordVersion}</td>
-                                   <td><i id="divi-but-${i}"
-                                   DistrictId ="${data.DistrictId}"
-                                   DistrictCode ="${data.DistrictCode}"
-                                   DivisionCode ="${data.DivisionCode}"
-                                   DivisionNameBangla ="${data.DivisionNameBangla}"
-                                   DistrictNameEnglish ="${data.DistrictNameEnglish}"
-                                   DistrictNameBangla ="${data.DistrictNameBangla}"
-                                   Note ="${data.Note}"
-                                   RecordStatus ="${data.RecordStatus}"
-                                   RecordVersion ="${data.RecordVersion}"
-                                    class="fas fa-eye"></i></td></td>
-                              </tr>`;
-                    });
-                table+= `</table>`;
-                $('#indexData').html(table)
-        }
+                                   <td>${data.AreaTypeId}</td>
+                                   <td>${data.AreaTypeCode}</td>
+                                   <td>${data.AreaTypeNameEnglish}</td>
+                                  <td>${data.AreaTypeNameBangla}</td>
+                                  <td>${data.Note}</td>
+                                  <td>${data.RecordStatus}</td>
+                                  <td>${data.RecordVersion}</td>
+                                  <td><i id="divi-but-${i}" key="${data.AreaTypeCode}" class="fas fa-eye"></i></td></td>
+                              </tr>`
+                });
+                table+=`</table>`;
 
-        {{--*******************************************************************
-                    @  This function Run ajex call for input main table data
-                    @ Input Receive data to main Table
-                    @ Includes Click Event To Show Details in sub Table
-            ******************************************************************* --}}
-        function mainTableInsert(currentPage=0,filterKey=0){
-            /* Ajex Call with Axios */
-            window.currentPage = currentPage;
-            window.filterKey = filterKey
-            axios.get('/district/'+currentPage+'/'+filterKey,{
-                filterKey:filterKey
-            }).then((response)=>{
+                /* Insert Data to main table*/
+                $('#indexData').html(table);
 
-                loadWindowsData(response);
-
-                filterDistrict(response);
-
-
+                /* Click Event for show Details in sub Table*/
                 $('.divi-table i').on('click',function(){
-                    let DistrictId = $(this).attr('DistrictId')
-                    let DistrictCode = $(this).attr('DistrictCode')
-                    let DivisionCode = $(this).attr('DivisionCode')
-                    let DivisionNameBangla = $(this).attr('DivisionNameBangla')
-                    let DistrictNameEnglish = $(this).attr('DistrictNameEnglish')
-                    let DistrictNameBangla = $(this).attr('DistrictNameBangla')
-                    let Note = $(this).attr('Note')
-                    let RecordStatus = $(this).attr('RecordStatus')
-                    let RecordVersion = $(this).attr('RecordVersion')
+                    var key = $(this).attr('key');
+                    axios.get('/areatype/show/'+key).then((response)=>{
 
-                        var district = response.data;
+                        var AreaType = response.data;
                         var table = '';
                         table+= insertHeader();
                         table+=`<div class="row sub_table-body">
                                 <table>
                                     <tr>
-                                        <th>জেলা আই ডি</th>
+                                        <th>এলাকা ধরন আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td>${DistrictId}</td>
+                                        <td>${AreaType[0].AreaTypeId}</td>
                                     </tr>
                                     <tr>
-                                        <th>জেলা কোড</th>
+                                        <th>এলাকা ধরন কোড</th>
                                         <td class="clone">:</td>
-                                        <td>${DistrictCode}</td>
+                                        <td>${AreaType[0].AreaTypeCode}</td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ</th>
+                                        <th>এলাকা ধরন নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td>${DivisionNameBangla}</td>
+                                        <td>${AreaType[0].AreaTypeNameEnglish}</td>
                                     </tr>
                                     <tr>
-                                        <th>জেলা নাম (ইংলিশ)</th>
+                                        <th>এলাকা ধরন নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td>${DistrictNameEnglish}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>জেলা নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td>${DistrictNameBangla}</td>
+                                        <td>${AreaType[0].AreaTypeNameBangla}</td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
                                         <td class="clone">:</td>
-                                        <td>${Note}</td>
+                                        <td>${AreaType[0].Note}</td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড স্ট্যাটাস</th>
                                         <td class="clone">:</td>
-                                        <td>${RecordStatus}</td>
+                                        <td>${AreaType[0].RecordStatus}</td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড ভার্সন</th>
                                         <td class="clone">:</td>
-                                        <td>${RecordVersion}</td>
+                                        <td>${AreaType[0].RecordVersion}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -233,7 +185,7 @@
                                 <div class="col-8"><p>Message: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <button id="editDivision">এডিট</button>
-                                    <button id="deleteDivision" key=${DistrictCode}>ডিলিট</button></div>
+                                    <button id="deleteDivision" key=${AreaType[0].AreaTypeCode}>ডিলিট</button></div>
                                 </div>
                             </div>
                             <div>`;
@@ -245,7 +197,7 @@
                         $('#deleteDivision').click(function () {
                             key = $(this).attr('key');
                             if(confirm("Want to delete table")){
-                                axios.delete('/district/'+key).then((response)=>{
+                                axios.delete('/areatype/'+key).then((response)=>{
                                     $('#message').html(response.data)
                                     mainTableInsert(window.currentPage);
                                     $('#sub_input').html('');
@@ -264,54 +216,45 @@
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
-                                        <th>জেলা আই ডি</th>
+                                        <th>এলাকা ধরন আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictId" value="${DistrictId}"></td>
+                                        <td><input type="text" name="AreaTypeId" value="${AreaType[0].AreaTypeId}"></td>
                                     </tr>
                                     <tr>
-                                        <th>জেলা কোড</th>
+                                        <th>এলাকা ধরন কোড</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictCodeHidden" value="${DistrictCode}" disabled>
-                                            <input type="hidden" name="DistrictCode" value="${DistrictCode}">
-                                        </td>
+                                        <td><input type="text" name="AreaTypeCode" value="${AreaType[0].AreaTypeCode}"></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ</th>
+                                        <th>এলাকা ধরন নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameBangla" value="${DivisionNameBangla}" disabled>
-                                            <input type="hidden" name="DivisionCode" value="${DivisionCode}">
-                                        </td>
+                                        <td><input type="text" name="AreaTypeNameEnglish" value="${AreaType[0].AreaTypeNameEnglish}"></td>
                                     </tr>
                                     <tr>
-                                        <th>জেলা নাম (ইংলিশ)</th>
+                                        <th>এলাকা ধরন নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictNameEnglish" value="${DistrictNameEnglish}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>জেলা নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictNameBangla" value="${DistrictNameBangla}"></td>
+                                        <td><input type="text" name="AreaTypeNameBangla" value="${AreaType[0].AreaTypeNameBangla}"></td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="Note" value="${Note}"></td>
+                                        <td><input type="text" name="Note" value="${AreaType[0].Note}"></td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড স্ট্যাটাস</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="RecordStatus" value="${RecordStatus}"></td>
+                                        <td><input type="text" name="RecordStatus" value="${AreaType[0].RecordStatus}"></td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড ভার্সন</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="RecordVersion" value="${RecordVersion}"></td>
+                                        <td><input type="text" name="RecordVersion" value="${AreaType[0].RecordVersion}"></td>
                                     </tr>
                                 </table>
-                           </div>
+                            </div>
                             <div class=" row sub_table-bottom">
                                 <div class="row sub_table-button">
-                                <div class="col-8"><p>Messages: <span id="message"></span></p></div>
+                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <input type="submit" name="submit" value="আপডেট">
                                     <button onclick="clearSubTable(event)">পিছনে</button>
@@ -326,9 +269,8 @@
                             /* Ajex call for Update record*/
                             $('#saveDivision').submit(function (event) {
                                 event.preventDefault();
-                                let info = $('#saveDivision').serialize();
-                                // console.log(info);
-                                axios.patch('/district/update',info).then((response)=>{
+                                var info = $('#saveDivision').serialize();
+                                axios.patch('/areatype/update',info).then((response)=>{
                                     $('#message').html(response.data)
                                     mainTableInsert(window.currentPage);
                                 }).catch((error)=>{
@@ -336,7 +278,11 @@
                                     console.log(error)
                                 })
                             });
+
                         })
+                    }).catch((error)=>{
+                        console.log(error);
+                    })
                 });
             }).catch((error)=>{
                 $('#indexData').html("Ajex Call for load table data");
@@ -351,7 +297,7 @@
             return `<div class="row body_top">
                                 <div class="col-2"><h3>প্রশাসনিক</h3></div>
                                 <div class="col-1 clone">:</div>
-                                <div class="col-8"><h3>জেলা</h3></div>
+                                <div class="col-8"><h3>বিভাগ</h3></div>
                             </div>`
         }
 
@@ -359,43 +305,30 @@
                     @ This function return imput form Field
             ************************************************************ --}}
         function inputFormField() {
-            axios.get('/data/divisionList').then((response)=>{
-                let DistrictList = response.data;
-                var table = '';
-
-                table+= insertHeader();
-                table+= `<form id="addDivisionForm">
+            var table = '';
+            table+= insertHeader();
+            table+= `<form id="addDivisionForm">
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
-                                        <th>জেলা আই ডি</th>
+                                        <th>এলাকা ধরন আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictId" ></td>
+                                        <td><input type="text" name="AreaTypeId" ></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ</th>
+                                        <th>এলাকা ধরন কোড</th>
                                         <td class="clone">:</td>
-                                        <td><select name="DivisionCode" id="addDivisionList">`
-                DistrictList.forEach((data)=>{
-                    table+=`<option value="${data.DivisionCode}">${data.DivisionNameBangla}</option>`
-                });
-
-                table+=`</select></td>
+                                        <td><input type="text" name="AreaTypeCode"></td>
                                     </tr>
                                     <tr>
-                                        <th>জেলা কোড</th>
+                                        <th>এলাকা ধরন নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictCode"></td>
+                                        <td><input type="text" name="AreaTypeNameEnglish"></td>
                                     </tr>
                                     <tr>
-                                        <th>জেলা নাম (ইংলিশ)</th>
+                                        <th>এলাকা ধরন নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictNameEnglish"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>জেলা নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictNameBangla"></td>
+                                        <td><input type="text" name="AreaTypeNameBangla"></td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
@@ -426,26 +359,24 @@
                             <div>
                           </form>`;
 
-                /* Insert Data to main table*/
-                $('#sub_input').html(table);
+            /* Insert Data to main table*/
+            $('#sub_input').html(table);
 
 
-                /* Ajex call for add data to database*/
-                $('#addDivisionForm').submit(function (event) {
-                    event.preventDefault();
-                    var info = $('#addDivisionForm').serialize();
-                    axios.post('/district/create',info).then((response)=>{
-                        mainTableInsert('lastPage');
-                        inputFormField();
-                        $('#message').html(response.data);
+            /* Ajex call for add data to database*/
+            $('#addDivisionForm').submit(function (event) {
+                event.preventDefault();
+                var info = $('#addDivisionForm').serialize();
+                axios.post('/areatype/create',info).then((response)=>{
+                    mainTableInsert('lastPage');
+                    inputFormField();
+                    $('#message').html(response.data);
 
-                    }).catch((error)=>{
-                        $('#message').html(error);
-                        console.log(error)
-                    })
+                }).catch((error)=>{
+                    $('#message').html(error);
+                    console.log(error)
                 })
             })
-
         }
 
         function clearSubTable(e) {
@@ -453,10 +384,7 @@
             $('#sub_input').html('');
         }
 
-        function loadWindowsData(response) {
-            window.divisionList = response.data['DivisionName'];
-        }
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 @endpush
+

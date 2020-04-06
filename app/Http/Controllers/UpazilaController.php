@@ -128,8 +128,7 @@ class UpazilaController extends Controller
             'RecordVersion'=>'required',
         ]);
 
-        $response = DB::table('ada_upazila
-        ')
+        $response = DB::table('ada_upazila')
             ->where('UpazilaCode', request()->UpazilaCode)
             ->update([
                 'UpazilaId'=>request()->UpazilaId,

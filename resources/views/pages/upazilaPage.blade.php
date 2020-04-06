@@ -42,11 +42,6 @@
     *************************************************************** --}}
     <div id="sub_input"></div>
 
-    <div id="test" style="background-color: white;padding: 20px;margin: 5px">
-        <ul id="testShow"></ul>
-        <button id="testBtn">Click Me</button>
-
-    </div>
 
 @endsection
 
@@ -55,29 +50,6 @@
     <script src="{{asset('js/pagination.js')}}"></script>
     <script>
         $(document).ready(function () {
-
-            $('#testBtn').click(function () {
-                var info= ['Data 1','Data 2','Data 3'];
-                var anotherInfo= 'Another Informaion';
-
-                testFunc(info,anotherInfo)
-            })
-
-            function testFunc(info,anotherInfo){
-
-                axios.get('test/show',{
-                    params:{
-                        name:{firstName:'Rabbial',lastName:'Anower'},
-                    }
-                }).then(response => {
-                    console.log(response.data)
-                    // var table = '';
-                    // response.data.forEach(data =>{
-                    //     table+= `<li>${data}</li>`
-                    // });
-                    // $('#testShow').html(table)
-                })
-            }
 
             loadPagination();
 
@@ -105,7 +77,6 @@
                 window.DivisionKey = 0;
                 window.DistrictKey = 0;
             }
-            console.log(window.DivisionKey);
             let currentPage=0;
             let value = 0;
             axios.get('/upazila/'+currentPage+'/'+value,{
@@ -146,8 +117,6 @@
         function mainTableInsert(currentPage=0,value=0){
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-
-            window.DistrictKey = 0;
             axios.get('/upazila/'+currentPage+'/'+value,{
                 params:{
                     filterKey:{
@@ -157,7 +126,7 @@
                 }
             }).then((response)=>{
 
-                console.log(response.data)
+                // console.log(response.data)
                 filterDistrict(response);
 
 
@@ -376,8 +345,8 @@
                                     <select id='dist_filter-button' name="division" onchange="loadPagination({'DistrictKey':this.value})">`;
                                     table+= `<option value="0">জেলা</option>\n`;
 
-                                        divisionName.forEach((data)=>{
-                                    table+= `<option value="${data}">${data}</option>\n`
+                                        info.forEach((data)=>{
+                                    table+= `<option value="${data.DistrictNameBangla}">${data.DistrictNameBangla}</option>\n`
                                         }) ;
 
                                     table+= `<option value="0">All</option>
@@ -451,7 +420,7 @@
                             <div class="row sub_table-body">
                                 <table>
                                 <tr>
-                                        <th>District কোড</th>
+                                        <th>বিভাগ</th>
                                         <td class="clone">:</td>
                                         <td>
 
@@ -463,7 +432,7 @@
                                     table+=`</select></td></tr>`;
 
                         table +=`<tr>
-                                        <th>District কোড</th>
+                                        <th>জেলা</th>
                                         <td class="clone">:</td>
                                         <td>
                                             <select name="DistrictCode" id="addDistrictList">

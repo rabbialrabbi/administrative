@@ -56,166 +56,26 @@
             <div class="col-8"><h3>এলাকা</h3></div>
         </div>
 
+        <component :is="currentComponent" v-if="currentComponent" v-bind="loadProps"></component>
 
 
-        <div v-if="isAreaView">
-            <div class="row sub_table-body">
-                <table v-for="area in subTableList" v-model="areaDetails=area">
-                    <tr>
-                        <th>এলাকা ধরন আই ডি</th>
-                        <td class="clone">:</td>
-                        <td>{{area.AreaTypeId}}</td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন কোড</th>
-                        <td class="clone">:</td>
-                        <td>{{area.AreaTypeCode}}</td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন নাম (ইংলিশ)</th>
-                        <td class="clone">:</td>
-                        <td>{{area.AreaTypeNameEnglish}}</td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন নাম (বাংলা)</th>
-                        <td class="clone">:</td>
-                        <td>{{area.AreaTypeNameBangla}}</td>
-                    </tr>
-                    <tr>
-                        <th>নোট</th>
-                        <td class="clone">:</td>
-                        <td>{{area.Note}}</td>
-                    </tr>
-                    <tr>
-                        <th>রেকর্ড স্ট্যাটাস</th>
-                        <td class="clone">:</td>
-                        <td>{{area.RecordStatus}}</td>
-                    </tr>
-                    <tr>
-                        <th>রেকর্ড ভার্সন</th>
-                        <td class="clone">:</td>
-                        <td>{{area.RecordVersion}}</td>
-                    </tr>
+<!--        <area-view-->
+<!--            :showCondition="isAreaView"-->
+<!--            :areaDetails="areaDetails"-->
+<!--            :loadAreaEdit="loadAreaEdit"-->
+<!--        v-bind="test">-->
+<!--        </area-view>-->
 
-                </table>
-            </div>
-            <div class=" row sub_table-bottom">
-                <div class="row sub_table-button">
-                    <div class="col-8"><p>Message: <span id="message"></span></p></div>
-                    <div class="col-4">
-                        <button id="editDivision" @click="loadAreaEdit()">এডিট</button>
-                        <button id="deleteDivision" key=${AreaType[0].AreaTypeCode}>ডিলিট</button></div>
-                </div>
-            </div>
-        </div>
+<!--        <area-add-->
+<!--            :mainTable="mainTable">-->
+<!--        </area-add>-->
 
-        <div v-if="isAreaAdd">
-            <form @submit.prevent="addArea">
-                <div class="row sub_table-body">
-                    <table>
-                        <tr>
-                            <th>এলাকা ধরন আই ডি</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.AreaTypeId"></td>
-                        </tr>
-                        <tr>
-                            <th>এলাকা ধরন কোড</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.AreaTypeCode"></td>
-                        </tr>
-                        <tr>
-                            <th>এলাকা ধরন নাম (ইংলিশ)</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.AreaTypeNameEnglish"></td>
-                        </tr>
-                        <tr>
-                            <th>এলাকা ধরন নাম (বাংলা)</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.AreaTypeNameBangla"></td>
-                        </tr>
-                        <tr>
-                            <th>নোট</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.Note"></td>
-                        </tr>
-                        <tr>
-                            <th>রেকর্ড স্ট্যাটাস</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.RecordStatus"></td>
-                        </tr>
-                        <tr>
-                            <th>রেকর্ড ভার্সন</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" v-model="areaDataToInsert.RecordVersion"></td>
-                        </tr>
-                    </table>
-
-                </div>
-                <div class=" row sub_table-bottom">
-                    <div class="row sub_table-button">
-                        <div class="col-8"><p>Messages: {{notify}}</p></div>
-                        <div class="col-4">
-                            <input type="submit" value="অ্যাড">
-                            <button onclick="clearSubTable(event)">পিছনে</button>
-                        </div>
-                    </div>
-                    </div>
-            </form>
-        </div>
-
-        <div v-if="isAreaEdit">
-            <form id="saveDivision" action="">
-                <div class="row sub_table-body">
-                    <table>
-                        <tr>
-                            <th>এলাকা ধরন আই ডি</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="AreaTypeId" :value="areaDetails.AreaTypeId"></td>
-                        </tr>
-                        <tr>
-                            <th>এলাকা ধরন কোড</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="AreaTypeCode" :value="areaDetails.AreaTypeCode"></td>
-                        </tr>
-                        <tr>
-                            <th>এলাকা ধরন নাম (ইংলিশ)</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="AreaTypeNameEnglish" :value="areaDetails.AreaTypeNameEnglish"></td>
-                        </tr>
-                        <tr>
-                            <th>এলাকা ধরন নাম (বাংলা)</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="AreaTypeNameBangla" :value="areaDetails.AreaTypeNameBangla"></td>
-                        </tr>
-                        <tr>
-                            <th>নোট</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="Note" :value="areaDetails.Note"></td>
-                        </tr>
-                        <tr>
-                            <th>রেকর্ড স্ট্যাটাস</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="RecordStatus" :value="areaDetails.RecordStatus"></td>
-                        </tr>
-                        <tr>
-                            <th>রেকর্ড ভার্সন</th>
-                            <td class="clone">:</td>
-                            <td><input type="text" name="RecordVersion" :value="areaDetails.RecordVersion"></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class=" row sub_table-bottom">
-                    <div class="row sub_table-button">
-                        <div class="col-8"><p>Message: <span></span></p></div>
-                        <div class="col-4">
-                            <input type="submit" name="submit" value="আপডেট">
-                            <button onclick="clearSubTable(event)">পিছনে</button>
-                        </div>
-                    </div>
-                    </div>
-            </form>
-        </div>
-
+<!--        <area-edit-->
+<!--            :showCondition="isAreaEdit"-->
+<!--            :areaDetails="areaDetails"-->
+<!--            :mainTable="mainTable"-->
+<!--            :loadSubTable="loadSubTable">-->
+<!--        </area-edit>-->
 
     </div>
 </div>
@@ -223,12 +83,16 @@
 
 <script>
     import $ from 'jquery'
-    import areaView from "./body/areaView";
     import paginator from "../resource/pagination";
+    import areaView from "./body/areaView";
+    import areaAdd from "./body/areaAdd";
+    import areaEdit from "./body/areaEdit";
+
     export default {
         data(){
             return {
                 i:[],
+                currentComponent:false,
                 areaList:'',
                 isAreaView:false,
                 isAreaAdd:false,
@@ -236,20 +100,34 @@
                 subTableList:'',
                 isSubTableView:false,
                 areaDetails:'',
-                areaDataToInsert:{
-                    AreaTypeId:'',
-                    AreaTypeCode:'',
-                    AreaTypeNameEnglish:'',
-                    AreaTypeNameBangla:'',
-                    Note:'',
-                    RecordStatus:'',
-                    RecordVersion:'',
-                },
                 notify:''
             }
         },
         components:{
-            areaView:areaView
+            areaView:areaView,
+            areaAdd:areaAdd,
+            areaEdit:areaEdit
+        },
+
+        computed:{
+          loadProps(){
+              if(this.currentComponent === 'area-add'){
+                  return{
+                      mainTable:this.mainTable
+                  }
+              }else if(this.currentComponent === 'area-view'){
+                  return {
+                        areaDetails:this.areaDetails,
+                        loadAreaEdit:this.loadAreaEdit,
+                  }
+              }else if(this.currentComponent === 'area-edit'){
+                  return {
+                      areaDetails:this.areaDetails,
+                      mainTable:this.mainTable,
+                      loadSubTable:this.loadSubTable
+                  }
+              }
+          }
         },
         created() {
             this.mainTable()
@@ -262,34 +140,24 @@
                 })
             },
             loadSubTable(key){
+                this.currentComponent = 'area-view'
                 this.isSubTableView = true
-                this.isAreaAdd = false
-                this.isAreaEdit=false
-                this.isAreaView = true
                 axios.get('/areatype/show/'+key).then((response)=>{
-                    this.subTableList = response.data
+                    this.areaDetails = response.data[0]
                 })
             },
             loadAreaInput(){
                 this.isSubTableView = true
-                this.isAreaView = false
-                this.isAreaEdit=false
-                this.isAreaAdd = true
+                this.currentComponent = 'area-add'
             },
             loadAreaEdit(){
                 this.isSubTableView = true
-                this.isAreaView = false
-                this.isAreaAdd = false
-                this.isAreaEdit=true
+                this.currentComponent= 'area-edit'
             },
-            addArea(event){
-                var info = this.areaDataToInsert
-                axios.post('/areatype/create',info).then((response)=>{
-                    this.notify = response.data
-                    info.AreaTypeId = info.AreaTypeCode = info.AreaTypeNameBangla = info.AreaTypeNameEnglish = info.Note = info.RecordStatus = info.RecordVersion = ''
-                    this.mainTable()
-                })
+            hideSubTable(){
+                this.isSubTableView = false
             }
+
         },
     }
 </script>

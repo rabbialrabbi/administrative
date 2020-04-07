@@ -14,25 +14,18 @@
 
 <div id="app" class="container-fluid">
 
-    {{--***************************
-                @ Header Part
-    ***************************** --}}
-<admin-head></admin-head>
 
-    {{--***************************
-                @ SideBar Panel
-    ***************************** --}}
+    <admin-head></admin-head>
+
     <div class="row">
+
         <admin-sidebar></admin-sidebar>
-    <div class="col-10 body">
-        <admin-body></admin-body>
-    </div>
-    </div>
 
+        <div class="col-10 body">
+            <admin-body></admin-body>
+        </div>
 
-        {{--***************************
-                @ Table Body
-        ***************************** --}}
+    </div>
 
 
 </div>

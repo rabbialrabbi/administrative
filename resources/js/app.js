@@ -23,7 +23,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
- * the pages. Then, you may begin adding components to this application
+ * the pages. Then, you may begin adding componen ts to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import adminHead from './components/layout/header'

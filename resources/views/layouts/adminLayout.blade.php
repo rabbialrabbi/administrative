@@ -50,7 +50,7 @@
                 <a href="/division"><p>ড্যশবোর্ড (Division)</p></a>
                 <a href="/district"><p>পরামর্শ (District)</p></a>
                 <a href="/upazila"><p>ফিডব্যাক সার্ভিস (Upazila)</p></a>
-                <a href="#"><p>এসএএও</p></a>
+                <a href="/areatype"><p>এসএএও (Area Type)</p></a>
                 <a href="#"><p>সেটিংস</p></a>
                 <a href="#"><p>মোবাইল অ্যাপ</p></a>
                 <a href="#"><p>সাহায্য</p></a>

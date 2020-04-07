@@ -1944,6 +1944,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _resource_pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../resource/pagination */ "./resources/js/components/resource/pagination.vue");
+/* harmony import */ var _body_areaView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./body/areaView */ "./resources/js/components/layout/body/areaView.vue");
+/* harmony import */ var _body_areaAdd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./body/areaAdd */ "./resources/js/components/layout/body/areaAdd.vue");
+/* harmony import */ var _body_areaEdit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./body/areaEdit */ "./resources/js/components/layout/body/areaEdit.vue");
 //
 //
 //
@@ -2027,150 +2030,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       i: [],
+      currentComponent: false,
       areaList: '',
       isAreaView: false,
       isAreaAdd: false,
@@ -2178,17 +2047,33 @@ __webpack_require__.r(__webpack_exports__);
       subTableList: '',
       isSubTableView: false,
       areaDetails: '',
-      areaDataToInsert: {
-        AreaTypeId: '',
-        AreaTypeCode: '',
-        AreaTypeNameEnglish: '',
-        AreaTypeNameBangla: '',
-        Note: '',
-        RecordStatus: '',
-        RecordVersion: ''
-      },
       notify: ''
     };
+  },
+  components: {
+    areaView: _body_areaView__WEBPACK_IMPORTED_MODULE_2__["default"],
+    areaAdd: _body_areaAdd__WEBPACK_IMPORTED_MODULE_3__["default"],
+    areaEdit: _body_areaEdit__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  computed: {
+    loadProps: function loadProps() {
+      if (this.currentComponent === 'area-add') {
+        return {
+          mainTable: this.mainTable
+        };
+      } else if (this.currentComponent === 'area-view') {
+        return {
+          areaDetails: this.areaDetails,
+          loadAreaEdit: this.loadAreaEdit
+        };
+      } else if (this.currentComponent === 'area-edit') {
+        return {
+          areaDetails: this.areaDetails,
+          mainTable: this.mainTable,
+          loadSubTable: this.loadSubTable
+        };
+      }
+    }
   },
   created: function created() {
     this.mainTable();
@@ -2204,37 +2089,291 @@ __webpack_require__.r(__webpack_exports__);
     loadSubTable: function loadSubTable(key) {
       var _this2 = this;
 
+      this.currentComponent = 'area-view';
       this.isSubTableView = true;
-      this.isAreaAdd = false;
-      this.isAreaEdit = false;
-      this.isAreaView = true;
       axios.get('/areatype/show/' + key).then(function (response) {
-        _this2.subTableList = response.data;
+        _this2.areaDetails = response.data[0];
       });
     },
     loadAreaInput: function loadAreaInput() {
       this.isSubTableView = true;
-      this.isAreaView = false;
-      this.isAreaEdit = false;
-      this.isAreaAdd = true;
+      this.currentComponent = 'area-add';
     },
     loadAreaEdit: function loadAreaEdit() {
       this.isSubTableView = true;
-      this.isAreaView = false;
-      this.isAreaAdd = false;
-      this.isAreaEdit = true;
+      this.currentComponent = 'area-edit';
     },
+    hideSubTable: function hideSubTable() {
+      this.isSubTableView = false;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaAdd.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/body/areaAdd.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var mainTable;
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    mainTable: Function
+  },
+  data: function data() {
+    return {
+      notify: '',
+      areaDataToInsert: {
+        AreaTypeId: '',
+        AreaTypeCode: '',
+        AreaTypeNameEnglish: '',
+        AreaTypeNameBangla: '',
+        Note: '',
+        RecordStatus: '',
+        RecordVersion: ''
+      }
+    };
+  },
+  methods: {
     addArea: function addArea(event) {
-      var _this3 = this;
+      var _this = this;
 
       var info = this.areaDataToInsert;
       axios.post('/areatype/create', info).then(function (response) {
-        _this3.notify = response.data;
+        _this.notify = response.data;
         info.AreaTypeId = info.AreaTypeCode = info.AreaTypeNameBangla = info.AreaTypeNameEnglish = info.Note = info.RecordStatus = info.RecordVersion = '';
 
-        _this3.mainTable();
+        _this.mainTable();
       });
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaEdit.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/body/areaEdit.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      notify: ''
+    };
+  },
+  props: {
+    areaDetails: {},
+    mainTable: Function,
+    loadSubTable: Function
+  },
+  methods: {
+    editSubmit: function editSubmit() {
+      var _this = this;
+
+      var info = this.areaDetails;
+      axios.patch('/areatype/update', info).then(function (response) {
+        _this.notify = response.data;
+
+        _this.mainTable();
+      });
+    },
+    loadAreaView: function loadAreaView() {
+      this.loadSubTable(this.areaDetails.AreaTypeCode);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaView.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/body/areaView.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    areaDetails: {
+      "default": {}
+    },
+    loadAreaEdit: Function
   }
 });
 
@@ -37909,508 +38048,26 @@ var render = function() {
     ]),
     _vm._v(" "),
     _vm.isSubTableView
-      ? _c("div", { attrs: { id: "sub_input" } }, [
-          _vm._m(3),
-          _vm._v(" "),
-          _vm.isAreaView
-            ? _c("div", [
-                _c(
-                  "div",
-                  { staticClass: "row sub_table-body" },
-                  _vm._l(_vm.subTableList, function(area) {
-                    return _c(
-                      "table",
-                      {
-                        model: {
-                          value: (_vm.areaDetails = area),
-                          callback: function($$v) {
-                            _vm.areaDetails = area = $$v
-                          },
-                          expression: "areaDetails=area"
-                        }
-                      },
-                      [
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.AreaTypeId))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন কোড")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.AreaTypeCode))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.AreaTypeNameEnglish))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.AreaTypeNameBangla))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("নোট")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.Note))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.RecordStatus))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("রেকর্ড ভার্সন")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(area.RecordVersion))])
-                        ])
-                      ]
-                    )
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: " row sub_table-bottom" }, [
-                  _c("div", { staticClass: "row sub_table-button" }, [
-                    _vm._m(4),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-4" }, [
-                      _c(
-                        "button",
-                        {
-                          attrs: { id: "editDivision" },
-                          on: {
-                            click: function($event) {
-                              return _vm.loadAreaEdit()
-                            }
-                          }
-                        },
-                        [_vm._v("এডিট")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          key: "${AreaType[0].AreaTypeCode}",
-                          attrs: { id: "deleteDivision" }
-                        },
-                        [_vm._v("ডিলিট")]
-                      )
-                    ])
-                  ])
-                ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.isAreaAdd
-            ? _c("div", [
-                _c(
-                  "form",
-                  {
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.addArea($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "row sub_table-body" }, [
-                      _c("table", [
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.areaDataToInsert.AreaTypeId,
-                                  expression: "areaDataToInsert.AreaTypeId"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.areaDataToInsert.AreaTypeId
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "AreaTypeId",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন কোড")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.areaDataToInsert.AreaTypeCode,
-                                  expression: "areaDataToInsert.AreaTypeCode"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.areaDataToInsert.AreaTypeCode
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "AreaTypeCode",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value:
-                                    _vm.areaDataToInsert.AreaTypeNameEnglish,
-                                  expression:
-                                    "areaDataToInsert.AreaTypeNameEnglish"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.areaDataToInsert.AreaTypeNameEnglish
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "AreaTypeNameEnglish",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value:
-                                    _vm.areaDataToInsert.AreaTypeNameBangla,
-                                  expression:
-                                    "areaDataToInsert.AreaTypeNameBangla"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.areaDataToInsert.AreaTypeNameBangla
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "AreaTypeNameBangla",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("নোট")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.areaDataToInsert.Note,
-                                  expression: "areaDataToInsert.Note"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: { value: _vm.areaDataToInsert.Note },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "Note",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.areaDataToInsert.RecordStatus,
-                                  expression: "areaDataToInsert.RecordStatus"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.areaDataToInsert.RecordStatus
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "RecordStatus",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("রেকর্ড ভার্সন")]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.areaDataToInsert.RecordVersion,
-                                  expression: "areaDataToInsert.RecordVersion"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.areaDataToInsert.RecordVersion
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.areaDataToInsert,
-                                    "RecordVersion",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: " row sub_table-bottom" }, [
-                      _c("div", { staticClass: "row sub_table-button" }, [
-                        _c("div", { staticClass: "col-8" }, [
-                          _c("p", [_vm._v("Messages: " + _vm._s(_vm.notify))])
-                        ]),
-                        _vm._v(" "),
-                        _vm._m(5)
-                      ])
-                    ])
-                  ]
+      ? _c(
+          "div",
+          { attrs: { id: "sub_input" } },
+          [
+            _vm._m(3),
+            _vm._v(" "),
+            _vm.currentComponent
+              ? _c(
+                  _vm.currentComponent,
+                  _vm._b(
+                    { tag: "component" },
+                    "component",
+                    _vm.loadProps,
+                    false
+                  )
                 )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.isAreaEdit
-            ? _c("div", [
-                _c("form", { attrs: { id: "saveDivision", action: "" } }, [
-                  _c("div", { staticClass: "row sub_table-body" }, [
-                    _c("table", [
-                      _c("tr", [
-                        _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: { type: "text", name: "AreaTypeId" },
-                            domProps: { value: _vm.areaDetails.AreaTypeId }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [_vm._v("এলাকা ধরন কোড")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: { type: "text", name: "AreaTypeCode" },
-                            domProps: { value: _vm.areaDetails.AreaTypeCode }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: {
-                              type: "text",
-                              name: "AreaTypeNameEnglish"
-                            },
-                            domProps: {
-                              value: _vm.areaDetails.AreaTypeNameEnglish
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: { type: "text", name: "AreaTypeNameBangla" },
-                            domProps: {
-                              value: _vm.areaDetails.AreaTypeNameBangla
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [_vm._v("নোট")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: { type: "text", name: "Note" },
-                            domProps: { value: _vm.areaDetails.Note }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: { type: "text", name: "RecordStatus" },
-                            domProps: { value: _vm.areaDetails.RecordStatus }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [_vm._v("রেকর্ড ভার্সন")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("input", {
-                            attrs: { type: "text", name: "RecordVersion" },
-                            domProps: { value: _vm.areaDetails.RecordVersion }
-                          })
-                        ])
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(6)
-                ])
-              ])
-            : _vm._e()
-        ])
+              : _vm._e()
+          ],
+          1
+        )
       : _vm._e()
   ])
 }
@@ -38478,15 +38135,290 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "col-8" }, [_c("h3", [_vm._v("এলাকা")])])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-8" }, [
-      _c("p", [_vm._v("Message: "), _c("span", { attrs: { id: "message" } })])
-    ])
-  },
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaAdd.vue?vue&type=template&id=036db831&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/body/areaAdd.vue?vue&type=template&id=036db831&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "form",
+      {
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.addArea($event)
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "row sub_table-body" }, [
+          _c("table", [
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.AreaTypeId,
+                      expression: "areaDataToInsert.AreaTypeId"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.AreaTypeId },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "AreaTypeId",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন কোড")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.AreaTypeCode,
+                      expression: "areaDataToInsert.AreaTypeCode"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.AreaTypeCode },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "AreaTypeCode",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.AreaTypeNameEnglish,
+                      expression: "areaDataToInsert.AreaTypeNameEnglish"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.AreaTypeNameEnglish },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "AreaTypeNameEnglish",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.AreaTypeNameBangla,
+                      expression: "areaDataToInsert.AreaTypeNameBangla"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.AreaTypeNameBangla },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "AreaTypeNameBangla",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("নোট")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.Note,
+                      expression: "areaDataToInsert.Note"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.Note },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "Note",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.RecordStatus,
+                      expression: "areaDataToInsert.RecordStatus"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.RecordStatus },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "RecordStatus",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("রেকর্ড ভার্সন")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDataToInsert.RecordVersion,
+                      expression: "areaDataToInsert.RecordVersion"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.areaDataToInsert.RecordVersion },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDataToInsert,
+                        "RecordVersion",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: " row sub_table-bottom" }, [
+          _c("div", { staticClass: "row sub_table-button" }, [
+            _c("div", { staticClass: "col-8" }, [
+              _c("p", [_vm._v("Messages: " + _vm._s(_vm.notify))])
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ])
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -38498,27 +38430,395 @@ var staticRenderFns = [
         _vm._v("পিছনে")
       ])
     ])
-  },
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaEdit.vue?vue&type=template&id=160ff52a&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/body/areaEdit.vue?vue&type=template&id=160ff52a&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "form",
+      {
+        attrs: { id: "saveDivision" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.editSubmit($event)
+          }
+        }
+      },
+      [
+        _c("div", { staticClass: "row sub_table-body" }, [
+          _c("table", [
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  attrs: { type: "text", name: "AreaTypeId" },
+                  domProps: { value: _vm.areaDetails.AreaTypeId }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন কোড")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDetails.AreaTypeCode,
+                      expression: "areaDetails.AreaTypeCode"
+                    }
+                  ],
+                  attrs: { type: "text", name: "AreaTypeCode" },
+                  domProps: { value: _vm.areaDetails.AreaTypeCode },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDetails,
+                        "AreaTypeCode",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDetails.AreaTypeNameEnglish,
+                      expression: "areaDetails.AreaTypeNameEnglish"
+                    }
+                  ],
+                  attrs: { type: "text", name: "AreaTypeNameEnglish" },
+                  domProps: { value: _vm.areaDetails.AreaTypeNameEnglish },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDetails,
+                        "AreaTypeNameEnglish",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDetails.AreaTypeNameBangla,
+                      expression: "areaDetails.AreaTypeNameBangla"
+                    }
+                  ],
+                  attrs: { type: "text", name: "AreaTypeNameBangla" },
+                  domProps: { value: _vm.areaDetails.AreaTypeNameBangla },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDetails,
+                        "AreaTypeNameBangla",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("নোট")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDetails.Note,
+                      expression: "areaDetails.Note"
+                    }
+                  ],
+                  attrs: { type: "text", name: "Note" },
+                  domProps: { value: _vm.areaDetails.Note },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.areaDetails, "Note", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDetails.RecordStatus,
+                      expression: "areaDetails.RecordStatus"
+                    }
+                  ],
+                  attrs: { type: "text", name: "RecordStatus" },
+                  domProps: { value: _vm.areaDetails.RecordStatus },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDetails,
+                        "RecordStatus",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("রেকর্ড ভার্সন")]),
+              _vm._v(" "),
+              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.areaDetails.RecordVersion,
+                      expression: "areaDetails.RecordVersion"
+                    }
+                  ],
+                  attrs: { type: "text", name: "RecordVersion" },
+                  domProps: { value: _vm.areaDetails.RecordVersion },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.areaDetails,
+                        "RecordVersion",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: " row sub_table-bottom" }, [
+          _c("div", { staticClass: "row sub_table-button" }, [
+            _c("div", { staticClass: "col-8" }, [
+              _c("p", [_vm._v("Message: " + _vm._s(_vm.notify))])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-4" }, [
+              _c("input", {
+                attrs: { type: "submit", name: "submit", value: "আপডেট" }
+              }),
+              _vm._v(" "),
+              _c("button", { on: { click: _vm.loadAreaView } }, [
+                _vm._v("পিছনে")
+              ])
+            ])
+          ])
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaView.vue?vue&type=template&id=044c0776&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/body/areaView.vue?vue&type=template&id=044c0776&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row sub_table-body" }, [
+      _c("table", [
+        _c("tr", [
+          _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeId))])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th", [_vm._v("এলাকা ধরন কোড")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeCode))])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeNameEnglish))])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeNameBangla))])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th", [_vm._v("নোট")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.Note))])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.RecordStatus))])
+        ]),
+        _vm._v(" "),
+        _c("tr", [
+          _c("th", [_vm._v("রেকর্ড ভার্সন")]),
+          _vm._v(" "),
+          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.areaDetails.RecordVersion))])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: " row sub_table-bottom" }, [
+      _c("div", { staticClass: "row sub_table-button" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4" }, [
+          _c(
+            "button",
+            {
+              attrs: { id: "editDivision" },
+              on: {
+                click: function($event) {
+                  return _vm.loadAreaEdit()
+                }
+              }
+            },
+            [_vm._v("এডিট")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              key: "${AreaType[0].AreaTypeCode}",
+              attrs: { id: "deleteDivision" }
+            },
+            [_vm._v("ডিলিট")]
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: " row sub_table-bottom" }, [
-      _c("div", { staticClass: "row sub_table-button" }, [
-        _c("div", { staticClass: "col-8" }, [
-          _c("p", [_vm._v("Message: "), _c("span")])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4" }, [
-          _c("input", {
-            attrs: { type: "submit", name: "submit", value: "আপডেট" }
-          }),
-          _vm._v(" "),
-          _c("button", { attrs: { onclick: "clearSubTable(event)" } }, [
-            _vm._v("পিছনে")
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "col-8" }, [
+      _c("p", [_vm._v("Message: "), _c("span", { attrs: { id: "message" } })])
     ])
   }
 ]
@@ -50849,7 +51149,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
- * the pages. Then, you may begin adding components to this application
+ * the pages. Then, you may begin adding componen ts to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
@@ -51045,6 +51345,213 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_body_vue_vue_type_template_id_117130ec_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_body_vue_vue_type_template_id_117130ec_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaAdd.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/layout/body/areaAdd.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _areaAdd_vue_vue_type_template_id_036db831_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./areaAdd.vue?vue&type=template&id=036db831&scoped=true& */ "./resources/js/components/layout/body/areaAdd.vue?vue&type=template&id=036db831&scoped=true&");
+/* harmony import */ var _areaAdd_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./areaAdd.vue?vue&type=script&lang=js& */ "./resources/js/components/layout/body/areaAdd.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _areaAdd_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _areaAdd_vue_vue_type_template_id_036db831_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _areaAdd_vue_vue_type_template_id_036db831_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "036db831",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/layout/body/areaAdd.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaAdd.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/layout/body/areaAdd.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaAdd_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaAdd.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaAdd.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaAdd_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaAdd.vue?vue&type=template&id=036db831&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/layout/body/areaAdd.vue?vue&type=template&id=036db831&scoped=true& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaAdd_vue_vue_type_template_id_036db831_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaAdd.vue?vue&type=template&id=036db831&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaAdd.vue?vue&type=template&id=036db831&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaAdd_vue_vue_type_template_id_036db831_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaAdd_vue_vue_type_template_id_036db831_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaEdit.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/layout/body/areaEdit.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _areaEdit_vue_vue_type_template_id_160ff52a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./areaEdit.vue?vue&type=template&id=160ff52a&scoped=true& */ "./resources/js/components/layout/body/areaEdit.vue?vue&type=template&id=160ff52a&scoped=true&");
+/* harmony import */ var _areaEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./areaEdit.vue?vue&type=script&lang=js& */ "./resources/js/components/layout/body/areaEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _areaEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _areaEdit_vue_vue_type_template_id_160ff52a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _areaEdit_vue_vue_type_template_id_160ff52a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "160ff52a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/layout/body/areaEdit.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaEdit.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/layout/body/areaEdit.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaEdit.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaEdit.vue?vue&type=template&id=160ff52a&scoped=true&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/layout/body/areaEdit.vue?vue&type=template&id=160ff52a&scoped=true& ***!
+  \*****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaEdit_vue_vue_type_template_id_160ff52a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaEdit.vue?vue&type=template&id=160ff52a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaEdit.vue?vue&type=template&id=160ff52a&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaEdit_vue_vue_type_template_id_160ff52a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaEdit_vue_vue_type_template_id_160ff52a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaView.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/layout/body/areaView.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _areaView_vue_vue_type_template_id_044c0776_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./areaView.vue?vue&type=template&id=044c0776&scoped=true& */ "./resources/js/components/layout/body/areaView.vue?vue&type=template&id=044c0776&scoped=true&");
+/* harmony import */ var _areaView_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./areaView.vue?vue&type=script&lang=js& */ "./resources/js/components/layout/body/areaView.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _areaView_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _areaView_vue_vue_type_template_id_044c0776_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _areaView_vue_vue_type_template_id_044c0776_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "044c0776",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/layout/body/areaView.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaView.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/layout/body/areaView.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaView_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaView.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaView.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaView_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/body/areaView.vue?vue&type=template&id=044c0776&scoped=true&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/layout/body/areaView.vue?vue&type=template&id=044c0776&scoped=true& ***!
+  \*****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaView_vue_vue_type_template_id_044c0776_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaView.vue?vue&type=template&id=044c0776&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/body/areaView.vue?vue&type=template&id=044c0776&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaView_vue_vue_type_template_id_044c0776_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaView_vue_vue_type_template_id_044c0776_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

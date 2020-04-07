@@ -69,5 +69,6 @@
 
 
 @stack('customJs')
+
 </body>
 </html>

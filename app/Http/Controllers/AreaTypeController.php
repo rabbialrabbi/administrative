@@ -53,7 +53,7 @@ class AreaTypeController extends Controller
             'AccessDate' => now(),
         ]);
 
-        return 'Input Successful';
+        return $response;
     }
 
     public function update()

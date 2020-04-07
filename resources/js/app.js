@@ -26,7 +26,14 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  * the pages. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+import adminHead from './components/layout/header'
+import adminSidebar from './components/layout/sidebar'
+import adminBody from './components/layout/body'
 const app = new Vue({
     el: '#app',
+    components:{
+        adminHead:adminHead,
+        adminSidebar:adminSidebar,
+        adminBody:adminBody
+    }
 });

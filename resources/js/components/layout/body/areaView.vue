@@ -1,50 +1,22 @@
 <template>
     <div>
         <div class="row sub_table-body">
-            <table >
-                <tr>
-                    <th>এলাকা ধরন আই ডি</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.AreaTypeId}}</td>
-                </tr>
-                <tr>
-                    <th>এলাকা ধরন কোড</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.AreaTypeCode}}</td>
-                </tr>
-                <tr>
-                    <th>এলাকা ধরন নাম (ইংলিশ)</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.AreaTypeNameEnglish}}</td>
-                </tr>
-                <tr>
-                    <th>এলাকা ধরন নাম (বাংলা)</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.AreaTypeNameBangla}}</td>
-                </tr>
-                <tr>
-                    <th>নোট</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.Note}}</td>
-                </tr>
-                <tr>
-                    <th>রেকর্ড স্ট্যাটাস</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.RecordStatus}}</td>
-                </tr>
-                <tr>
-                    <th>রেকর্ড ভার্সন</th>
-                    <td class="clone">:</td>
-                    <td>{{areaDetails.RecordVersion}}</td>
-                </tr>
-            </table>
+            <area-subtable>
+                <td slot="id">{{areaDetails.AreaTypeId}}</td>
+                <td slot="code">{{areaDetails.AreaTypeCode}}</td>
+                <td slot="nameEnglish">{{areaDetails.AreaTypeNameEnglish}}</td>
+                <td slot="nameBangla">{{areaDetails.AreaTypeNameBangla}}</td>
+                <td slot="note">{{areaDetails.Note}}</td>
+                <td slot="status">{{areaDetails.RecordStatus}}</td>
+                <td slot="version">{{areaDetails.RecordVersion}}</td>
+            </area-subtable>
         </div>
         <div class=" row sub_table-bottom">
             <div class="row sub_table-button">
-                <div class="col-8"><p>Message: <span id="message"></span></p></div>
+                <div class="col-8"><p>Message: {{notify}}</p></div>
                 <div class="col-4">
                     <button id="editDivision" @click="loadAreaEdit()">এডিট</button>
-                    <button id="deleteDivision" key=${AreaType[0].AreaTypeCode}>ডিলিট</button></div>
+                    <button id="deleteDivision" @click="destory()">ডিলিট</button></div>
             </div>
         </div>
     </div>
@@ -52,12 +24,36 @@
 </template>
 
 <script>
+    import areaSubtable from "../template/areaSubtable";
     export default {
+        data(){
+            return{
+                notify:''
+            }
+        },
         props:{
             areaDetails:{
                 default:{}
             },
             loadAreaEdit:Function,
+            hideSubTable:Function,
+            mainTable:Function
+        },
+        components:{
+            areaSubtable:areaSubtable
+        },
+        methods:{
+            destory(){
+                if(confirm("Want To Delete the Data")){
+                    axios.delete('/areatype/'+this.areaDetails.AreaTypeCode).then((response)=>{
+                        this.mainTable();
+                        this.hideSubTable()
+                    })
+                }else{
+                    this.notify = "Cancel Delete"
+                }
+
+            }
         }
     }
 </script>

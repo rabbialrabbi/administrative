@@ -2013,23 +2013,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -2059,12 +2042,15 @@ __webpack_require__.r(__webpack_exports__);
     loadProps: function loadProps() {
       if (this.currentComponent === 'area-add') {
         return {
-          mainTable: this.mainTable
+          mainTable: this.mainTable,
+          hideSubTable: this.hideSubTable
         };
       } else if (this.currentComponent === 'area-view') {
         return {
           areaDetails: this.areaDetails,
-          loadAreaEdit: this.loadAreaEdit
+          loadAreaEdit: this.loadAreaEdit,
+          hideSubTable: this.hideSubTable,
+          mainTable: this.mainTable
         };
       } else if (this.currentComponent === 'area-edit') {
         return {
@@ -2120,6 +2106,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _template_areaSubtable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../template/areaSubtable */ "./resources/js/components/layout/template/areaSubtable.vue");
 //
 //
 //
@@ -2148,38 +2135,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var mainTable;
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    mainTable: Function
+    mainTable: Function,
+    hideSubTable: Function
   },
   data: function data() {
     return {
@@ -2194,6 +2154,9 @@ var mainTable;
         RecordVersion: ''
       }
     };
+  },
+  components: {
+    areaSubtable: _template_areaSubtable__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   methods: {
     addArea: function addArea(event) {
@@ -2221,6 +2184,7 @@ var mainTable;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _template_areaSubtable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../template/areaSubtable */ "./resources/js/components/layout/template/areaSubtable.vue");
 //
 //
 //
@@ -2250,37 +2214,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       notify: ''
     };
+  },
+  components: {
+    areaSubtable: _template_areaSubtable__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: {
     areaDetails: {},
@@ -2315,6 +2257,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _template_areaSubtable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../template/areaSubtable */ "./resources/js/components/layout/template/areaSubtable.vue");
 //
 //
 //
@@ -2340,40 +2283,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      notify: ''
+    };
+  },
   props: {
     areaDetails: {
       "default": {}
     },
-    loadAreaEdit: Function
+    loadAreaEdit: Function,
+    hideSubTable: Function,
+    mainTable: Function
+  },
+  components: {
+    areaSubtable: _template_areaSubtable__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  methods: {
+    destory: function destory() {
+      var _this = this;
+
+      if (confirm("Want To Delete the Data")) {
+        axios["delete"]('/areatype/' + this.areaDetails.AreaTypeCode).then(function (response) {
+          _this.mainTable();
+
+          _this.hideSubTable();
+        });
+      } else {
+        this.notify = "Cancel Delete";
+      }
+    }
   }
 });
 
@@ -2443,6 +2384,61 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/template/areaSubtable.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/template/areaSubtable.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "areaSubtable"
+});
 
 /***/ }),
 
@@ -38054,17 +38050,23 @@ var render = function() {
           [
             _vm._m(3),
             _vm._v(" "),
-            _vm.currentComponent
-              ? _c(
-                  _vm.currentComponent,
-                  _vm._b(
-                    { tag: "component" },
-                    "component",
-                    _vm.loadProps,
-                    false
-                  )
-                )
-              : _vm._e()
+            _c(
+              "keep-alive",
+              [
+                _vm.currentComponent
+                  ? _c(
+                      _vm.currentComponent,
+                      _vm._b(
+                        { tag: "component" },
+                        "component",
+                        _vm.loadProps,
+                        false
+                      )
+                    )
+                  : _vm._e()
+              ],
+              1
+            )
           ],
           1
         )
@@ -38170,14 +38172,12 @@ var render = function() {
         }
       },
       [
-        _c("div", { staticClass: "row sub_table-body" }, [
-          _c("table", [
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
-              _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+        _c(
+          "div",
+          { staticClass: "row sub_table-body" },
+          [
+            _c("area-subtable", [
+              _c("td", { attrs: { slot: "id" }, slot: "id" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38202,15 +38202,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন কোড")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "code" }, slot: "code" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38235,48 +38229,42 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.areaDataToInsert.AreaTypeNameEnglish,
-                      expression: "areaDataToInsert.AreaTypeNameEnglish"
-                    }
-                  ],
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.areaDataToInsert.AreaTypeNameEnglish },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _c(
+                "td",
+                { attrs: { slot: "nameEnglish" }, slot: "nameEnglish" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.areaDataToInsert.AreaTypeNameEnglish,
+                        expression: "areaDataToInsert.AreaTypeNameEnglish"
                       }
-                      _vm.$set(
-                        _vm.areaDataToInsert,
-                        "AreaTypeNameEnglish",
-                        $event.target.value
-                      )
+                    ],
+                    attrs: { type: "text" },
+                    domProps: {
+                      value: _vm.areaDataToInsert.AreaTypeNameEnglish
+                    },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.areaDataToInsert,
+                          "AreaTypeNameEnglish",
+                          $event.target.value
+                        )
+                      }
                     }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
+                  })
+                ]
+              ),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "nameBangla" }, slot: "nameBangla" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38301,15 +38289,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("নোট")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "note" }, slot: "note" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38334,15 +38316,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "status" }, slot: "status" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38367,15 +38343,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("রেকর্ড ভার্সন")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "version" }, slot: "version" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38402,8 +38372,9 @@ var render = function() {
                 })
               ])
             ])
-          ])
-        ]),
+          ],
+          1
+        ),
         _vm._v(" "),
         _c("div", { staticClass: " row sub_table-bottom" }, [
           _c("div", { staticClass: "row sub_table-button" }, [
@@ -38411,27 +38382,20 @@ var render = function() {
               _c("p", [_vm._v("Messages: " + _vm._s(_vm.notify))])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("div", { staticClass: "col-4" }, [
+              _c("input", { attrs: { type: "submit", value: "অ্যাড" } }),
+              _vm._v(" "),
+              _c("button", { on: { click: _vm.hideSubTable } }, [
+                _vm._v("পিছনে")
+              ])
+            ])
           ])
         ])
       ]
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-4" }, [
-      _c("input", { attrs: { type: "submit", value: "অ্যাড" } }),
-      _vm._v(" "),
-      _c("button", { attrs: { onclick: "clearSubTable(event)" } }, [
-        _vm._v("পিছনে")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -38466,27 +38430,19 @@ var render = function() {
         }
       },
       [
-        _c("div", { staticClass: "row sub_table-body" }, [
-          _c("table", [
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
-              _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+        _c(
+          "div",
+          { staticClass: "row sub_table-body" },
+          [
+            _c("area-subtable", [
+              _c("td", { attrs: { slot: "id" }, slot: "id" }, [
                 _c("input", {
                   attrs: { type: "text", name: "AreaTypeId" },
                   domProps: { value: _vm.areaDetails.AreaTypeId }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন কোড")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "code" }, slot: "code" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38511,48 +38467,40 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.areaDetails.AreaTypeNameEnglish,
-                      expression: "areaDetails.AreaTypeNameEnglish"
-                    }
-                  ],
-                  attrs: { type: "text", name: "AreaTypeNameEnglish" },
-                  domProps: { value: _vm.areaDetails.AreaTypeNameEnglish },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _c(
+                "td",
+                { attrs: { slot: "nameEnglish" }, slot: "nameEnglish" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.areaDetails.AreaTypeNameEnglish,
+                        expression: "areaDetails.AreaTypeNameEnglish"
                       }
-                      _vm.$set(
-                        _vm.areaDetails,
-                        "AreaTypeNameEnglish",
-                        $event.target.value
-                      )
+                    ],
+                    attrs: { type: "text", name: "AreaTypeNameEnglish" },
+                    domProps: { value: _vm.areaDetails.AreaTypeNameEnglish },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.areaDetails,
+                          "AreaTypeNameEnglish",
+                          $event.target.value
+                        )
+                      }
                     }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
+                  })
+                ]
+              ),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "nameBangla" }, slot: "nameBangla" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38577,15 +38525,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("নোট")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "note" }, slot: "note" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38606,15 +38548,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "status" }, slot: "status" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38639,15 +38575,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("রেকর্ড ভার্সন")]),
+              ]),
               _vm._v(" "),
-              _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-              _vm._v(" "),
-              _c("td", [
+              _c("td", { attrs: { slot: "version" }, slot: "version" }, [
                 _c("input", {
                   directives: [
                     {
@@ -38674,8 +38604,9 @@ var render = function() {
                 })
               ])
             ])
-          ])
-        ]),
+          ],
+          1
+        ),
         _vm._v(" "),
         _c("div", { staticClass: " row sub_table-bottom" }, [
           _c("div", { staticClass: "row sub_table-button" }, [
@@ -38721,69 +38652,48 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "row sub_table-body" }, [
-      _c("table", [
-        _c("tr", [
-          _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
+    _c(
+      "div",
+      { staticClass: "row sub_table-body" },
+      [
+        _c("area-subtable", [
+          _c("td", { attrs: { slot: "id" }, slot: "id" }, [
+            _vm._v(_vm._s(_vm.areaDetails.AreaTypeId))
+          ]),
           _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _c("td", { attrs: { slot: "code" }, slot: "code" }, [
+            _vm._v(_vm._s(_vm.areaDetails.AreaTypeCode))
+          ]),
           _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeId))])
-        ]),
-        _vm._v(" "),
-        _c("tr", [
-          _c("th", [_vm._v("এলাকা ধরন কোড")]),
+          _c("td", { attrs: { slot: "nameEnglish" }, slot: "nameEnglish" }, [
+            _vm._v(_vm._s(_vm.areaDetails.AreaTypeNameEnglish))
+          ]),
           _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _c("td", { attrs: { slot: "nameBangla" }, slot: "nameBangla" }, [
+            _vm._v(_vm._s(_vm.areaDetails.AreaTypeNameBangla))
+          ]),
           _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeCode))])
-        ]),
-        _vm._v(" "),
-        _c("tr", [
-          _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+          _c("td", { attrs: { slot: "note" }, slot: "note" }, [
+            _vm._v(_vm._s(_vm.areaDetails.Note))
+          ]),
           _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+          _c("td", { attrs: { slot: "status" }, slot: "status" }, [
+            _vm._v(_vm._s(_vm.areaDetails.RecordStatus))
+          ]),
           _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeNameEnglish))])
-        ]),
-        _vm._v(" "),
-        _c("tr", [
-          _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
-          _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.AreaTypeNameBangla))])
-        ]),
-        _vm._v(" "),
-        _c("tr", [
-          _c("th", [_vm._v("নোট")]),
-          _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.Note))])
-        ]),
-        _vm._v(" "),
-        _c("tr", [
-          _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
-          _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.RecordStatus))])
-        ]),
-        _vm._v(" "),
-        _c("tr", [
-          _c("th", [_vm._v("রেকর্ড ভার্সন")]),
-          _vm._v(" "),
-          _c("td", { staticClass: "clone" }, [_vm._v(":")]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.areaDetails.RecordVersion))])
+          _c("td", { attrs: { slot: "version" }, slot: "version" }, [
+            _vm._v(_vm._s(_vm.areaDetails.RecordVersion))
+          ])
         ])
-      ])
-    ]),
+      ],
+      1
+    ),
     _vm._v(" "),
     _c("div", { staticClass: " row sub_table-bottom" }, [
       _c("div", { staticClass: "row sub_table-button" }, [
-        _vm._m(0),
+        _c("div", { staticClass: "col-8" }, [
+          _c("p", [_vm._v("Message: " + _vm._s(_vm.notify))])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-4" }, [
           _c(
@@ -38802,8 +38712,12 @@ var render = function() {
           _c(
             "button",
             {
-              key: "${AreaType[0].AreaTypeCode}",
-              attrs: { id: "deleteDivision" }
+              attrs: { id: "deleteDivision" },
+              on: {
+                click: function($event) {
+                  return _vm.destory()
+                }
+              }
             },
             [_vm._v("ডিলিট")]
           )
@@ -38812,16 +38726,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-8" }, [
-      _c("p", [_vm._v("Message: "), _c("span", { attrs: { id: "message" } })])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -38953,6 +38858,114 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/template/areaSubtable.vue?vue&type=template&id=630087d6&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/layout/template/areaSubtable.vue?vue&type=template&id=630087d6&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("table", [
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("এলাকা ধরন আই ডি")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("id")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("এলাকা ধরন কোড")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("code")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("এলাকা ধরন নাম (ইংলিশ)")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("nameEnglish")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("এলাকা ধরন নাম (বাংলা)")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("nameBangla")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("নোট")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("note")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("রেকর্ড স্ট্যাটাস")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("status")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "tr",
+      [
+        _c("th", [_vm._v("রেকর্ড ভার্সন")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "clone" }, [_vm._v(":")]),
+        _vm._v(" "),
+        _vm._t("version")
+      ],
+      2
+    )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -51690,6 +51703,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_sidebar_vue_vue_type_template_id_69b89502_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_sidebar_vue_vue_type_template_id_69b89502_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/template/areaSubtable.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/layout/template/areaSubtable.vue ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _areaSubtable_vue_vue_type_template_id_630087d6_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./areaSubtable.vue?vue&type=template&id=630087d6&scoped=true& */ "./resources/js/components/layout/template/areaSubtable.vue?vue&type=template&id=630087d6&scoped=true&");
+/* harmony import */ var _areaSubtable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./areaSubtable.vue?vue&type=script&lang=js& */ "./resources/js/components/layout/template/areaSubtable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _areaSubtable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _areaSubtable_vue_vue_type_template_id_630087d6_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _areaSubtable_vue_vue_type_template_id_630087d6_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "630087d6",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/layout/template/areaSubtable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/template/areaSubtable.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/layout/template/areaSubtable.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaSubtable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaSubtable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/template/areaSubtable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_areaSubtable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/template/areaSubtable.vue?vue&type=template&id=630087d6&scoped=true&":
+/*!*************************************************************************************************************!*\
+  !*** ./resources/js/components/layout/template/areaSubtable.vue?vue&type=template&id=630087d6&scoped=true& ***!
+  \*************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaSubtable_vue_vue_type_template_id_630087d6_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./areaSubtable.vue?vue&type=template&id=630087d6&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/layout/template/areaSubtable.vue?vue&type=template&id=630087d6&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaSubtable_vue_vue_type_template_id_630087d6_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_areaSubtable_vue_vue_type_template_id_630087d6_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

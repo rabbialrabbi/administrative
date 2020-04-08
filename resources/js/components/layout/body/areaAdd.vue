@@ -2,43 +2,15 @@
     <div>
         <form @submit.prevent="addArea">
             <div class="row sub_table-body">
-                <table>
-                    <tr>
-                        <th>এলাকা ধরন আই ডি</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.AreaTypeId"></td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন কোড</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.AreaTypeCode"></td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন নাম (ইংলিশ)</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.AreaTypeNameEnglish"></td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন নাম (বাংলা)</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.AreaTypeNameBangla"></td>
-                    </tr>
-                    <tr>
-                        <th>নোট</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.Note"></td>
-                    </tr>
-                    <tr>
-                        <th>রেকর্ড স্ট্যাটাস</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.RecordStatus"></td>
-                    </tr>
-                    <tr>
-                        <th>রেকর্ড ভার্সন</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" v-model="areaDataToInsert.RecordVersion"></td>
-                    </tr>
-                </table>
+                <area-subtable>
+                    <td slot="id"><input type="text" v-model="areaDataToInsert.AreaTypeId"></td>
+                    <td slot="code"><input type="text" v-model="areaDataToInsert.AreaTypeCode"></td>
+                    <td slot="nameEnglish"><input type="text" v-model="areaDataToInsert.AreaTypeNameEnglish"></td>
+                    <td slot="nameBangla"><input type="text" v-model="areaDataToInsert.AreaTypeNameBangla"></td>
+                    <td slot="note"><input type="text" v-model="areaDataToInsert.Note"></td>
+                    <td slot="status"><input type="text" v-model="areaDataToInsert.RecordStatus"></td>
+                    <td slot="version"><input type="text" v-model="areaDataToInsert.RecordVersion"></td>
+                </area-subtable>
 
             </div>
             <div class=" row sub_table-bottom">
@@ -46,7 +18,7 @@
                     <div class="col-8"><p>Messages: {{notify}}</p></div>
                     <div class="col-4">
                         <input type="submit" value="অ্যাড">
-                        <button onclick="clearSubTable(event)">পিছনে</button>
+                        <button @click="hideSubTable">পিছনে</button>
                     </div>
                 </div>
             </div>
@@ -55,10 +27,11 @@
 </template>
 
 <script>
-    let mainTable;
+    import areaSubtable from "../template/areaSubtable";
     export default {
         props:{
             mainTable:Function,
+            hideSubTable:Function
         },
         data(){
             return{
@@ -73,6 +46,9 @@
                     RecordVersion:'',
                 },
             }
+        },
+        components:{
+          areaSubtable:areaSubtable
         },
         methods:{
             addArea(event){

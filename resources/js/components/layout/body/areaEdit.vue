@@ -2,43 +2,17 @@
     <div>
         <form id="saveDivision" @submit.prevent="editSubmit">
             <div class="row sub_table-body">
-                <table>
-                    <tr>
-                        <th>এলাকা ধরন আই ডি</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="AreaTypeId" :value="areaDetails.AreaTypeId"></td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন কোড</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="AreaTypeCode" v-model="areaDetails.AreaTypeCode"></td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন নাম (ইংলিশ)</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="AreaTypeNameEnglish" v-model="areaDetails.AreaTypeNameEnglish"></td>
-                    </tr>
-                    <tr>
-                        <th>এলাকা ধরন নাম (বাংলা)</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="AreaTypeNameBangla" v-model="areaDetails.AreaTypeNameBangla"></td>
-                    </tr>
-                    <tr>
-                        <th>নোট</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="Note" v-model="areaDetails.Note"></td>
-                    </tr>
-                    <tr>
-                        <th>রেকর্ড স্ট্যাটাস</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="RecordStatus" v-model="areaDetails.RecordStatus"></td>
-                    </tr>
-                    <tr>
-                        <th>রেকর্ড ভার্সন</th>
-                        <td class="clone">:</td>
-                        <td><input type="text" name="RecordVersion" v-model="areaDetails.RecordVersion"></td>
-                    </tr>
-                </table>
+
+                <area-subtable>
+                    <td slot="id"><input type="text" name="AreaTypeId" :value="areaDetails.AreaTypeId"></td>
+                    <td slot="code"><input type="text" name="AreaTypeCode" v-model="areaDetails.AreaTypeCode"></td>
+                    <td slot="nameEnglish"><input type="text" name="AreaTypeNameEnglish" v-model="areaDetails.AreaTypeNameEnglish"></td>
+                    <td slot="nameBangla"><input type="text" name="AreaTypeNameBangla" v-model="areaDetails.AreaTypeNameBangla"></td>
+                    <td slot="note"><input type="text" name="Note" v-model="areaDetails.Note"></td>
+                    <td slot="status"><input type="text" name="RecordStatus" v-model="areaDetails.RecordStatus"></td>
+                    <td slot="version"><input type="text" name="RecordVersion" v-model="areaDetails.RecordVersion"></td>
+                </area-subtable>
+
             </div>
             <div class=" row sub_table-bottom">
                 <div class="row sub_table-button">
@@ -54,11 +28,16 @@
 </template>
 
 <script>
+    import areaSubtable from "../template/areaSubtable";
+
     export default {
         data(){
             return{
                 notify:''
             }
+        },
+        components:{
+            areaSubtable:areaSubtable
         },
         props:{
             areaDetails:{},

@@ -56,26 +56,9 @@
             <div class="col-8"><h3>এলাকা</h3></div>
         </div>
 
+        <keep-alive>
         <component :is="currentComponent" v-if="currentComponent" v-bind="loadProps"></component>
-
-
-<!--        <area-view-->
-<!--            :showCondition="isAreaView"-->
-<!--            :areaDetails="areaDetails"-->
-<!--            :loadAreaEdit="loadAreaEdit"-->
-<!--        v-bind="test">-->
-<!--        </area-view>-->
-
-<!--        <area-add-->
-<!--            :mainTable="mainTable">-->
-<!--        </area-add>-->
-
-<!--        <area-edit-->
-<!--            :showCondition="isAreaEdit"-->
-<!--            :areaDetails="areaDetails"-->
-<!--            :mainTable="mainTable"-->
-<!--            :loadSubTable="loadSubTable">-->
-<!--        </area-edit>-->
+        </keep-alive>
 
     </div>
 </div>
@@ -113,12 +96,15 @@
           loadProps(){
               if(this.currentComponent === 'area-add'){
                   return{
-                      mainTable:this.mainTable
+                      mainTable:this.mainTable,
+                      hideSubTable: this.hideSubTable
                   }
               }else if(this.currentComponent === 'area-view'){
                   return {
                         areaDetails:this.areaDetails,
                         loadAreaEdit:this.loadAreaEdit,
+                        hideSubTable:this.hideSubTable,
+                      mainTable:this.mainTable
                   }
               }else if(this.currentComponent === 'area-edit'){
                   return {

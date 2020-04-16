@@ -2,97 +2,118 @@
 
 namespace App\Http\Controllers;
 
+use App\Converter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UpazilaController extends Controller
 {
+    protected $upazila='';
+    public function __construct(Converter $converter)
+    {
+        $this->upazila = $converter;
+    }
+    /**
+     * Receive Current page Number, DivisionNameBangla, DistrictNameBangla
+     * Return 10 of Table Data according to filter, Count, Division Name list, District Name list
+     * @param Request $request
+     * @return mixed
+     */
     public function index(Request $request)
     {
 
         $dataPerPage = 10;
-        $filterKey = json_decode($request->filterKey);
+        $filterKey = $this->upazila->convertJsonToColleciton($request->filterKey);
+        $condition = $this->upazila->convertToMultiArray($filterKey);
+
         $currentPage = $request->currentPage;
 
-        if($filterKey->DivisionNameBangla){
-            foreach($filterKey as $key=>$r){
-                if($r){
-                    $where[]= [$key,'=',$r];
+        if($condition && $currentPage !='lastPage'){
+                $fetchData = DB::table('ada_upazila')
+                    ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
+                    ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
+                    ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode');
+
+                $filterData = $fetchData->where($condition);
+                $total = $filterData->count();
+
+                $firstData = ($currentPage-1) * $dataPerPage;
+
+            /* Return Count for pagination With filter Condition */
+                $upazila['tableData'] = $filterData->orderBy('UpazilaId','asc')
+                    ->offset($firstData)
+                    ->limit($dataPerPage)
+                    ->get();
+
+             /* Return Count for pagination for filter Condition */
+                $upazila['count']= ceil($total/$dataPerPage);
+
+
+                if($filterKey->DivisionNameBangla){
+
+                  /* Return District Name List for filter Condition */
+                    $upazila['DistrictName']= DB::table('ada_upazila')
+                        ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
+                        ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
+                        ->select('ada_division.DivisionNameBangla','ada_district.DistrictNameBangla')
+                        ->where('DivisionNameBangla','=',$filterKey->DivisionNameBangla)->distinct()->get(['DistrictNameBangla']);
+                }else{
+                    /* Return District Name List */
+                    $upazila['DistrictName']= DB::table('ada_upazila')
+                        ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
+                        ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
+                        ->select('ada_division.DivisionNameBangla','ada_district.DistrictNameBangla')
+                        ->distinct()->get(['DistrictNameBangla']);
                 }
-            }
-
-            $filterData = DB::table('ada_upazila')
-                ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
-                ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
-                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')->where($where);
-            $total = $filterData->count();
-            $currentPage = $request->currentPage  ;
-            $firstData = $currentPage * $dataPerPage;
-            $district['tableData'] = $filterData
-                ->orderBy('UpazilaId','asc')
-                ->offset($firstData)
-                ->limit($dataPerPage)
-                ->get();
-
-            $district['count']= ceil($total/$dataPerPage);
 
         }else{
-            $q = DB::table('ada_upazila');
-            $total = $q->count();
-            $checkFraction = $total%$dataPerPage;
+                $q = DB::table('ada_upazila');
+                $total = $q->count();
+                $checkFraction = $total%$dataPerPage;
 
-            if($currentPage == 'lastPage'){
-                $currentPage = floor($total/$dataPerPage);
-                $firstData = $currentPage * $dataPerPage;
-                if($checkFraction){
-                    $dataPerPage = $checkFraction;
-                }
-            }else{
-                $currentPage = $currentPage -1 ;
-                $firstData = $currentPage * $dataPerPage;
-            }
-            $district['tableData'] = DB::table('ada_upazila')
-                ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
-                ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
-                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')
-                ->orderBy('DistrictId','asc')
-                ->offset($firstData)
-                ->limit($dataPerPage)
-                ->get();
+                if($currentPage == 'lastPage'){
+                    $currentPage = floor($total/$dataPerPage);
+                    $firstData = $currentPage * $dataPerPage;
+                        if($checkFraction){
+                            $dataPerPage = $checkFraction;
+                            }
+                    }else{
+                        $currentPage = $currentPage-1;
+                         $firstData = $currentPage * $dataPerPage;
+                        }
+                $totalData = DB::table('ada_upazila')
+                    ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
+                    ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
+                    ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode');
 
-            $district['count']= ceil($total/$dataPerPage);
+                $upazila['tableData'] = $totalData->orderBy('DistrictId','asc')
+                    ->offset($firstData)
+                    ->limit($dataPerPage)
+                    ->get();
+
+                $upazila['count']= ceil($total/$dataPerPage);
+                $upazila['DistrictName']= $totalData->select('DistrictNameBangla')->distinct()->get();
         }
 
-        $district['DivisionName'] = DB::table('ada_district')
+        $upazila['DivisionName'] = DB::table('ada_district')
             ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla')
-            ->groupBy('DivisionNameBangla')
-            ->pluck('DivisionNameBangla');
+            ->select('ada_division.DivisionCode', 'ada_division.DivisionNameBangla')
+            ->distinct()
+            ->get();
 
-        return $district;
+        return $upazila;
     }
 
-    public function filter($key)
+    public function show($id)
     {
-        $data =  DB::table('ada_district')
-            ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla')->where('DivisionNameBangla','=',$key)->get();
-        return $data;
+        $division = DB::table('ada_district')->where('DistrictId','=',$id)->get();
+
+        return $division;
     }
 
     public function add()
     {
-        $validation = request()->validate([
-            'UpazilaId'=>'required',
-            'DivisionCode'=>'required',
-            'DistrictCode'=>'required',
-            'UpazilaCode'=>'required',
-            'UpazilaNameEnglish'=>'required',
-            'UpazilaNameBangla'=>'required',
-            'Note'=>'required',
-            'RecordStatus'=>'required',
-            'RecordVersion'=>'required',
-        ]);
+        $validation = $this->validation();
 
         $response = DB::table('ada_upazila')->insert([
             'UpazilaId'=>request()->UpazilaId,
@@ -116,24 +137,13 @@ class UpazilaController extends Controller
 
     public function update()
     {
-        $validation = request()->validate([
-            'UpazilaId'=>'required',
-            'DivisionCode'=>'required',
-            'DistrictCode'=>'required',
-            'UpazilaCode'=>'required',
-            'UpazilaNameEnglish'=>'required',
-            'UpazilaNameBangla'=>'required',
-            'Note'=>'required',
-            'RecordStatus'=>'required',
-            'RecordVersion'=>'required',
-        ]);
+        $validation = $this->validation();
+
 
         $response = DB::table('ada_upazila')
             ->where('UpazilaCode', request()->UpazilaCode)
             ->update([
                 'UpazilaId'=>request()->UpazilaId,
-                'DivisionCode'=>request()->DivisionCode,
-                'DistrictCode'=>request()->DistrictCode,
                 'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
                 'UpazilaNameBangla'=>request()->UpazilaNameBangla,
                 'UpazilaImage1'=>'Default',
@@ -153,10 +163,20 @@ class UpazilaController extends Controller
         return 'Delete Successful';
     }
 
-    public function show($id)
-    {
-        $division = DB::table('ada_district')->where('DistrictId','=',$id)->get();
 
-        return $division;
+
+    protected function validation()
+    {
+        return request()->validate([
+            'UpazilaId'=>'required',
+            'DivisionCode'=>'required',
+            'DistrictCode'=>'required',
+            'UpazilaCode'=>'required',
+            'UpazilaNameEnglish'=>'required',
+            'UpazilaNameBangla'=>'required',
+            'Note'=>'required',
+            'RecordStatus'=>'required',
+            'RecordVersion'=>'required',
+        ]);
     }
 }

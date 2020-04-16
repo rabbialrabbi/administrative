@@ -36,7 +36,6 @@ Route::prefix('division')->group(function () {
 Route::prefix('district')->group(function () {
     Route::view('/', 'pages.districtPage');
     Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
-    Route::get('/filter/{key}','DistrictController@filter');
     Route::post('/create', 'DistrictController@add');
     Route::get('/{id}', 'DistrictController@show');
     Route::patch('/update', 'DistrictController@update');
@@ -45,8 +44,7 @@ Route::prefix('district')->group(function () {
 
 Route::prefix('upazila')->group(function () {
     Route::view('/', 'pages.upazilaPage');
-    Route::get('/{currentPage}/{filterKey}', 'UpazilaController@index');
-    Route::get('/filter/{key}','UpazilaController@filter');
+    Route::get('/{currentPage}', 'UpazilaController@index');
     Route::post('/create', 'UpazilaController@add');
     Route::get('/{id}', 'UpazilaController@show');
     Route::patch('/update', 'UpazilaController@update');
@@ -62,6 +60,16 @@ Route::prefix('areatype')->group(function () {
     Route::delete('/{id}', 'AreaTypeController@destroy');
 });
 
+Route::prefix('area')->group(function () {
+    Route::view('/', 'pages.areaPage');
+    Route::get('/{currentPage}/{filterKey}', 'AreaController@index');
+    Route::post('/create', 'AreaController@add');
+    Route::get('/{id}', 'AreaController@show');
+    Route::patch('/update', 'AreaController@update');
+    Route::delete('/{id}', 'AreaController@destroy');
+});
+
+/* Vue practive */
 Route::prefix('vueareatype')->group(function () {
     Route::view('/', 'vue.areaType');
     Route::get('/{currentPage}', 'AreaTypeController@index');
@@ -81,14 +89,7 @@ Route::prefix('data')->group(function (){
 
 
 
-Route::get('/test/{show}',function (\Illuminate\Http\Request $request){
-//    $result = $request->all();
-//    foreach($result as $key=>$r){
-//        $where[]= [$key,'=',$r];
-//    }
-//    $where2 = [['Name','=','Rabbial'],['Address','=','Shibgronj']];
-    return $request->name;
-});
+//Route::get('/test','UpazilaController@test');
 //Route::post('/test','DataController@test');
 
 

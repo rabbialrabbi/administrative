@@ -28,7 +28,7 @@ class UpazilaController extends Controller
 
         $currentPage = $request->currentPage;
 
-        if($condition && $currentPage !='lastPage'){
+        if($condition){
                 $fetchData = DB::table('ada_upazila')
                     ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
                     ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
@@ -36,18 +36,26 @@ class UpazilaController extends Controller
 
                 $filterData = $fetchData->where($condition);
                 $total = $filterData->count();
+                $checkFraction = $total%$dataPerPage;
 
-                $firstData = ($currentPage-1) * $dataPerPage;
+                $upazila['count']= ceil($total/$dataPerPage);
+
+            if($currentPage == 'lastPage'){
+                $currentPage = floor($total/$dataPerPage);
+                $firstData = $currentPage * $dataPerPage;
+                if($checkFraction){
+                    $dataPerPage = $checkFraction;
+                }
+            }else{
+                $currentPage = $currentPage-1;
+                $firstData = $currentPage * $dataPerPage;
+            }
 
             /* Return Count for pagination With filter Condition */
                 $upazila['tableData'] = $filterData->orderBy('UpazilaId','asc')
                     ->offset($firstData)
                     ->limit($dataPerPage)
                     ->get();
-
-             /* Return Count for pagination for filter Condition */
-                $upazila['count']= ceil($total/$dataPerPage);
-
 
                 if($filterKey->DivisionNameBangla){
 

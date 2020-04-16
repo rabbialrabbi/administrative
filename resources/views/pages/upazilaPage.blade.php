@@ -70,7 +70,8 @@
 
             if(info && info.DivisionKey){
                 window.DivisionKey = info.DivisionKey
-                window.DistrictKey = 0
+                window.DistrictKey = info.DistrictKey?info.DistrictKey:0
+
             }else if(info && info.DistrictKey){
                 window.DistrictKey = info.DistrictKey
             }else{
@@ -79,7 +80,12 @@
             }
             console.log(window.DivisionKey);
             console.log(window.DistrictKey);
-            let currentPage=1;
+            var currentPage = '';
+            if(info && info.currentPage){
+                currentPage = info.currentPage
+            }else{
+                currentPage = 1
+            }
 
             axios.get('/upazila/'+currentPage,{
                 params:{
@@ -119,7 +125,9 @@
         function mainTableInsert(currentPage=1){
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-            console.log(window.currentPage)
+            console.log(window.DivisionKey);
+            console.log(window.DistrictKey);
+            console.log(window.currentPage);
             axios.get('/upazila/'+currentPage,{
                 params:{
                     filterKey:{
@@ -347,7 +355,7 @@
                                     table+= `<option value="0">জেলা</option>\n`;
 
                                         districtName.forEach((data)=>{
-                                    table+= `<option value="${data.DistrictNameBangla}">${data.DistrictNameBangla}</option>\n`
+                                    table+= `<option value="${data.DistrictNameBangla}">${data.DistrictNameBangla}</option>`
                                         }) ;
 
                                     table+= `<option value="0">All</option>
@@ -420,10 +428,15 @@
                 $('#addDivisionForm').submit(function (event) {
 
                     event.preventDefault();
-                    var info = $('#addDivisionForm').serialize();
-                    axios.post('/upazila/create',info).then((response)=>{
 
-                        mainTableInsert('lastPage');
+                    var info = $('#addDivisionForm').serialize();
+
+                    axios.post('/upazila/create',info).then((response)=>{
+                        loadPagination({
+                            'currentPage':'lastPage',
+                            'DivisionKey':window.DivisionKey,
+                            'DistrictKey':window.DistrictKey
+                        });
                         loadAddForm(data);
                         $('#message').html(response.data);
 
@@ -436,7 +449,6 @@
 
         }
         function loadDataList(section,filterKey){
-
             var code = section+'Code';
             var name = section+'NameBangla';
             var selector = $("#addDivisionForm select[name="+section+"Code]");
@@ -450,13 +462,14 @@
                 var respData = response.data;
                 var info = '';
                 respData.forEach(function (data) {
-                    info += "<option value="+data[code]+">"+data[name]+"</option>"
+                    info += `<option value="${data[code]}" key="${data[name]}">${data[name]}</option>`
                 });
                 selector.html(info)
 
             })
         }
 
+        /* Input Form*/
         function loadAddForm(response) {
             let DivisionList = response.data['division'];
             let DistrictList = response.data['district'];
@@ -471,9 +484,10 @@
                                         <td class="clone">:</td>
                                         <td>
 
-                                        <select name="DivisionCode" id="addDivisionList" onchange="loadDataList('District',this.value)">`;
+                                        <select name="DivisionCode" id="addDivisionList"
+onchange="loadDataList('District',this.value);loadWindow('DivisionKey',event)">`;
             DivisionList.forEach((data)=>{
-                table+=`<option value="${data.DivisionCode}">${data.DivisionNameBangla}</option>`
+                table+=`<option value="${data.DivisionCode}" key="${data.DivisionNameBangla}">${data.DivisionNameBangla}</option>`
             });
 
             table+=`</select></td></tr>`;
@@ -482,7 +496,7 @@
                                         <th>জেলা</th>
                                         <td class="clone">:</td>
                                         <td>
-                                            <select name="DistrictCode" id="addDistrictList">
+                                            <select name="DistrictCode" id="addDistrictList" onchange="loadWindow('DistrictKey',event)">
                                             </select>
                                         </td>
                                     </tr>
@@ -541,13 +555,13 @@
             $('#sub_input').html(table);
         }
 
+        function loadWindow(section,event) {
+            window[section]= event.target.options[event.target.selectedIndex].getAttribute('key')
+        }
+
         function clearSubTable(e) {
             e.preventDefault();
             $('#sub_input').html('');
-        }
-
-        function loadWindowsData(response) {
-            window.divisionList = response.data['DivisionName'];
         }
 
     </script>

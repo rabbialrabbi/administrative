@@ -294,3 +294,59 @@ VALUES  ( 1,'40','41','61','10','83' ,'1100', '1100'	,'NOAPARA Pourashava'			,'�
 		( 49,'30','93','85','20','80'	,'5900', '5900'	,'SAKHIPUR Grameen'			,'সখীপুর গ্রামীণ'			,'Note','Image Path1','Image Path2'     ,'Active','Draft','01-10-01-001','02/04/2020'),
 		( 50,'30','93','95','20','87'	,'6000', '6000'	,'TANGAIL SADAR Grameen'		,'টাঙ্গাইল গ্রামীণ'		,'Note','Image Path1','Image Path2'     ,'Active','Draft','01-10-01-001','02/04/2020');
 
+
+
+CREATE TABLE dbo.Ada_CodeList(
+	CodeListId int(11) NOT NULL,
+	CodeListCode varchar(50) NOT NULL,
+	CodeListNameEnglish varchar(150) NOT NULL,
+	CodeListNameBangla varchar(150) NOT NULL,
+	Note text NOT NULL,
+	RecordStatus varchar(50) NOT NULL,
+	RecordVirsion varchar(50) NOT NULL,
+	UserAccess varchar(50) NOT NULL,
+	AccessDate datetime NOT NULL,
+	PRIMARY Key(CodeListCode)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO   Ada_CodeList
+
+(CodeListId,CodeListCode,CodeListNameEnglish,CodeListNameBangla
+,Note,RecordStatus,RecordVirsion,UserAccess,AccessDate)
+
+
+VALUES  ( 1,'1','Privilege'						,'অনুমতি'					,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 2,'2','Record Status'					,'রেকর্ড স্ট্যাটাস'			,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 3,'3','Record Version'				,'রেকর্ড  ভার্সন'				,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 4,'4','Mobile App'					,'মোবাইল অ্যাপ'			,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 5,'5','Paurasava Category'			,'পৌরসভা কেটাগরী'			,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 6,'6','Recipient Type'				,'পৌরসভা কেটাগরী'			,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 7,'7','Gateway'						,'গেটওয়ে'					,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 8,'8','Mobile App - Agro Officer'		,'মোবাইল অ্যাপ - এসএসএও'	,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 9,'9','Mobile App - Farmer'			,'মোবাইল অ্যাপ - কৃষক'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 10,'10','Advisory Status'				,'অ্যাডভাইসরি স্ট্যাটাস'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 11,'11','Venu'							,'অনুষ্ঠান স্থল'				,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 12,'12','Determine the applicability of weather advice'			,'আবহাওয়া বিষয়ক প্রাপ্ত পরামর্শগুলোর উপযোগিতা নির্ধারণ করুন'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 13,'13','How have you benefited from using this advice?'			,'আপনি কিভাবে এই পরামর্শটি ব্যবহার করে উপকৃত হয়েছেন ?'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 14,'14','A'				,'এ'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 15,'15','B'				,'বি'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 16,'16','C'				,'সি'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 17,'17','D'				,'ডি'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 18,'18','E'				,'ই'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 19,'919','F'				,'এফ'		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020'),
+		( 20,'20','G'				,'জি '		,'NOTE','ACTIVE','DRAFT','01-10-01-001','01/04/2020');
+
+CREATE TABLE dbo.Ada_ListItem(
+	ListItemId int(11) NOT NULL,
+	CodeListCode varchar(50) NOT NULL,
+	ListItemCode varchar(50) NOT NULL,
+	ListItemNameEnglish varchar(150) NOT NULL,
+	ListItemNameBangla varchar(150) NOT NULL,
+	Note text NOT NULL,
+	RecordStatus varchar(50) NOT NULL,
+	RecordVersion varchar(50) NOT NULL,
+	UserAccess archar(50) NOT NULL,
+	AccessDate datetime NOT NULL,
+	PRIMARY KEY(CodeListCode)
+	FOREIGN	KEY	(`CodeListCode`) REFERENCES	`ADA`.`Ada_codeList` (`CodeListCode`)	ON	DELETE	CASCADE	ON	UPDATE	CASCADE,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

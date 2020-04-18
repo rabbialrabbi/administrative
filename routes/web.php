@@ -62,11 +62,29 @@ Route::prefix('areatype')->group(function () {
 
 Route::prefix('area')->group(function () {
     Route::view('/', 'pages.areaPage');
-    Route::get('/{currentPage}/{filterKey}', 'AreaController@index');
+    Route::get('/{currentPage}', 'AreaController@index');
     Route::post('/create', 'AreaController@add');
     Route::get('/{id}', 'AreaController@show');
     Route::patch('/update', 'AreaController@update');
     Route::delete('/{id}', 'AreaController@destroy');
+});
+
+Route::prefix('codelist')->group(function () {
+    Route::view('/', 'pages.codeListPage');
+    Route::get('/{currentPage}', 'DivisionController@index');
+    Route::post('/create', 'DivisionController@add');
+    Route::get('/show/{id}', 'DivisionController@show');
+    Route::patch('/update', 'DivisionController@update');
+    Route::delete('/{id}', 'DivisionController@destroy');
+});
+
+Route::prefix('listitem')->group(function () {
+    Route::view('/', 'pages.districtPage');
+    Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
+    Route::post('/create', 'DistrictController@add');
+    Route::get('/{id}', 'DistrictController@show');
+    Route::patch('/update', 'DistrictController@update');
+    Route::delete('/{id}', 'DistrictController@destroy');
 });
 
 /* Vue practive */

@@ -2,42 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Converter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AreaController extends Controller
 {
+    protected $upazila='';
+    public function __construct(Converter $converter)
+    {
+        $this->upazila = $converter;
+    }
+    /**
+     * Receive Current page Number, DivisionNameBangla, DistrictNameBangla
+     * Return 10 of Table Data according to filter, Count, Division Name list, District Name list
+     * @param Request $request
+     * @return mixed
+     */
     public function index(Request $request)
     {
 
         $dataPerPage = 10;
-        $filterKey = json_decode($request->filterKey);
+        $filterKey = $this->upazila->convertJsonToColleciton($request->filterKey);
+        $condition = $this->upazila->convertToMultiArray($filterKey);
+
         $currentPage = $request->currentPage;
 
-        if($filterKey->DivisionNameBangla){
-            foreach($filterKey as $key=>$r){
-                if($r){
-                    $where[]= [$key,'=',$r];
+        if($condition){
+            $fetchData = DB::table('ada_area')
+                ->join('ada_division', 'ada_area.DivisionCode', '=', 'ada_division.DivisionCode')
+                ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                ->join('ada_area_type', 'ada_area.AreaTypeCode', '=', 'ada_area_type.AreaTypeCode')
+                ->select('ada_area.*', 'ada_division.DivisionNameBangla','ada_district.DistrictNameBangla','ada_upazila.UpazilaNameBangla','ada_area_type.AreaTypeNameBangla');
+
+            $filterData = $fetchData->where($condition);
+            $total = $filterData->count();
+            $checkFraction = $total%$dataPerPage;
+
+            $area['count']= ceil($total/$dataPerPage);
+
+            if($currentPage == 'lastPage'){
+                $currentPage = floor($total/$dataPerPage);
+                $firstData = $currentPage * $dataPerPage;
+                if($checkFraction){
+                    $dataPerPage = $checkFraction;
                 }
+            }else{
+                $currentPage = $currentPage-1;
+                $firstData = $currentPage * $dataPerPage;
             }
 
-            $filterData = DB::table('ada_upazila')
-                ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
-                ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
-                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')->where($where);
-            $total = $filterData->count();
-            $currentPage = $request->currentPage  ;
-            $firstData = $currentPage * $dataPerPage;
-            $district['tableData'] = $filterData
-                ->orderBy('UpazilaId','asc')
+            /* Return Count for pagination With filter Condition */
+            $area['tableData'] = $filterData->orderBy('AreaId','asc')
                 ->offset($firstData)
                 ->limit($dataPerPage)
                 ->get();
 
-            $district['count']= ceil($total/$dataPerPage);
+            if($filterKey->DivisionNameBangla){
+
+                /* Return District Name List for filter Condition */
+                $area['DistrictName']= DB::table('ada_area')
+                    ->join('ada_division', 'ada_area.DivisionCode', '=', 'ada_division.DivisionCode')
+                    ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                    ->select('ada_division.DivisionNameBangla','ada_district.DistrictNameBangla')
+                    ->where('DivisionNameBangla','=',$filterKey->DivisionNameBangla)->distinct()->get(['DistrictNameBangla']);
+
+                if($filterKey->DistrictNameBangla){
+                    $area['UpazilaName']= DB::table('ada_area')
+                        ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                        ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                        ->select('ada_upazila.UpazilaNameBangla','ada_district.DistrictNameBangla')
+                        ->where('DistrictNameBangla','=',$filterKey->DistrictNameBangla)->distinct()->get(['UpazilaNameBangla']);
+                }else{
+                    $area['UpazilaName']= DB::table('ada_area')
+                        ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                        ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                        ->select('ada_upazila.UpazilaNameBangla','ada_district.DistrictNameBangla')
+                        ->distinct()->get(['UpazilaNameBangla']);
+                }
+            }else{
+
+                /* Return District Name List */
+                $area['DistrictName']= DB::table('ada_area')
+                    ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                    ->select('ada_district.DistrictNameBangla')
+                    ->distinct()->get(['DistrictNameBangla']);
+
+                $area['UpazilaName']= DB::table('ada_area')
+                    ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                    ->select('ada_upazila.UpazilaNameBangla')
+                    ->distinct()->get(['UpazilaNameBangla']);
+
+
+            }
 
         }else{
-            $q = DB::table('ada_upazila');
+            $q = DB::table('ada_area');
             $total = $q->count();
             $checkFraction = $total%$dataPerPage;
 
@@ -48,61 +109,62 @@ class AreaController extends Controller
                     $dataPerPage = $checkFraction;
                 }
             }else{
-                $currentPage = $currentPage -1 ;
+                $currentPage = $currentPage-1;
                 $firstData = $currentPage * $dataPerPage;
             }
-            $district['tableData'] = DB::table('ada_upazila')
-                ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
-                ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
-                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')
-                ->orderBy('DistrictId','asc')
+            $totalData = $fetchData = DB::table('ada_area')
+                ->join('ada_division', 'ada_area.DivisionCode', '=', 'ada_division.DivisionCode')
+                ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                ->join('ada_area_type', 'ada_area.AreaTypeCode', '=', 'ada_area_type.AreaTypeCode')
+                ->select('ada_area.*', 'ada_division.DivisionNameBangla','ada_district.DistrictNameBangla','ada_upazila.UpazilaNameBangla','ada_area_type.AreaTypeNameBangla');
+
+            $area['tableData'] = $totalData->orderBy('AreaId','asc')
                 ->offset($firstData)
                 ->limit($dataPerPage)
                 ->get();
 
-            $district['count']= ceil($total/$dataPerPage);
+            $area['count']= ceil($total/$dataPerPage);
+            $area['DistrictName']= $totalData->select('DistrictNameBangla')->distinct()->get();
+            $area['UpazilaName']= DB::table('ada_area')
+                ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                ->select('ada_upazila.UpazilaNameBangla')
+                ->distinct()->get(['UpazilaNameBangla']);
         }
 
-        $district['DivisionName'] = DB::table('ada_district')
-            ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla')
-            ->groupBy('DivisionNameBangla')
-            ->pluck('DivisionNameBangla');
 
-        return $district;
+
+        $area['DivisionName'] = DB::table('ada_district')
+            ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
+            ->select('ada_division.DivisionCode', 'ada_division.DivisionNameBangla')
+            ->distinct()
+            ->get();
+
+        return $area;
     }
 
-    public function filter($key)
+    public function show($id)
     {
-        $data =  DB::table('ada_district')
-            ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla')->where('DivisionNameBangla','=',$key)->get();
-        return $data;
+        $division = DB::table('ada_district')->where('DistrictId','=',$id)->get();
+
+        return $division;
     }
 
     public function add()
     {
-        $validation = request()->validate([
-            'UpazilaId'=>'required',
-            'DivisionCode'=>'required',
-            'DistrictCode'=>'required',
-            'UpazilaCode'=>'required',
-            'UpazilaNameEnglish'=>'required',
-            'UpazilaNameBangla'=>'required',
-            'Note'=>'required',
-            'RecordStatus'=>'required',
-            'RecordVersion'=>'required',
-        ]);
+        $validation = $this->validation();
 
-        $response = DB::table('ada_upazila')->insert([
-            'UpazilaId'=>request()->UpazilaId,
+        $response = DB::table('ada_area')->insert([
+            'AreaId'=>request()->AreaId,
             'DivisionCode'=>request()->DivisionCode,
             'DistrictCode'=>request()->DistrictCode,
             'UpazilaCode'=>request()->UpazilaCode,
-            'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
-            'UpazilaNameBangla'=>request()->UpazilaNameBangla,
-            'UpazilaImage1'=>'Default',
-            'UpazilaImage2'=>'Default',
+            'AreaTypeCode'=>request()->AreaTypeCode,
+            'AreaCode'=>request()->AreaCode,
+            'AreaNameEnglish'=>request()->AreaNameEnglish,
+            'AreaNameBangla'=>request()->AreaNameBangla,
+            'AreaImage1'=>'Default',
+            'AreaImage2'=>'Default',
             'Note'=>request()->Note,
             'RecordStatus'=>request()->RecordStatus,
             'RecordVersion'=>request()->RecordVersion,
@@ -116,28 +178,17 @@ class AreaController extends Controller
 
     public function update()
     {
-        $validation = request()->validate([
-            'UpazilaId'=>'required',
-            'DivisionCode'=>'required',
-            'DistrictCode'=>'required',
-            'UpazilaCode'=>'required',
-            'UpazilaNameEnglish'=>'required',
-            'UpazilaNameBangla'=>'required',
-            'Note'=>'required',
-            'RecordStatus'=>'required',
-            'RecordVersion'=>'required',
-        ]);
+        $validation = $this->validation();
 
-        $response = DB::table('ada_upazila')
-            ->where('UpazilaCode', request()->UpazilaCode)
+
+        $response = DB::table('ada_area')
+            ->where('AreaCode', request()->AreaCode)
             ->update([
-                'UpazilaId'=>request()->UpazilaId,
-                'DivisionCode'=>request()->DivisionCode,
-                'DistrictCode'=>request()->DistrictCode,
-                'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
-                'UpazilaNameBangla'=>request()->UpazilaNameBangla,
-                'UpazilaImage1'=>'Default',
-                'UpazilaImage2'=>'Default',
+                'AreaId'=>request()->AreaId,
+                'AreaNameEnglish'=>request()->AreaNameEnglish,
+                'AreaNameBangla'=>request()->AreaNameBangla,
+                'AreaImage1'=>'Default',
+                'AreaImage2'=>'Default',
                 'Note'=>request()->Note,
                 'RecordStatus'=>request()->RecordStatus,
                 'RecordVersion'=>request()->RecordVersion,
@@ -149,14 +200,26 @@ class AreaController extends Controller
 
     public function destroy($id)
     {
-        DB::table('ada_upazila')->where('UpazilaCode', '=', $id)->delete();
+        DB::table('ada_area')->where('AreaCode', '=', $id)->delete();
         return 'Delete Successful';
     }
 
-    public function show($id)
-    {
-        $division = DB::table('ada_district')->where('DistrictId','=',$id)->get();
 
-        return $division;
+
+    protected function validation()
+    {
+        return request()->validate([
+            'AreaId'=>'required',
+            'DivisionCode'=>'required',
+            'DistrictCode'=>'required',
+            'UpazilaCode'=>'required',
+            'AreaTypeCode'=>'required',
+            'AreaCode'=>'required',
+            'AreaNameEnglish'=>'required',
+            'AreaNameBangla'=>'required',
+            'Note'=>'required',
+            'RecordStatus'=>'required',
+            'RecordVersion'=>'required',
+        ]);
     }
 }

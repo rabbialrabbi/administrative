@@ -51,7 +51,7 @@
                 <a href="/district"><p>পরামর্শ (District)</p></a>
                 <a href="/upazila"><p>ফিডব্যাক সার্ভিস (Upazila)</p></a>
                 <a href="/areatype"><p>এসএএও (Area Type)</p></a>
-                <a href="#"><p>সেটিংস</p></a>
+                <a href="/area"><p>সেটিংস (Area)</p></a>
                 <a href="#"><p>মোবাইল অ্যাপ</p></a>
                 <a href="#"><p>সাহায্য</p></a>
             </div>

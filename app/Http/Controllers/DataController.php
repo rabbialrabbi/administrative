@@ -24,6 +24,10 @@ class DataController extends Controller
         $list['district'] = DB::table('ada_district')
             ->select('DistrictCode','DistrictNameBangla')
             ->get();
+        $list['upazila'] = DB::table('ada_upazila')
+            ->select('UpazilaCode','UpazilaNameBangla')
+            ->get();
+        $list['areaType']= DB::table('ada_area_type')->select('AreaTypeCode','AreaTypeNameBangla')->get();
 
         return $list;
    }

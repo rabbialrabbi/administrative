@@ -15,6 +15,9 @@ class Data
             case 'Upazila':
                 return 'DistrictCode';
                 break;
+            case 'Area':
+                return 'UpazilaCode';
+                break;
             default:
                 return "Error in Switch Statement";
         }

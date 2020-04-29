@@ -23,4 +23,23 @@ class Converter
         }
         return $array;
     }
+    public function convertJsonToArray($data)
+    {
+        $filterKey = $this->convertJsonToColleciton($data);
+        foreach($filterKey as $r){
+
+                $array[]= $r;
+
+        }
+        if(@!$array){
+            $array = false;
+        }
+        return $array;
+    }
+    public function convertJsonToMultiArray($json)
+    {
+       $collectionData =  $this->convertJsonToColleciton($json);
+
+        return $this->convertToMultiArray($collectionData);
+    }
 }

@@ -10,7 +10,7 @@ class CodeListController extends Controller
     public function index($currentPage)
     {
         $dataPerPage = 10;
-        $total = DB::table('ada_division')->count();
+        $total = DB::table('ada_codelist')->count();
         $checkFraction = $total%$dataPerPage;
 
         if($currentPage == 'lastPage'){
@@ -24,7 +24,7 @@ class CodeListController extends Controller
             $firstData = $currentPage * $dataPerPage;
         }
 
-        $division['tableData'] = DB::table('ada_division')->orderBy('DivisionId','asc')->offset($firstData)->limit($dataPerPage)->get();
+        $division['tableData'] = DB::table('ada_codelist')->orderBy('CodeListId','asc')->offset($firstData)->limit($dataPerPage)->get();
         $division['count']= ceil($total/$dataPerPage);
         return $division;
     }
@@ -32,22 +32,20 @@ class CodeListController extends Controller
     public function add()
     {
         $validation = request()->validate([
-            'DivisionId'=>'required',
-            'DivisionCode'=>'required',
-            'DivisionNameEnglish'=>'required',
-            'DivisionNameBangla'=>'required',
+            'CodeListId'=>'required',
+            'CodeListCode'=>'required',
+            'CodeListNameEnglish'=>'required',
+            'CodeListNameBangla'=>'required',
             'Note'=>'required',
             'RecordStatus'=>'required',
             'RecordVersion'=>'required',
         ]);
 
-        $response = DB::table('ada_division')->insert([
-            'DivisionId'=>request()->DivisionId,
-            'DivisionCode'=>request()->DivisionCode,
-            'DivisionNameEnglish'=>request()->DivisionNameEnglish,
-            'DivisionNameBangla'=>request()->DivisionNameBangla,
-            'DivisionImage1'=>'Default',
-            'DivisionImage2'=>'Default',
+        $response = DB::table('ada_codelist')->insert([
+            'CodeListId'=>request()->CodeListId,
+            'CodeListCode'=>request()->CodeListCode,
+            'CodeListNameEnglish'=>request()->CodeListNameEnglish,
+            'CodeListNameBangla'=>request()->CodeListNameBangla,
             'Note'=>request()->Note,
             'RecordStatus'=>request()->RecordStatus,
             'RecordVersion'=>request()->RecordVersion,
@@ -60,14 +58,12 @@ class CodeListController extends Controller
 
     public function update()
     {
-        $response = DB::table('ada_division')
-            ->where('DivisionCode', request()->DivisionCode)
+        $response = DB::table('ada_codelist')
+            ->where('CodeListCode', request()->CodeListCode)
             ->update([
-                'DivisionId'=>request()->DivisionId,
-                'DivisionNameEnglish'=>request()->DivisionNameEnglish,
-                'DivisionNameBangla'=>request()->DivisionNameBangla,
-                'DivisionImage1'=>'Default',
-                'DivisionImage2'=>'Default',
+                'CodeListId'=>request()->CodeListId,
+                'CodeListNameEnglish'=>request()->CodeListNameEnglish,
+                'CodeListNameBangla'=>request()->CodeListNameBangla,
                 'Note'=>request()->Note,
                 'RecordStatus'=>request()->RecordStatus,
                 'RecordVersion'=>request()->RecordVersion,
@@ -79,13 +75,13 @@ class CodeListController extends Controller
 
     public function destroy($id)
     {
-        DB::table('ada_division')->where('DivisionCode', '=', $id)->delete();
+        DB::table('ada_codelist')->where('CodelistCode', '=', $id)->delete();
         return 'Delete Successful';
     }
 
     public function show($id)
     {
-        $division = DB::table('ada_division')->where('DivisionCode','=',$id)->get();
+        $division = DB::table('ada_codelist')->where('CodeListCode','=',$id)->get();
 
         return $division;
     }

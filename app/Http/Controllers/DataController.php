@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Converter;
 use App\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,20 @@ class DataController extends Controller
     public function test()
     {
        return request();
+   }
+
+    public function getTable(Converter $converter)
+    {
+//        dd(request()->selection);
+
+        $tableName = request()->tableName;
+        $condition = $converter->convertToMultiArray(request()->condition) ;
+        $data = DB::table($tableName)->select(request()->selection);
+        if($condition){
+            $data= $data->where($condition);
+        }
+        return $data->get();
+
    }
 
 

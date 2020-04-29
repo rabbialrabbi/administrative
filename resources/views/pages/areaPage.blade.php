@@ -476,9 +476,9 @@
                     event.preventDefault();
 
                     var info = $('#addDivisionForm').serialize();
-                    console.log(info);
 
                     axios.post('/area/create',info).then((response)=>{
+
                         loadPagination({
                             'currentPage':'lastPage',
                             'DivisionKey':window.DivisionKey,

@@ -71,20 +71,20 @@ Route::prefix('area')->group(function () {
 
 Route::prefix('codelist')->group(function () {
     Route::view('/', 'pages.codeListPage');
-    Route::get('/{currentPage}', 'DivisionController@index');
-    Route::post('/create', 'DivisionController@add');
-    Route::get('/show/{id}', 'DivisionController@show');
-    Route::patch('/update', 'DivisionController@update');
-    Route::delete('/{id}', 'DivisionController@destroy');
+    Route::get('/{currentPage}', 'CodeListController@index');
+    Route::post('/create', 'CodeListController@add');
+    Route::get('/show/{id}', 'CodeListController@show');
+    Route::patch('/update', 'CodeListController@update');
+    Route::delete('/{id}', 'CodeListController@destroy');
 });
 
 Route::prefix('listitem')->group(function () {
-    Route::view('/', 'pages.districtPage');
-    Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
-    Route::post('/create', 'DistrictController@add');
-    Route::get('/{id}', 'DistrictController@show');
-    Route::patch('/update', 'DistrictController@update');
-    Route::delete('/{id}', 'DistrictController@destroy');
+    Route::view('/', 'pages.listItemPage');
+    Route::get('/{currentPage}', 'ListItemController@index');
+    Route::post('/create', 'ListItemController@add');
+    Route::get('/{id}', 'ListItemController@show');
+    Route::patch('/update', 'ListItemController@update');
+    Route::delete('/{id}', 'ListItemController@destroy');
 });
 
 /* Vue practive */
@@ -102,6 +102,7 @@ Route::prefix('data')->group(function (){
     Route::get('/divisionList/{start?}/{end?}','DataController@divisionList');
     Route::get('/all','DataController@dataList');
     Route::get('/section','DataController@sectionalDataList');
+    Route::post('/gettable/{tableName}','DataController@getTable');
 
 });
 

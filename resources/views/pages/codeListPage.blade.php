@@ -70,7 +70,7 @@
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
         function loadPagination() {
-            axios.get('/division/1').then((response)=>{
+            axios.get('/codelist/1').then((response)=>{
                 paginator.initPaginator({
                     'previousPage': 'পূর্বের পাতা',
                     'nextPage': 'পরের পাতা',
@@ -95,14 +95,14 @@
 
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-            axios.get('/division/'+currentPage).then((response)=>{
+            axios.get('/codelist/'+currentPage).then((response)=>{
 
                 let info = response.data['tableData'];
                 let table="";
-                let i=0;
+                let i= currentPage !==1 && currentPage !== 0 ? currentPage*10 : 0;
                 table+=`<table>
                             <tr>
-                                <th>ক্রমিক</th>
+                                <th>ক্রমিক</th> 
                                 <th>আই ডি</th>
                                 <th>কোড</th>
                                 <th>নাম (ইংলিশ)</th>
@@ -118,14 +118,14 @@
                     table +=`
                                <tr id="divi-table-${i}" class="divi-table">
                                <td>${i}</td>
-                                   <td>${data.DivisionId}</td>
-                                   <td>${data.DivisionCode}</td>
-                                   <td>${data.DivisionNameEnglish}</td>
-                                  <td>${data.DivisionNameBangla}</td>
+                                   <td>${data.CodeListId}</td>
+                                   <td>${data.CodeListCode}</td>
+                                   <td>${data.CodeListNameEnglish}</td>
+                                  <td>${data.CodeListNameBangla}</td>
                                   <td>${data.Note}</td>
                                   <td>${data.RecordStatus}</td>
                                   <td>${data.RecordVersion}</td>
-                                  <td><i id="divi-but-${i}" key="${data.DivisionCode}" class="fas fa-eye"></i></td></td>
+                                  <td><i id="divi-but-${i}" key="${data.CodeListCode}" class="fas fa-eye"></i></td></td>
                               </tr>`
                 });
                 table+=`</table>`;
@@ -136,47 +136,47 @@
                 /* Click Event for show Details in sub Table*/
                 $('.divi-table i').on('click',function(){
                     var key = $(this).attr('key');
-                    axios.get('/division/show/'+key).then((response)=>{
+                    axios.get('/codelist/show/'+key).then((response)=>{
 
-                        var division = response.data;
+                        var CodeList = response.data;
                         var table = '';
                         table+= insertHeader();
                         table+=`<div class="row sub_table-body">
                                 <table>
                                     <tr>
-                                        <th>বিভাগ আই ডি</th>
+                                        <th>কোড লিস্ট আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].DivisionId}</td>
+                                        <td>${CodeList[0].CodeListId}</td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ কোড</th>
+                                        <th>কোড লিস্ট কোড</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].DivisionCode}</td>
+                                        <td>${CodeList[0].CodeListCode}</td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ নাম (ইংলিশ)</th>
+                                        <th>কোড লিস্ট নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].DivisionNameEnglish}</td>
+                                        <td>${CodeList[0].CodeListNameEnglish}</td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ নাম (বাংলা)</th>
+                                        <th>কোড লিস্ট নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].DivisionNameBangla}</td>
+                                        <td>${CodeList[0].CodeListNameBangla}</td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].Note}</td>
+                                        <td>${CodeList[0].Note}</td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড স্ট্যাটাস</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].RecordStatus}</td>
+                                        <td>${CodeList[0].RecordStatus}</td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড ভার্সন</th>
                                         <td class="clone">:</td>
-                                        <td>${division[0].RecordVersion}</td>
+                                        <td>${CodeList[0].RecordVersion}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -185,7 +185,7 @@
                                 <div class="col-8"><p>Message: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <button id="editDivision">এডিট</button>
-                                    <button id="deleteDivision" key=${division[0].DivisionCode}>ডিলিট</button></div>
+                                    <button id="deleteDivision" key=${CodeList[0].CodeListCode}>ডিলিট</button></div>
                                 </div>
                             </div>
                             <div>`;
@@ -197,7 +197,7 @@
                         $('#deleteDivision').click(function () {
                             key = $(this).attr('key');
                             if(confirm("Want to delete table")){
-                                axios.delete('/division/'+key).then((response)=>{
+                                axios.delete('/codelist/'+key).then((response)=>{
                                     $('#message').html(response.data)
                                     mainTableInsert(window.currentPage);
                                     $('#sub_input').html('');
@@ -216,45 +216,45 @@
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
-                                        <th>বিভাগ আই ডি</th>
+                                        <th>কোড লিস্ট আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionId" value="${division[0].DivisionId}"></td>
+                                        <td><input type="text" name="CodeListId" value="${CodeList[0].CodeListId}"></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ কোড</th>
+                                        <th>কোড লিস্ট কোড</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionCode" value="${division[0].DivisionCode}"></td>
+                                        <td><input type="text" name="CodeListCode" value="${CodeList[0].CodeListCode}"></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ নাম (ইংলিশ)</th>
+                                        <th>কোড লিস্ট নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameEnglish" value="${division[0].DivisionNameEnglish}"></td>
+                                        <td><input type="text" name="CodeListNameEnglish" value="${CodeList[0].CodeListNameEnglish}"></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ নাম (বাংলা)</th>
+                                        <th>কোড লিস্ট নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameBangla" value="${division[0].DivisionNameBangla}"></td>
+                                        <td><input type="text" name="CodeListNameBangla" value="${CodeList[0].CodeListNameBangla}"></td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="Note" value="${division[0].Note}"></td>
+                                        <td><input type="text" name="Note" value="${CodeList[0].Note}"></td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড স্ট্যাটাস</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="RecordStatus" value="${division[0].RecordStatus}"></td>
+                                        <td><input type="text" name="RecordStatus" value="${CodeList[0].RecordStatus}"></td>
                                     </tr>
                                     <tr>
                                         <th>রেকর্ড ভার্সন</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="RecordVersion" value="${division[0].RecordVersion}"></td>
+                                        <td><input type="text" name="RecordVersion" value="${CodeList[0].RecordVersion}"></td>
                                     </tr>
                                 </table>
                             </div>
                             <div class=" row sub_table-bottom">
                                 <div class="row sub_table-button">
-                                <div class="col-8"><p>Messages: <span id="message"></span></p></div>
+                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
                                 <div class="col-4">
                                     <input type="submit" name="submit" value="আপডেট">
                                     <button onclick="clearSubTable(event)">পিছনে</button>
@@ -270,7 +270,7 @@
                             $('#saveDivision').submit(function (event) {
                                 event.preventDefault();
                                 var info = $('#saveDivision').serialize();
-                                axios.patch('/division/update',info).then((response)=>{
+                                axios.patch('/codelist/update',info).then((response)=>{
                                     $('#message').html(response.data)
                                     mainTableInsert(window.currentPage);
                                 }).catch((error)=>{
@@ -297,7 +297,7 @@
             return `<div class="row body_top">
                                 <div class="col-2"><h3>প্রশাসনিক</h3></div>
                                 <div class="col-1 clone">:</div>
-                                <div class="col-8"><h3>বিভাগ</h3></div>
+                                <div class="col-8"><h3>কোড লিস্ট</h3></div>
                             </div>`
         }
 
@@ -311,24 +311,24 @@
                             <div class="row sub_table-body">
                                 <table>
                                     <tr>
-                                        <th>বিভাগ আই ডি</th>
+                                        <th>কোড লিস্ট আই ডি</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionId" ></td>
+                                        <td><input type="text" name="CodeListId" ></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ কোড</th>
+                                        <th>কোড লিস্ট কোড</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionCode"></td>
+                                        <td><input type="text" name="CodeListCode"></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ নাম (ইংলিশ)</th>
+                                        <th>কোড লিস্ট নাম (ইংলিশ)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameEnglish"></td>
+                                        <td><input type="text" name="CodeListNameEnglish"></td>
                                     </tr>
                                     <tr>
-                                        <th>বিভাগ নাম (বাংলা)</th>
+                                        <th>কোড লিস্ট নাম (বাংলা)</th>
                                         <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameBangla"></td>
+                                        <td><input type="text" name="CodeListNameBangla"></td>
                                     </tr>
                                     <tr>
                                         <th>নোট</th>
@@ -367,7 +367,7 @@
             $('#addDivisionForm').submit(function (event) {
                 event.preventDefault();
                 var info = $('#addDivisionForm').serialize();
-                axios.post('/division/create',info).then((response)=>{
+                axios.post('/codelist/create',info).then((response)=>{
                     mainTableInsert('lastPage');
                     inputFormField();
                     $('#message').html(response.data);

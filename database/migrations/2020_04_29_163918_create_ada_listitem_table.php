@@ -15,8 +15,8 @@ class CreateAdaListitemTable extends Migration
     {
         Schema::create('ada_listitem', function (Blueprint $table) {
             $table->bigInteger('ListItemId');
-            $table->bigInteger('CodeListCode')->unsigned()->index();
-            $table->bigInteger('ListItemCode')->primary()->unsigned()->index();
+            $table->bigInteger('CodeListCode')->unsigned()->index()->unique();
+            $table->bigInteger('ListItemCode')->primary()->unsigned()->index()->unique();
             $table->string('ListItemNameEnglish');
             $table->string('ListItemNameBangla');
             $table->string('Note');

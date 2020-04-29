@@ -15,7 +15,7 @@ class CreateAdaDivisionTable extends Migration
     {
         Schema::create('ada_division', function (Blueprint $table) {
             $table->bigInteger('DivisionId');
-            $table->bigInteger('DivisionCode')->primary()->unsigned()->index();
+            $table->bigInteger('DivisionCode')->primary()->unsigned()->index()->unique();
             $table->string('DivisionNameEnglish');
             $table->string('DivisionNameBangla');
             $table->string('DivisionImage1');

@@ -15,11 +15,11 @@ class CreateAdaAreaTable extends Migration
     {
         Schema::create('ada_area', function (Blueprint $table) {
             $table->bigInteger('AreaId');
-            $table->bigInteger('DivisionCode')->unsigned()->index();
-            $table->bigInteger('DistrictCode')->unsigned()->index();
-            $table->bigInteger('UpazilaCode')->unsigned()->index();
-            $table->bigInteger('AreaTypeCode')->unsigned()->index();
-            $table->bigInteger('AreaCode')->primary()->unsigned()->index();
+            $table->bigInteger('DivisionCode')->unsigned()->index()->unique();
+            $table->bigInteger('DistrictCode')->unsigned()->index()->unique();
+            $table->bigInteger('UpazilaCode')->unsigned()->index()->unique();
+            $table->bigInteger('AreaTypeCode')->unsigned()->index()->unique();
+            $table->bigInteger('AreaCode')->primary()->unsigned()->index()->unique();
             $table->string('Area_Dept_Code1');
             $table->string('Area_Dept_Code2');
             $table->string('AreaNameEnglish');

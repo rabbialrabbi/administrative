@@ -15,9 +15,9 @@ class CreateAdaUpazilaTable extends Migration
     {
         Schema::create('ada_upazila', function (Blueprint $table) {
             $table->bigInteger('UpazilaId');
-            $table->bigInteger('DivisionCode')->unsigned()->index();
-            $table->bigInteger('DistrictCode')->unsigned()->index();
-            $table->bigInteger('UpazilaCode')->primary()->unsigned()->index();
+            $table->bigInteger('DivisionCode')->unsigned()->index()->unique();
+            $table->bigInteger('DistrictCode')->unsigned()->index()->unique();
+            $table->bigInteger('UpazilaCode')->primary()->unsigned()->index()->unique();
             $table->string('UpazilaNameEnglish');
             $table->string('UpazilaNameBangla');
             $table->string('UpazilaImage1');

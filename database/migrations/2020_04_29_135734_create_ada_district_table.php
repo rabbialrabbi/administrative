@@ -15,8 +15,8 @@ class CreateAdaDistrictTable extends Migration
     {
         Schema::create('ada_district', function (Blueprint $table) {
             $table->bigInteger('DistrictId');
-            $table->bigInteger('DivisionCode')->unsigned()->index();
-            $table->bigInteger('DistrictCode')->primary()->unsigned()->index();
+            $table->bigInteger('DivisionCode')->unsigned()->index()->unique();
+            $table->bigInteger('DistrictCode')->primary()->unsigned()->index()->unique();
             $table->string('DistrictNameEnglish');
             $table->string('DistrictNameBangla');
             $table->string('DistrictImage1');

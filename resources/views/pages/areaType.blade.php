@@ -9,7 +9,7 @@
     <div class="row body_top">
         <div class="col-2"><h3>প্রশাসনিক</h3> </div>
         <div class="col-1 clone">:</div>
-        <div class="col-8"><h3>এলাকা</h3></div>
+        <div class="col-8"><h3>এলাকা ধরন</h3></div>
     </div>
     <div class="row body_search-panel">
         <div class="col-8"></div>
@@ -297,7 +297,7 @@
             return `<div class="row body_top">
                                 <div class="col-2"><h3>প্রশাসনিক</h3></div>
                                 <div class="col-1 clone">:</div>
-                                <div class="col-8"><h3>বিভাগ</h3></div>
+                                <div class="col-8"><h3>এলাকা ধরন</h3></div>
                             </div>`
         }
 

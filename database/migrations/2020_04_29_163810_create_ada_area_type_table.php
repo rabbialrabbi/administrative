@@ -15,7 +15,7 @@ class CreateAdaAreaTypeTable extends Migration
     {
         Schema::create('ada_area_type', function (Blueprint $table) {
             $table->bigInteger('AreaTypeId');
-            $table->bigInteger('AreaTypeCode')->primary()->unsigned()->index()->unique();
+            $table->unsignedBigInteger('AreaTypeCode')->primary();
             $table->string('AreaTypeNameEnglish');
             $table->string('AreaTypeNameBangla');
             $table->string('Note');

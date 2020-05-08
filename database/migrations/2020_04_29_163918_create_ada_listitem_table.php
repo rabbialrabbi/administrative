@@ -15,8 +15,8 @@ class CreateAdaListitemTable extends Migration
     {
         Schema::create('ada_listitem', function (Blueprint $table) {
             $table->bigInteger('ListItemId');
-            $table->bigInteger('CodeListCode')->unsigned()->index()->unique();
-            $table->bigInteger('ListItemCode')->primary()->unsigned()->index()->unique();
+            $table->unsignedBigInteger('CodeListCode');
+            $table->unsignedBigInteger('ListItemCode')->primary();
             $table->string('ListItemNameEnglish');
             $table->string('ListItemNameBangla');
             $table->string('Note');
@@ -24,7 +24,8 @@ class CreateAdaListitemTable extends Migration
             $table->string('RecordVersion');
             $table->string('UserAccess');
             $table->dateTime('AccessDate');
-            $table->foreign('CodeListCode')->references('CodeListCode')->on('ada_codelist')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('CodeListCode')->references('CodeListCode')->on('ada_codelist')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

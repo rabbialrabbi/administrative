@@ -15,11 +15,11 @@ class CreateAdaAreaTable extends Migration
     {
         Schema::create('ada_area', function (Blueprint $table) {
             $table->bigInteger('AreaId');
-            $table->bigInteger('DivisionCode')->unsigned()->index()->unique();
-            $table->bigInteger('DistrictCode')->unsigned()->index()->unique();
-            $table->bigInteger('UpazilaCode')->unsigned()->index()->unique();
-            $table->bigInteger('AreaTypeCode')->unsigned()->index()->unique();
-            $table->bigInteger('AreaCode')->primary()->unsigned()->index()->unique();
+            $table->unsignedBigInteger('DivisionCode');
+            $table->unsignedBigInteger('DistrictCode');
+            $table->unsignedBigInteger('UpazilaCode');
+            $table->unsignedBigInteger('AreaTypeCode');
+            $table->unsignedBigInteger('AreaCode')->primary();
             $table->string('Area_Dept_Code1');
             $table->string('Area_Dept_Code2');
             $table->string('AreaNameEnglish');
@@ -31,10 +31,14 @@ class CreateAdaAreaTable extends Migration
             $table->string('RecordVersion');
             $table->string('UserAccess');
             $table->dateTime('AccessDate');
-            $table->foreign('DivisionCode')->references('DivisionCode')->on('ada_upazila')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('DistrictCode')->references('DistrictCode')->on('ada_upazila')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('UpazilaCode')->references('UpazilaCode')->on('ada_upazila')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('AreaTypeCode')->references('AreaTypeCode')->on('ada_area_type')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('DivisionCode')->references('DivisionCode')->on('ada_division')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('DistrictCode')->references('DistrictCode')->on('ada_district')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('UpazilaCode')->references('UpazilaCode')->on('ada_upazila')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('AreaTypeCode')->references('AreaTypeCode')->on('ada_area_type')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

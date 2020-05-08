@@ -15,7 +15,7 @@ class CreateAdaCodelistTable extends Migration
     {
         Schema::create('ada_codelist', function (Blueprint $table) {
             $table->bigInteger('CodeListId');
-            $table->bigInteger('CodeListCode')->primary()->unsigned()->index()->unique();
+            $table->unsignedBigInteger('CodeListCode')->primary();
             $table->string('CodeListNameEnglish');
             $table->string('CodeListNameBangla');
             $table->string('Note');

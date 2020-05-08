@@ -15,9 +15,9 @@ class CreateAdaUpazilaTable extends Migration
     {
         Schema::create('ada_upazila', function (Blueprint $table) {
             $table->bigInteger('UpazilaId');
-            $table->bigInteger('DivisionCode')->unsigned()->index()->unique();
-            $table->bigInteger('DistrictCode')->unsigned()->index()->unique();
-            $table->bigInteger('UpazilaCode')->primary()->unsigned()->index()->unique();
+            $table->unsignedBigInteger('DivisionCode');
+            $table->unsignedBigInteger('DistrictCode');
+            $table->unsignedBigInteger('UpazilaCode')->primary();
             $table->string('UpazilaNameEnglish');
             $table->string('UpazilaNameBangla');
             $table->string('UpazilaImage1');
@@ -27,8 +27,10 @@ class CreateAdaUpazilaTable extends Migration
             $table->string('RecordVersion');
             $table->string('UserAccess');
             $table->dateTime('AccessDate');
-            $table->foreign('DivisionCode')->references('DivisionCode')->on('ada_district')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('DistrictCode')->references('DistrictCode')->on('ada_district')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('DivisionCode')->references('DivisionCode')->on('ada_division')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('DistrictCode')->references('DistrictCode')->on('ada_district')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

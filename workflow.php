@@ -8,3 +8,5 @@
 //01.04.20
 // edo test request speed
 // edo Create reuse able structure
+// edo Generate Report
+// edo Multi authentication

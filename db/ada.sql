@@ -591,3 +591,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SQLSTATE[42803]: Grouping error: 7 ERROR:  column "ada_district.DistrictId" must appear in the GROUP BY clause or be used in an aggregate function↵LINE 1: select "ada_district".*, "ada_division"."DivisionNameBangla" (SQL: select "ada_district".*, "ada_division"."DivisionNameBangla" from "ada_district" inner join "ada_division" on "ada_district"."DivisionCode" = "ada_division"."DivisionCode" group by "DivisionNameBangla")

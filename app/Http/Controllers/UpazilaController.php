@@ -100,7 +100,7 @@ class UpazilaController extends Controller
                     ->get();
 
                 $upazila['count']= ceil($total/$dataPerPage);
-                $upazila['DistrictName']= $totalData->select('DistrictNameBangla')->distinct()->get();
+                $upazila['DistrictName']= $totalData->distinct()->get();
         }
 
         $upazila['DivisionName'] = DB::table('ada_district')

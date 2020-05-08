@@ -18,7 +18,7 @@ class Converter
                 $array[]= [$key,'=',$r];
             }
         }
-        if(@!$array){
+        if(empty($array)){
             $array = false;
         }
         return $array;
@@ -31,7 +31,7 @@ class Converter
                 $array[]= $r;
 
         }
-        if(@!$array){
+        if(empty($array)){
             $array = false;
         }
         return $array;

@@ -95,6 +95,7 @@
             let i = '';
             let info = response.data['tableData'];
             let divisionName = response.data['DivisionName'];
+            console.log(divisionName)
 
                 table+=`<table>
                             <tr >
@@ -105,7 +106,7 @@
                 table+= `<option value="0">District</option>\n`;
 
        divisionName.forEach((data)=>{
-                table+= `<option value="${data}">${data}</option>\n`
+                table+= `<option value="${data.DivisionNameBangla}">${data.DivisionNameBangla}</option>\n`
                 }) ;
 
                 table+= `<option value="0">All</option>`;

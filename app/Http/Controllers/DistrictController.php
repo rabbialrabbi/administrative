@@ -58,8 +58,9 @@ class DistrictController extends Controller
 
         $district['DivisionName'] = DB::table('ada_district')
             ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla')
-            ->pluck('DivisionNameBangla');
+            ->select('ada_division.DivisionCode', 'ada_division.DivisionNameBangla')
+            ->distinct()
+            ->get();
 
         return $district;
     }

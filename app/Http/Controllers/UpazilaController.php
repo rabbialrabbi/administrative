@@ -94,13 +94,16 @@ class UpazilaController extends Controller
                     ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
                     ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode');
 
-                $upazila['tableData'] = $totalData->orderBy('DistrictId','asc')
+            $upazila['tableData'] = $totalData->orderBy('DistrictId','asc')
                     ->offset($firstData)
                     ->limit($dataPerPage)
                     ->get();
 
-                $upazila['count']= ceil($total/$dataPerPage);
-                $upazila['DistrictName']= $totalData->distinct()->get();
+            $upazila['count']= ceil($total/$dataPerPage);
+            $upazila['DistrictName']= DB::table('ada_upazila')
+                ->join('ada_division', 'ada_upazila.DivisionCode', '=', 'ada_division.DivisionCode')
+                ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
+                ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode')->distinct()->get();
         }
 
         $upazila['DivisionName'] = DB::table('ada_district')

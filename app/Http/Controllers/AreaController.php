@@ -125,7 +125,12 @@ class AreaController extends Controller
                 ->get();
 
             $area['count']= ceil($total/$dataPerPage);
-            $area['DistrictName']= $totalData->select('DistrictNameBangla')->distinct()->get();
+            $area['DistrictName']=  DB::table('ada_area')
+                ->join('ada_division', 'ada_area.DivisionCode', '=', 'ada_division.DivisionCode')
+                ->join('ada_district', 'ada_area.DistrictCode', '=', 'ada_district.DistrictCode')
+                ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
+                ->join('ada_area_type', 'ada_area.AreaTypeCode', '=', 'ada_area_type.AreaTypeCode')
+                ->select('ada_area.*', 'ada_division.DivisionNameBangla','ada_district.DistrictNameBangla','ada_upazila.UpazilaNameBangla','ada_area_type.AreaTypeNameBangla')->select('DistrictNameBangla')->distinct()->get();
             $area['UpazilaName']= DB::table('ada_area')
                 ->join('ada_upazila', 'ada_area.UpazilaCode', '=', 'ada_upazila.UpazilaCode')
                 ->select('ada_upazila.UpazilaNameBangla')

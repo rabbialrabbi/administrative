@@ -147,6 +147,16 @@ INSERT INTO `ada_division` (`DivisionId`, `DivisionCode`, `DivisionNameEnglish`,
 (7, '60', 'Sylhet', 'সিলেট', 'Path', 'Path', 'Note', 'Active', 'Draft', '01-10-01-001', '2018-06-04 00:00:00'),
 (8, '70', 'Mymensingh', 'ময়মনসিংহ', 'Path', 'Path', 'Note', 'Active', 'Draft', '01-10-01-001', '2018-06-04 00:00:00');
 
+$data = (object)[
+         0=>(object) [
+                    'id'=>1,
+                    'name'=>'Abul'
+            ],
+        1=>(object) [
+                'id'=>1,
+                'name'=>'Abul'
+        ]
+    ];
 --
 -- Indexes for dumped tables
 --

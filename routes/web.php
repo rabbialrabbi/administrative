@@ -108,7 +108,12 @@ Route::prefix('data')->group(function (){
 
 
 
-//Route::get('/test','UpazilaController@test');
+Route::get('/test',function (){
+
+
+
+
+});
 //Route::post('/test','DataController@test');
 
 

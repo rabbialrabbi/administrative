@@ -13,5 +13,10 @@ class DatabaseSeeder extends Seeder
     {
          $this->call(DivisionTableSeeder::class);
          $this->call(DistrictTableSeeder::class);
+         $this->call(UpazilaTableSeeder::class);
+         $this->call(AreaTypeTableSeeder::class);
+         $this->call(AreaTableSeeder::class);
+         $this->call(CodeListTableSeeder::class);
+         $this->call(ListItemTableSeeder::class);
     }
 }

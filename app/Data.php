@@ -32,6 +32,7 @@ class Data
         }
 
         foreach ($e as $i){
+            $i['AccessDate']=now();
             DB::table($tableName)->insert($i);
         }
     }

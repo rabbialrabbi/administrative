@@ -47,7 +47,9 @@
 @endsection
 
 @push('customJs')
-    <script src="{{asset('js/app.js')}}"></script>
+{{--    <script src="{{asset('js/app.js')}}"></script>--}}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+
     <script src="{{asset('js/pagination.js')}}"></script>
     <script>
         $(document).ready(function () {
@@ -634,4 +636,5 @@
         }
 
     </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 @endpush

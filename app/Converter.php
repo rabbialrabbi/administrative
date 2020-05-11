@@ -6,6 +6,7 @@ namespace App;
 
 class Converter
 {
+   public $msg = 'Test Successful';
     public function convertJsonToColleciton($json)
     {
         $filterKey = json_decode($json);
@@ -41,5 +42,8 @@ class Converter
        $collectionData =  $this->convertJsonToColleciton($json);
 
         return $this->convertToMultiArray($collectionData);
+    }
+    public function test(){
+        return 'WOrking';
     }
 }

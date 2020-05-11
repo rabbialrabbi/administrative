@@ -24,6 +24,7 @@
             @ data from database will fetch with ajex and append here
      ******************************************************************* --}}
     <div id="indexData" class="row body_bottom">
+        <img src="https://cdn.clipart.email/d94ddd93994b3bc30cc1dd53c5e2a09e_spinning-circle-png-gif_480-474.gif" alt="Flowers in Chania" height="80" width="80" style="margin-left: auto;margin-right: auto">
     </div>
 
     {{--****************************************************************
@@ -50,10 +51,6 @@
     <script>
 
         $(document).ready(function () {
-            /* Waiting Loading Animation logo*/
-            let gifUrl = "https://cdn.clipart.email/d94ddd93994b3bc30cc1dd53c5e2a09e_spinning-circle-png-gif_480-474.gif";
-            let table = `<img src=${gifUrl} alt="Flowers in Chania" height="80" width="80" style="margin-left: auto;margin-right: auto">`;
-            $('#indexData').html(table);
 
             loadPagination();
 

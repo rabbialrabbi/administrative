@@ -35,7 +35,7 @@ class DataController extends Controller
 
     public function sectionalDataList(Request $request, Data $data)
     {
-        $tableName = 'ada_'.$request->section;
+        $tableName = strtolower('ada_'.$request->section) ;
         $sectionCode = $request->section.'Code';
         $sectionName = $request->section.'NameBangla';
         $columnName = $data->convertColumnName($request->section);

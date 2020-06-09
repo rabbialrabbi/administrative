@@ -12,11 +12,14 @@ class AreaTypeController extends Controller
         $dataPerPage = 10;
         $total = DB::table('ada_area_type')->count();
         $checkFraction = $total % $dataPerPage;
+        $division['count'] = ceil($total / $dataPerPage);
 
         if ($currentPage == 'lastPage') {
             $currentPage = floor($total / $dataPerPage);
             $firstData = $currentPage * $dataPerPage;
             if ($checkFraction) {
+                $currentPage = floor($total/$dataPerPage);
+                $firstData = $currentPage * $dataPerPage;
                 $dataPerPage = $checkFraction;
             }
         } else {
@@ -25,7 +28,7 @@ class AreaTypeController extends Controller
         }
 
         $division['tableData'] = DB::table('ada_area_type')->orderBy('AreaTypeId', 'asc')->offset($firstData)->limit($dataPerPage)->get();
-        $division['count'] = ceil($total / $dataPerPage);
+
         return $division;
     }
 

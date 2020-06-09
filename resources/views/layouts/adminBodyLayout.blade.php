@@ -7,6 +7,7 @@
     <div class="col-1 clone">:</div>
     <div class="col-8"><h3>{{$section}}</h3></div>
 </div>
+
 <div class="row body_search-panel">
     <div class="col-8"></div>
     <div class="col-4">

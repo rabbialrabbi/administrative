@@ -1,16 +1,37 @@
 @extends('layouts.adminLayout')
+<?php $sectionType= 'উপজেলা' ?>
 
-@section('title','উপজেলা')
+@section('title',$sectionType)
 @section('body')
 
-    @include('layouts.adminBodyLayout',['section'=>'উপজেলা'])
+    @include('layouts.adminBodyLayout',['section'=>$sectionType])
 
 @endsection
 
 @push('customJs')
     <script src="{{asset('js/app.js')}}"></script>
+    <script src="{{asset('js/Section.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
     <script src="{{asset('js/pagination.js')}}"></script>
+
     <script>
+
+        let upazila = new SectionClass({
+            'sectionName':{'Upazila':'{{ $sectionType }}'},
+            'table':{
+                'UpazilaId':'আই ডি',
+                'UpazilaCode':'উপজেলা কোড',
+                'UpazilaNameEnglish':'এলাকা নাম (ইংলিশ)',
+                'UpazilaNameBangla':'এলাকা নাম (বাংলা)',
+                'Note':'নোট',
+                'RecordStatus':'রেকর্ড স্ট্যাটার্স',
+                'RecordVersion':'রেকর্ড ভার্সন',
+                'DivisionNameBangla':'বিভাগ',
+                'DistrictNameBangla':'জেলা',
+                'AreaTypeNameBangla':'এলাকা ধরন',
+            }
+        });
+
         $(document).ready(function () {
 
             loadPagination();
@@ -28,35 +49,22 @@
                     @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function loadPagination(info) {
+        function loadPagination(info=false) {
 
-            if(info && info.DivisionKey){
-                window.DivisionKey = info.DivisionKey
-                window.DistrictKey = info.DistrictKey?info.DistrictKey:0
-
-            }else if(info && info.DistrictKey){
-                window.DistrictKey = info.DistrictKey
-            }else{
-                window.DivisionKey = 0;
-                window.DistrictKey = 0;
-            }
-            console.log(window.DivisionKey);
-            console.log(window.DistrictKey);
-            var currentPage = '';
-            if(info && info.currentPage){
-                currentPage = info.currentPage
-            }else{
-                currentPage = 1
-            }
+            upazila.loadWindowData(info)
+            let currentPage = upazila.currentPage(info);
 
             axios.get('/upazila/'+currentPage,{
                 params:{
                     filterKey:{
                         DivisionNameBangla: window.DivisionKey,
-                        DistrictNameBangla: window.DistrictKey
+                        DistrictNameBangla: window.DistrictKey,
+                        UpazilaNameBangla: window.UpazilaKey
                     }
                 }
             }).then((response)=>{
+
+                upazila.setPageCount(response.data['count'])
 
                 paginator.initPaginator({
                     'previousPage': 'পূর্বের পাতা',
@@ -87,14 +95,12 @@
         function mainTableInsert(currentPage=1){
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-            console.log(window.DivisionKey);
-            console.log(window.DistrictKey);
-            console.log(window.currentPage);
             axios.get('/upazila/'+currentPage,{
                 params:{
                     filterKey:{
                         DivisionNameBangla: window.DivisionKey,
-                        DistrictNameBangla: window.DistrictKey
+                        DistrictNameBangla: window.DistrictKey,
+                        UpazilaNameBangla: window.UpazilaKey
                     }
                 }
             }).then((response)=>{
@@ -102,185 +108,28 @@
                 filterDistrict(response);
 
                 $('.divi-table i').on('click',function(){
-                    let UpazilaId = $(this).attr('UpazilaId');
-                    let UpazilaCode = $(this).attr('UpazilaCode');
-                    let DistrictCode = $(this).attr('DistrictCode');
-                    let DivisionCode = $(this).attr('DivisionCode');
-                    let DivisionNameBangla = $(this).attr('DivisionNameBangla');
-                    let DistrictNameBangla = $(this).attr('DistrictNameBangla');
-                    let UpazilaNameEnglish = $(this).attr('UpazilatNameEnglish');
-                    let UpazilaNameBangla = $(this).attr('UpazilaNameBangla');
-                    let Note = $(this).attr('Note');
-                    let RecordStatus = $(this).attr('RecordStatus');
-                    let RecordVersion = $(this).attr('RecordVersion');
 
-                    var district = response.data;
-                    var table = '';
-                    table+= insertHeader();
-                    table+=`<div class="row sub_table-body">
-                                <table>
-                                    <tr>
-                                        <th>উপজেলা আই ডি</th>
-                                        <td class="clone">:</td>
-                                        <td>${UpazilaId}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>উপজেলা কোড</th>
-                                        <td class="clone">:</td>
-                                        <td>${UpazilaCode}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ</th>
-                                        <td class="clone">:</td>
-                                        <td>${DivisionNameBangla}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>জেলা</th>
-                                        <td class="clone">:</td>
-                                        <td>${DistrictNameBangla}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>উপজেলা নাম (ইংলিশ)</th>
-                                        <td class="clone">:</td>
-                                        <td>${UpazilaNameEnglish}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>উপজেলা নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td>${UpazilaNameBangla}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>নোট</th>
-                                        <td class="clone">:</td>
-                                        <td>${Note}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড স্ট্যাটাস</th>
-                                        <td class="clone">:</td>
-                                        <td>${RecordStatus}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড ভার্সন</th>
-                                        <td class="clone">:</td>
-                                        <td>${RecordVersion}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class=" row sub_table-bottom">
-                                <div class="row sub_table-button">
-                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
-                                <div class="col-4">
-                                    <button id="editDivision">এডিট</button>
-                                    <button id="deleteDivision" key=${UpazilaCode}>ডিলিট</button></div>
-                                </div>
-                            </div>
-                            <div>`;
+                    let info = {
+                        DivisionNameBangla : {
+                            DivisionNameBangla: $(this).attr('DivisionNameBangla'),
+                            DivisionCode : $(this).attr('DivisionCode'),
+                        } ,
+                        DistrictNameBangla : {
+                            DistrictNameBangla:$(this).attr('DistrictNameBangla'),
+                            DistrictCode : $(this).attr('DistrictCode'),
+                        } ,
+                        UpazilaId : $(this).attr('UpazilaId'),
+                        UpazilaCode : $(this).attr('UpazilaCode'),
+                        UpazilaNameEnglish : $(this).attr('UpazilatNameEnglish'),
+                        UpazilaNameBangla : $(this).attr('UpazilaNameBangla'),
+                        Note : $(this).attr('Note'),
+                        RecordStatus : $(this).attr('RecordStatus'),
+                        RecordVersion : $(this).attr('RecordVersion'),
+                    }
 
-                    /* Insert Data to main table*/
-                    $('#sub_input').html(table);
+                    upazila.show(info);
 
-                    /* Ajex call for Delete record*/
-                    $('#deleteDivision').click(function () {
-                        key = $(this).attr('key');
-                        if(confirm("Want to delete table")){
-                            axios.delete('/upazila/'+key).then((response)=>{
-                                $('#message').html(response.data)
-                                mainTableInsert(window.currentPage);
-                                $('#sub_input').html('');
-                            }).catch((error)=>{
-                                $('#message').html(error)
-                                console.log(error)
-                            })
-                        }
-                    });
 
-                    /* Click Event for Edit record*/
-                    $('#editDivision').click(function () {
-                        var table = '';
-                        table+= insertHeader();
-                        table+=`<form id="updateUpazila" action="">
-                            <div class="row sub_table-body">
-                                <table>
-                                    <tr>
-                                        <th>উপজেলা আই ডি</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="UpazilaId" value="${UpazilaId}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameBangla" value="${DivisionNameBangla}" disabled>
-                                            <input type="hidden" name="DivisionCode" value="${DivisionCode}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>জেলা</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DistrictCodeHidden" value="${DistrictNameBangla}" disabled>
-                                            <input type="hidden" name="DistrictCode" value="${DistrictCode}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>উপজেলা কোড</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="UpazilaCodeHidden" value="${UpazilaCode}" disabled>
-                                            <input type="hidden" name="UpazilaCode" value="${UpazilaCode}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>উপজেলা নাম (ইংলিশ)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="UpazilaNameEnglish" value="${UpazilaNameEnglish}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>উপজেলা নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="UpazilaNameBangla" value="${UpazilaNameBangla}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>নোট</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="Note" value="${Note}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড স্ট্যাটাস</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="RecordStatus" value="${RecordStatus}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড ভার্সন</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="RecordVersion" value="${RecordVersion}"></td>
-                                    </tr>
-                                </table>
-                           </div>
-                            <div class=" row sub_table-bottom">
-                                <div class="row sub_table-button">
-                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
-                                <div class="col-4">
-                                    <input type="submit" name="submit" value="আপডেট">
-                                    <button onclick="clearSubTable(event)">পিছনে</button>
-                                </div>
-                            </div>
-                            <div>
-                        </form>`;
-
-                        /* Insert Data to sub table*/
-                        $('#sub_input').html(table);
-
-                        /* Ajex call for Update record*/
-                        $('#updateUpazila').submit(function (event) {
-                            event.preventDefault();
-                            let info = $('#updateUpazila').serialize();
-                            axios.patch('/upazila/update',info).then((response)=>{
-                                $('#message').html(response.data)
-                                mainTableInsert(window.currentPage);
-                            }).catch((error)=>{
-                                $('#message').html(error);
-                                console.log(error)
-                            })
-                        });
-                    })
                 });
             }).catch((error)=>{
                 $('#indexData').html("Ajex Call for load table data");
@@ -292,7 +141,7 @@
         function filterDistrict(response) {
             let currentPage = window.currentPage;
             var table = '';
-            let i = '';
+            let i = upazila.counter(currentPage);
             let info = response.data['tableData'];
             let divisionName = response.data['DivisionName'];
             let districtName = response.data['DistrictName'];
@@ -367,17 +216,6 @@
         }
 
         {{--************************************************************
-                    @ This function Only Return Table header data
-            ************************************************************ --}}
-        function insertHeader(){
-            return `<div class="row body_top">
-                                <div class="col-2"><h3>প্রশাসনিক</h3></div>
-                                <div class="col-1 clone">:</div>
-                                <div class="col-8"><h3>উপজেলা</h3></div>
-                            </div>`
-        }
-
-        {{--************************************************************
                     @ This function return imput form Field
             ************************************************************ --}}
         function inputFormField() {
@@ -396,10 +234,10 @@
                     axios.post('/upazila/create',info).then((response)=>{
                         loadPagination({
                             'currentPage':'lastPage',
-                            'DivisionKey':window.DivisionKey,
-                            'DistrictKey':window.DistrictKey
+                            'DivisionKey':0,
+                            'DistrictKey':0
                         });
-                        loadAddForm(data);
+                        inputFormField();
                         $('#message').html(response.data);
 
                     }).catch((error)=>{
@@ -408,8 +246,8 @@
                     })
                 })
             })
-
         }
+
         function loadDataList(section,filterKey){
             var code = section+'Code';
             var name = section+'NameBangla';
@@ -437,7 +275,7 @@
             let DistrictList = response.data['district'];
             var table = '';
 
-            table+= insertHeader();
+            table+= upazila.insertHeader();
             table+= `<form id="addDivisionForm">
                             <div class="row sub_table-body">
                                 <table>
@@ -527,4 +365,6 @@ onchange="loadDataList('District',this.value);loadWindow('DivisionKey',event)">`
         }
 
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 @endpush

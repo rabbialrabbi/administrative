@@ -1,21 +1,32 @@
 @extends('layouts.adminLayout')
-
-@section('title','বিভাগ')
+<?php $sectionType= 'বিভাগ' ?>
+@section('title',$sectionType)
 @section('body')
-
-    @include('layouts.adminBodyLayout',['section'=>'বিভাগ'])
-
+    @include('layouts.adminBodyLayout',['section'=>$sectionType])
 @endsection
 
 @push('customJs')
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="{{asset('js/Section.js')}}"></script>
     <script src="{{asset('js/pagination.js')}}"></script>
     <script>
+        let division = new SectionClass({
+            'sectionName':{'Division':'{{ $sectionType }}'},
+            'table':{
+                'DivisionId' :'আই ডি',
+                'DivisionCode' :'কোড',
+                'DivisionNameEnglish' :'বিভাগ নাম ( ইংলিশ )',
+                'DivisionNameBangla' :'বিভাগ নাম ( বংলা )',
+                'Note' :'নোট',
+                'RecordStatus' :'রেকর্ড স্ট্যাটার্স',
+                'RecordVersion' :'রেকর্ড ভার্সন',
+            }
+        })
 
         $(document).ready(function () {
 
             /* Load data to main table with relevant click event*/
-            mainTableInsert();
+            // mainTableInsert();
 
             /* Load pagination */
             loadPagination();
@@ -32,10 +43,24 @@
                     @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function loadPagination() {
+        function loadPagination(info=false) {
+
+            division.loadWindowData(info)
+            let currentPage = division.currentPage(info);
 
 
-            axios.get('/division/1').then((response)=>{
+            axios.get('/division/'+currentPage,{
+                params:{
+                    filterKey:{
+                        DivisionNameBangla: window.DivisionKey,
+                        DistrictNameBangla: window.DistrictKey,
+                        UpazilaNameBangla: window.UpazilaKey
+                    }
+                }
+            }).then((response)=>{
+
+                division.setPageCount(response.data['count'])
+
                 paginator.initPaginator({
                     'previousPage': 'পূর্বের পাতা',
                     'nextPage': 'পরের পাতা',
@@ -43,6 +68,7 @@
                     'triggerFunc': loadTable,
                     'paginationClass': 'custom-paginator'
                 });
+                mainTableInsert(currentPage)
 
                 function loadTable() {
                     var currentPage = $('.js-paginator').data('pageSelected');
@@ -56,16 +82,54 @@
                     @ Input Receive data to main Table
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function mainTableInsert(currentPage=0){
+        function mainTableInsert(currentPage=1){
 
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
-            axios.get('/division/'+currentPage).then((response)=>{
+            axios.get('/division/'+currentPage,{
+                params:{
+                    filterKey:{
+                        DivisionNameBangla: window.DivisionKey,
+                        DistrictNameBangla: window.DistrictKey,
+                        UpazilaNameBangla: window.UpazilaKey
+                    }
+                }
+            }).then((response)=>{
 
-                let info = response.data['tableData'];
-                let table="";
-                let i=0;
-                table+=`<table>
+                filterDistrict(response);
+
+
+               /* Click Event for show Details in sub Table*/
+                $('.divi-table i').on('click',function(){
+
+                    let info = {
+                        DivisionId :$(this).attr("DivisionId"),
+                        DivisionCode :$(this).attr("DivisionCode"),
+                        DivisionNameEnglish :$(this).attr("DivisionNameEnglish"),
+                        DivisionNameBangla :$(this).attr("DivisionNameBangla"),
+                        Note :$(this).attr("Note"),
+                        RecordStatus :$(this).attr("RecordStatus"),
+                        RecordVersion :$(this).attr("RecordVersion"),
+                    }
+
+                    division.show(info)
+
+
+                });
+            }).catch((error)=>{
+                $('#indexData').html("Ajex Call for load table data");
+                console.log(error)
+            });
+        }
+
+        function filterDistrict(response) {
+            let currentPage = window.currentPage;
+            let table = '';
+
+            let i = division.counter(currentPage);
+            let info = response.data['tableData'];
+
+            table+=`<table>
                             <tr>
                                 <th>ক্রমিক</th>
                                 <th>আই ডি</th>
@@ -90,188 +154,28 @@
                                   <td>${data.Note}</td>
                                   <td>${data.RecordStatus}</td>
                                   <td>${data.RecordVersion}</td>
-                                  <td><i id="divi-but-${i}" key="${data.DivisionCode}" class="fas fa-eye"></i></td></td>
-                              </tr>`
-                            });
-               table+=`</table>`;
-
-                /* Insert Data to main table*/
-                $('#indexData').html(table);
-
-               /* Click Event for show Details in sub Table*/
-                $('.divi-table i').on('click',function(){
-                    var key = $(this).attr('key');
-                    axios.get('/division/show/'+key).then((response)=>{
-
-                        var division = response.data;
-                        var table = '';
-                        table+= insertHeader();
-                        table+=`<div class="row sub_table-body">
-                                <table>
-                                    <tr>
-                                        <th>বিভাগ আই ডি</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].DivisionId}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ কোড</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].DivisionCode}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ নাম (ইংলিশ)</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].DivisionNameEnglish}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].DivisionNameBangla}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>নোট</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].Note}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড স্ট্যাটাস</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].RecordStatus}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড ভার্সন</th>
-                                        <td class="clone">:</td>
-                                        <td>${division[0].RecordVersion}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class=" row sub_table-bottom">
-                                <div class="row sub_table-button">
-                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
-                                <div class="col-4">
-                                    <button id="editDivision">এডিট</button>
-                                    <button id="deleteDivision" key=${division[0].DivisionCode}>ডিলিট</button></div>
-                                </div>
-                            </div>
-                            <div>`;
-
-                        /* Insert Data to main table*/
-                        $('#sub_input').html(table);
-
-                        /* Ajex call for Delete record*/
-                        $('#deleteDivision').click(function () {
-                            key = $(this).attr('key');
-                            if(confirm("Want to delete table")){
-                                axios.delete('/division/'+key).then((response)=>{
-                                    $('#message').html(response.data)
-                                    mainTableInsert(window.currentPage);
-                                    $('#sub_input').html('');
-                                }).catch((error)=>{
-                                    $('#message').html(error)
-                                    console.log(error)
-                                })
-                            }
-                        });
-
-                        /* Click Event for Edit record*/
-                        $('#editDivision').click(function () {
-                            var table = '';
-                            table+= insertHeader();
-                            table+=`<form id="saveDivision" action="">
-                            <div class="row sub_table-body">
-                                <table>
-                                    <tr>
-                                        <th>বিভাগ আই ডি</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionId" value="${division[0].DivisionId}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ কোড</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionCode" value="${division[0].DivisionCode}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ নাম (ইংলিশ)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameEnglish" value="${division[0].DivisionNameEnglish}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>বিভাগ নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="DivisionNameBangla" value="${division[0].DivisionNameBangla}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>নোট</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="Note" value="${division[0].Note}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড স্ট্যাটাস</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="RecordStatus" value="${division[0].RecordStatus}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড ভার্সন</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="RecordVersion" value="${division[0].RecordVersion}"></td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class=" row sub_table-bottom">
-                                <div class="row sub_table-button">
-                                <div class="col-8"><p>Messages: <span id="message"></span></p></div>
-                                <div class="col-4">
-                                    <input type="submit" name="submit" value="আপডেট">
-                                    <button onclick="clearSubTable(event)">পিছনে</button>
-                                </div>
-                            </div>
-                            <div>
-                        </form>`;
-
-                        /* Insert Data to sub table*/
-                            $('#sub_input').html(table);
-
-                            /* Ajex call for Update record*/
-                            $('#saveDivision').submit(function (event) {
-                                event.preventDefault();
-                                var info = $('#saveDivision').serialize();
-                                axios.patch('/division/update',info).then((response)=>{
-                                    $('#message').html(response.data)
-                                    mainTableInsert(window.currentPage);
-                                }).catch((error)=>{
-                                    $('#message').html(error);
-                                    console.log(error)
-                                })
-                            });
-
-                        })
-                    }).catch((error)=>{
-                        console.log(error);
-                    })
-                });
-            }).catch((error)=>{
-                $('#indexData').html("Ajex Call for load table data");
-                console.log(error)
+                                   <td><i id="divi-but-${i}"
+                                   DivisionId ="${data.DivisionId}"
+                                   DivisionCode ="${data.DivisionCode}"
+                                   DivisionNameEnglish ="${data.DivisionNameEnglish}"
+                                   DivisionNameBangla ="${data.DivisionNameBangla}"
+                                   Note ="${data.Note}"
+                                   RecordStatus ="${data.RecordStatus}"
+                                   RecordVersion ="${data.RecordVersion}"
+                                    class="fas fa-eye">(O)</i></td></td>
+                              </tr>`;
             });
+            table+= `</table>`;
+            $('#indexData').html(table)
         }
 
-        {{--************************************************************
-                    @ This function Only Return Table header data
-            ************************************************************ --}}
-        function insertHeader(){
-            return `<div class="row body_top">
-                                <div class="col-2"><h3>প্রশাসনিক</h3></div>
-                                <div class="col-1 clone">:</div>
-                                <div class="col-8"><h3>বিভাগ</h3></div>
-                            </div>`
-        }
 
         {{--************************************************************
                     @ This function return imput form Field
             ************************************************************ --}}
         function inputFormField() {
             var table = '';
-            table+= insertHeader();
+            table+= division.insertHeader();
             table+= `<form id="addDivisionForm">
                             <div class="row sub_table-body">
                                 <table>
@@ -333,7 +237,7 @@
                 event.preventDefault();
                 var info = $('#addDivisionForm').serialize();
                 axios.post('/division/create',info).then((response)=>{
-                    mainTableInsert('lastPage');
+                    loadPagination({currentPage:'lastPage'});
                     inputFormField();
                     $('#message').html(response.data);
 

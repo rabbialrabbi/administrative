@@ -35,7 +35,7 @@ Route::prefix('division')->group(function () {
 
 Route::prefix('district')->group(function () {
     Route::view('/', 'pages.districtPage');
-    Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
+    Route::get('/{currentPage}', 'DistrictController@index');
     Route::post('/create', 'DistrictController@add');
     Route::get('/{id}', 'DistrictController@show');
     Route::patch('/update', 'DistrictController@update');

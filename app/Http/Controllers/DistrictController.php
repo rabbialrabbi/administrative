@@ -4,31 +4,44 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Converter;
 
 class DistrictController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, Converter $converter)
     {
         $dataPerPage = 10;
-        $filterKey = $request->filterKey;
+        $filterKey = $converter->convertJsonToColleciton($request->filterKey);
+        $condition = $converter->convertToMultiArray($filterKey);
         $currentPage = $request->currentPage;
 
-        if($filterKey){
+        if($condition){
 
             $filterData = DB::table('ada_district')
                 ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-                ->select('ada_district.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode')->where('DivisionNameBangla',$filterKey);
+                ->select('ada_district.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode')->where($condition);
+
             $total = $filterData->count();
-            $currentPage = $request->currentPage -1 ;
-            $firstData = $currentPage * $dataPerPage;
+            $district['count']= ceil($total/$dataPerPage);
+            $checkFraction = $total%$dataPerPage;
+
+            if($currentPage == 'lastPage'){
+                $currentPage = floor($total/$dataPerPage);
+                $firstData = $currentPage * $dataPerPage;
+                if($checkFraction){
+                    $dataPerPage = $checkFraction;
+                }
+            }else{
+                $currentPage = $currentPage-1;
+                $firstData = $currentPage * $dataPerPage;
+            }
+
 
             $district['tableData'] = $filterData
                                 ->orderBy('DistrictId','asc')
                                 ->offset($firstData)
                                 ->limit($dataPerPage)
                                 ->get();
-
-            $district['count']= ceil($total/$dataPerPage);
 
         }else{
             $q = DB::table('ada_district');
@@ -45,6 +58,7 @@ class DistrictController extends Controller
                 $currentPage = $currentPage -1 ;
                 $firstData = $currentPage * $dataPerPage;
             }
+
             $district['tableData'] = DB::table('ada_district')
                 ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
                 ->select('ada_district.*', 'ada_division.DivisionNameBangla')
@@ -63,14 +77,6 @@ class DistrictController extends Controller
             ->get();
 
         return $district;
-    }
-
-    public function filter($key)
-    {
-        $data =  DB::table('ada_district')
-            ->join('ada_division', 'ada_district.DivisionCode', '=', 'ada_division.DivisionCode')
-            ->select('ada_district.*', 'ada_division.DivisionNameBangla')->where('DivisionNameBangla','=',$key)->get();
-        return $data;
     }
 
     public function add()

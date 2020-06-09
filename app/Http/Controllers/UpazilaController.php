@@ -8,23 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class UpazilaController extends Controller
 {
-    protected $upazila='';
-    public function __construct(Converter $converter)
-    {
-        $this->upazila = $converter;
-    }
     /**
      * Receive Current page Number, DivisionNameBangla, DistrictNameBangla
      * Return 10 of Table Data according to filter, Count, Division Name list, District Name list
      * @param Request $request
+     * @param Converter $converter
      * @return mixed
      */
-    public function index(Request $request)
+    public function index(Request $request, Converter $converter)
     {
 
         $dataPerPage = 10;
-        $filterKey = $this->upazila->convertJsonToColleciton($request->filterKey);
-        $condition = $this->upazila->convertToMultiArray($filterKey);
+        $filterKey = $converter->convertJsonToColleciton($request->filterKey);
+        $condition = $converter->convertToMultiArray($filterKey);
 
         $currentPage = $request->currentPage;
 
@@ -94,7 +90,7 @@ class UpazilaController extends Controller
                     ->join('ada_district', 'ada_upazila.DistrictCode', '=', 'ada_district.DistrictCode')
                     ->select('ada_upazila.*', 'ada_division.DivisionNameBangla','ada_division.DivisionCode','ada_district.DistrictNameBangla','ada_district.DistrictCode');
 
-            $upazila['tableData'] = $totalData->orderBy('DistrictId','asc')
+            $upazila['tableData'] = $totalData->orderBy('UpazilaId','asc')
                     ->offset($firstData)
                     ->limit($dataPerPage)
                     ->get();

@@ -12,20 +12,22 @@ class DivisionController extends Controller
         $dataPerPage = 10;
         $total = DB::table('ada_division')->count();
         $checkFraction = $total%$dataPerPage;
+        $division['count']= ceil($total/$dataPerPage);
 
         if($currentPage == 'lastPage'){
             $currentPage = floor($total/$dataPerPage);
             $firstData = $currentPage * $dataPerPage;
             if($checkFraction){
+                $currentPage = floor($total/$dataPerPage);
+                $firstData = $currentPage * $dataPerPage;
                 $dataPerPage = $checkFraction;
             }
         }else{
             $currentPage = $currentPage -1 ;
             $firstData = $currentPage * $dataPerPage;
         }
-
         $division['tableData'] = DB::table('ada_division')->orderBy('DivisionId','asc')->offset($firstData)->limit($dataPerPage)->get();
-        $division['count']= ceil($total/$dataPerPage);
+
         return $division;
     }
 

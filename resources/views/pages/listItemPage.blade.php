@@ -1,16 +1,32 @@
 @extends('layouts.adminLayout')
-
-@section('title','লিস্ট ধরন')
+<?php $sectionType= 'লিস্ট ধরন' ?>
+@section('title',$sectionType)
 @section('body')
 
-    @include('layouts.adminBodyLayout',['section'=>'লিস্ট ধরন'])
+    @include('layouts.adminBodyLayout',['section'=>$sectionType])
 
 @endsection
 
 @push('customJs')
+    <script src="{{asset('js/app.js')}}"></script>
+    <script src="{{asset('js/Section.js')}}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
     <script src="{{asset('js/pagination.js')}}"></script>
     <script>
+
+        let listItem = new SectionClass({
+            'sectionName':{'ListItem':'{{ $sectionType }}'},
+            'table':{
+                'ListItemId':'লিস্ট ধরন আই ডি',
+                'ListItemCode':'লিস্ট ধরন কোড',
+                'CodeListNameBangla':'কোড লিস্ট',
+                'ListItemNameEnglish':'লিস্ট ধরন নাম (ইংলিশ)',
+                'ListItemNameBangla':'লিস্ট ধরন নাম (বাংলা)',
+                'Note':'নোট',
+                'RecordStatus':'রেকর্ড স্ট্যাটার্স',
+                'RecordVersion':'রেকর্ড ভার্সন',
+            }
+        });
 
         $(document).ready(function () {
 
@@ -29,11 +45,19 @@
                     @ Full Documentation : https://www.jqueryscript.net/other/flexible-paginator.html
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function loadPagination() {
-            let currentPage=0;
-            window.filterKey = 0;
+        function loadPagination(info = false) {
+            listItem.loadWindowData(info)
+            let currentPage = listItem.currentPage(info);
+
             axios.get('/listitem/'+currentPage,{
+                params:{
+                    filterKey:{
+                        CodeListNameBangla:window.CodeListKey
+                    }
+                }
             }).then((response)=>{
+
+                listItem.setPageCount(response.data['count'])
 
                 paginator.initPaginator({
                     'previousPage': 'পূর্বের পাতা',
@@ -50,6 +74,8 @@
                     mainTableInsert(currentPage)
                 }
 
+            }).catch((error)=>{
+                console.log(error)
             })
         }
 
@@ -58,190 +84,198 @@
                     @ Input Receive data to main Table
                     @ Includes Click Event To Show Details in sub Table
             ******************************************************************* --}}
-        function mainTableInsert(currentPage=0){
+        function mainTableInsert(currentPage=1){
+
             /* Ajex Call with Axios */
             window.currentPage = currentPage;
             axios.get('/listitem/'+currentPage,{
-                params: {
-                    filterKey:window.filterKey
+                params:{
+                    filterKey:{
+                        CodeListNameBangla:window.CodeListKey
+                    }
                 }
             }).then((response)=>{
-
-                // loadWindowsData(response);
 
                 filterDistrict(response);
 
 
                 $('.divi-table i').on('click',function(){
-                    let ListItemId = $(this).attr('ListItemId');
-                    let ListItemCode = $(this).attr('ListItemCode');
-                    let CodeListCode = $(this).attr('CodeListCode');
-                    let CodeListNameBangla = $(this).attr('CodeListNameBangla');
-                    let ListItemNameEnglish = $(this).attr('ListItemNameEnglish');
-                    let ListItemNameBangla = $(this).attr('ListItemNameBangla');
-                    let Note = $(this).attr('Note');
-                    let RecordStatus = $(this).attr('RecordStatus');
-                    let RecordVersion = $(this).attr('RecordVersion');
-                    console.log(response.data['CodeListName'])
-                    let CodeListName = response.data['CodeListName'];
-                    var table = '';
-                    table+= insertHeader();
-                    table+=`<div class="row sub_table-body">
-                                <table>
-                                    <tr>
-                                        <th>লিস্ট আইটেম আই ডি</th>
-                                        <td class="clone">:</td>
-                                        <td>${ListItemId}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>লিস্ট আইটেম কোড</th>
-                                        <td class="clone">:</td>
-                                        <td>${ListItemCode}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>কোড লিস্ট</th>
-                                        <td class="clone">:</td>
-                                        <td>${CodeListNameBangla}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>লিস্ট আইটেম নাম (ইংলিশ)</th>
-                                        <td class="clone">:</td>
-                                        <td>${ListItemNameEnglish}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>লিস্ট আইটেম নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td>${ListItemNameBangla}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>নোট</th>
-                                        <td class="clone">:</td>
-                                        <td>${Note}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড স্ট্যাটাস</th>
-                                        <td class="clone">:</td>
-                                        <td>${RecordStatus}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড ভার্সন</th>
-                                        <td class="clone">:</td>
-                                        <td>${RecordVersion}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class=" row sub_table-bottom">
-                                <div class="row sub_table-button">
-                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
-                                <div class="col-4">
-                                    <button id="editDivision">এডিট</button>
-                                    <button id="deleteDivision" key=${ListItemCode}>ডিলিট</button></div>
-                                </div>
-                            </div>
-                            <div>`;
 
-                    /* Insert Data to main table*/
-                    $('#sub_input').html(table);
+                    let info = {
+                        ListItemId :$(this).attr("ListItemId"),
+                        ListItemCode :$(this).attr("ListItemCode"),
+                        CodeListNameBangla :{
+                            CodeListNameBangla :$(this).attr('CodeListNameBangla'),
+                            CodeListCode :$(this).attr('CodeListCode'),
+                        } ,
+                        ListItemNameEnglish :$(this).attr("ListItemNameEnglish"),
+                        ListItemNameBangla :$(this).attr("ListItemNameBangla"),
+                        Note :$(this).attr("Note"),
+                        RecordStatus :$(this).attr("RecordStatus"),
+                        RecordVersion :$(this).attr("RecordVersion"),
+                    }
 
-                    /* Ajex call for Delete record*/
-                    $('#deleteDivision').click(function () {
-                        key = $(this).attr('key');
-                        if(confirm("Want to delete table")){
-                            axios.delete('/listitem/'+key).then((response)=>{
-                                $('#message').html(response.data)
-                                mainTableInsert(window.currentPage);
-                                $('#sub_input').html('');
-                            }).catch((error)=>{
-                                $('#message').html(error)
-                                console.log(error)
-                            })
-                        }
-                    });
+                    listItem.show(info)
 
-                    /* Click Event for Edit record*/
-                    $('#editDivision').click(function () {
-                        var table = '';
-                        table+= insertHeader();
-                        table+=`<form id="saveDivision" action="">
-                            <div class="row sub_table-body">
-                                <table>
-                                    <tr>
-                                        <th>লিস্ট আইটেম আই ডি</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="ListItemId" value="${ListItemId}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>লিস্ট আইটেম কোড</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="ListItemCodeHidden" value="${ListItemCode}" disabled>
-                                            <input type="hidden" name="ListItemCode" value="${ListItemCode}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>কোড লিস্ট</th>
-                                        <td class="clone">:</td>
-                                        <td><select name="CodeListCode">`
-                        CodeListName.forEach((data)=>{
-                            table+= `<option value="${data.CodeListCode}">${data.CodeListNameBangla}</option>`
-                        });
-                table+=`           </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>লিস্ট আইটেম নাম (ইংলিশ)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="ListItemNameEnglish" value="${ListItemNameEnglish}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>লিস্ট আইটেম নাম (বাংলা)</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="ListItemNameBangla" value="${ListItemNameBangla}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>নোট</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="Note" value="${Note}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড স্ট্যাটাস</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="RecordStatus" value="${RecordStatus}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>রেকর্ড ভার্সন</th>
-                                        <td class="clone">:</td>
-                                        <td><input type="text" name="RecordVersion" value="${RecordVersion}"></td>
-                                    </tr>
-                                </table>
-                           </div>
-                            <div class=" row sub_table-bottom">
-                                <div class="row sub_table-button">
-                                <div class="col-8"><p>Message: <span id="message"></span></p></div>
-                                <div class="col-4">
-                                    <input type="submit" name="submit" value="আপডেট">
-                                    <button onclick="clearSubTable(event)">পিছনে</button>
-                                </div>
-                            </div>
-                            <div>
-                        </form>`;
-
-                        /* Insert Data to sub table*/
-                        $('#sub_input').html(table);
-
-                        /* Ajex call for Update record*/
-                        $('#saveDivision').submit(function (event) {
-                            event.preventDefault();
-                            let info = $('#saveDivision').serialize();
-                            // console.log(info);
-                            axios.patch('/listitem/update',info).then((response)=>{
-                                $('#message').html(response.data)
-                                mainTableInsert(window.currentPage);
-                            }).catch((error)=>{
-                                $('#message').html(error);
-                                console.log(error)
-                            })
-                        });
-                    })
+                //     let CodeListName = response.data['CodeListName'];
+                //     var table = '';
+                //     table+= insertHeader();
+                //     table+=`<div class="row sub_table-body">
+                //                 <table>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম আই ডি</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${ListItemId}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম কোড</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${ListItemCode}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>কোড লিস্ট</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${CodeListNameBangla}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম নাম (ইংলিশ)</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${ListItemNameEnglish}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম নাম (বাংলা)</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${ListItemNameBangla}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>নোট</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${Note}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>রেকর্ড স্ট্যাটাস</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${RecordStatus}</td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>রেকর্ড ভার্সন</th>
+                //                         <td class="clone">:</td>
+                //                         <td>${RecordVersion}</td>
+                //                     </tr>
+                //                 </table>
+                //             </div>
+                //             <div class=" row sub_table-bottom">
+                //                 <div class="row sub_table-button">
+                //                 <div class="col-8"><p>Message: <span id="message"></span></p></div>
+                //                 <div class="col-4">
+                //                     <button id="editDivision">এডিট</button>
+                //                     <button id="deleteDivision" key=${ListItemCode}>ডিলিট</button></div>
+                //                 </div>
+                //             </div>
+                //             <div>`;
+                //
+                //     /* Insert Data to main table*/
+                //     $('#sub_input').html(table);
+                //
+                //     /* Ajex call for Delete record*/
+                //     $('#deleteDivision').click(function () {
+                //         key = $(this).attr('key');
+                //         if(confirm("Want to delete table")){
+                //             axios.delete('/listitem/'+key).then((response)=>{
+                //                 $('#message').html(response.data)
+                //                 mainTableInsert(window.currentPage);
+                //                 $('#sub_input').html('');
+                //             }).catch((error)=>{
+                //                 $('#message').html(error)
+                //                 console.log(error)
+                //             })
+                //         }
+                //     });
+                //
+                //     /* Click Event for Edit record*/
+                //     $('#editDivision').click(function () {
+                //         var table = '';
+                //         table+= insertHeader();
+                //         table+=`<form id="saveDivision" action="">
+                //             <div class="row sub_table-body">
+                //                 <table>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম আই ডি</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="ListItemId" value="${ListItemId}"></td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম কোড</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="ListItemCodeHidden" value="${ListItemCode}" disabled>
+                //                             <input type="hidden" name="ListItemCode" value="${ListItemCode}">
+                //                         </td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>কোড লিস্ট</th>
+                //                         <td class="clone">:</td>
+                //                         <td><select name="CodeListCode">`
+                //         CodeListName.forEach((data)=>{
+                //             table+= `<option value="${data.CodeListCode}">${data.CodeListNameBangla}</option>`
+                //         });
+                // table+=`           </select>
+                //                         </td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম নাম (ইংলিশ)</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="ListItemNameEnglish" value="${ListItemNameEnglish}"></td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>লিস্ট আইটেম নাম (বাংলা)</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="ListItemNameBangla" value="${ListItemNameBangla}"></td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>নোট</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="Note" value="${Note}"></td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>রেকর্ড স্ট্যাটাস</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="RecordStatus" value="${RecordStatus}"></td>
+                //                     </tr>
+                //                     <tr>
+                //                         <th>রেকর্ড ভার্সন</th>
+                //                         <td class="clone">:</td>
+                //                         <td><input type="text" name="RecordVersion" value="${RecordVersion}"></td>
+                //                     </tr>
+                //                 </table>
+                //            </div>
+                //             <div class=" row sub_table-bottom">
+                //                 <div class="row sub_table-button">
+                //                 <div class="col-8"><p>Message: <span id="message"></span></p></div>
+                //                 <div class="col-4">
+                //                     <input type="submit" name="submit" value="আপডেট">
+                //                     <button onclick="clearSubTable(event)">পিছনে</button>
+                //                 </div>
+                //             </div>
+                //             <div>
+                //         </form>`;
+                //
+                //         /* Insert Data to sub table*/
+                //         $('#sub_input').html(table);
+                //
+                //         /* Ajex call for Update record*/
+                //         $('#saveDivision').submit(function (event) {
+                //             event.preventDefault();
+                //             let info = $('#saveDivision').serialize();
+                //             // console.log(info);
+                //             axios.patch('/listitem/update',info).then((response)=>{
+                //                 $('#message').html(response.data)
+                //                 mainTableInsert(window.currentPage);
+                //             }).catch((error)=>{
+                //                 $('#message').html(error);
+                //                 console.log(error)
+                //             })
+                //         });
+                //     })
                 });
             }).catch((error)=>{
                 $('#indexData').html("Ajex Call for load table data");
@@ -252,7 +286,7 @@
         function filterDistrict(response) {
             let currentPage = window.currentPage;
             var table = '';
-            let i = currentPage !==1 && currentPage !== 0 ? currentPage*10 : 0;
+            let i = listItem.counter(currentPage);
             let info = response.data['tableData'];
             let ListItemName = response.data['CodeListName'];
 
@@ -260,7 +294,7 @@
                             <tr >
                                 <th>ক্রমিক</th>
                                 <th>
-                                <select onchange="window.filterKey=this.value;mainTableInsert()">`;
+                                <select onchange="loadPagination({'CodeListKey':this.value})">`;
 
             table+= `<option value="0">কোড লিস্ট</option>\n`;
 
@@ -315,17 +349,6 @@
 
 
         {{--************************************************************
-                    @ This function Only Return Table header data
-            ************************************************************ --}}
-        function insertHeader(){
-            return `<div class="row body_top">
-                                <div class="col-2"><h3>প্রশাসনিক</h3></div>
-                                <div class="col-1 clone">:</div>
-                                <div class="col-8"><h3>লিস্ট ধরন</h3></div>
-                            </div>`
-        }
-
-        {{--************************************************************
                     @ This function return imput form Field
             ************************************************************ --}}
         function inputFormField() {
@@ -337,7 +360,7 @@
                 let ListItemList = response.data;
                 var table = '';
 
-                table+= insertHeader();
+                table+= listItem.insertHeader();
                 table+= `<form id="addDivisionForm">
                             <div class="row sub_table-body">
                                 <table>

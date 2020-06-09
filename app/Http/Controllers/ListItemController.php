@@ -2,33 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Converter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ListItemController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, Converter $converter)
     {
         $dataPerPage = 10;
-        $filterKey = $request->filterKey;
+        $filterKey = $converter->convertJsonToColleciton($request->filterKey);
+        $condition = $converter->convertToMultiArray($filterKey);
         $currentPage = $request->currentPage;
 
-        if($filterKey){
-
+        if($condition){
             $filterData = DB::table('ada_listitem')
                 ->join('ada_codelist', 'ada_listitem.CodeListCode', '=', 'ada_codelist.CodeListCode')
-                ->select('ada_listitem.*', 'ada_codelist.CodeListNameBangla')->where('CodeListNameBangla','=',$filterKey);
+                ->select('ada_listitem.*', 'ada_codelist.CodeListNameBangla')->where($condition);
+
             $total = $filterData->count();
-            $currentPage = $request->currentPage -1 ;
-            $firstData = $currentPage * $dataPerPage;
+            $division['count']= ceil($total/$dataPerPage);
+            $checkFraction = $total%$dataPerPage;
+
+            if($currentPage == 'lastPage'){
+                $currentPage = floor($total/$dataPerPage);
+                $firstData = $currentPage * $dataPerPage;
+                if($checkFraction){
+                    $dataPerPage = $checkFraction;
+                }
+            }else{
+                $currentPage = $currentPage-1;
+                $firstData = $currentPage * $dataPerPage;
+            }
 
             $district['tableData'] = $filterData
                 ->orderBy('ListItemId','asc')
                 ->offset($firstData)
                 ->limit($dataPerPage)
                 ->get();
-
-            $district['count']= ceil($total/$dataPerPage);
 
         }else{
             $q = DB::table('ada_listitem');
@@ -45,6 +56,7 @@ class ListItemController extends Controller
                 $currentPage = $currentPage -1 ;
                 $firstData = $currentPage * $dataPerPage;
             }
+
             $district['tableData'] = DB::table('ada_listitem')
                 ->join('ada_codelist', 'ada_listitem.CodeListCode', '=', 'ada_codelist.CodeListCode')
                 ->select('ada_listitem.*', 'ada_codelist.CodeListNameBangla')
@@ -54,11 +66,13 @@ class ListItemController extends Controller
                 ->get();
 
             $district['count']= ceil($total/$dataPerPage);
+
         }
 
         $district['CodeListName'] = DB::table('ada_codelist')
             ->select('CodeListCode','CodeListNameBangla')
             ->get();
+
 
         return $district;
     }

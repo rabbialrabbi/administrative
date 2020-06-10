@@ -74,6 +74,8 @@
                     var currentPage = $('.js-paginator').data('pageSelected');
                     mainTableInsert(currentPage)
                 }
+            }).catch((error)=>{
+                $('#indexData').html(division.errorHandler(error))
             })
         }
 
@@ -117,8 +119,7 @@
 
                 });
             }).catch((error)=>{
-                $('#indexData').html("Ajex Call for load table data");
-                console.log(error)
+                $('#indexData').html(division.errorHandler(error))
             });
         }
 
@@ -162,7 +163,7 @@
                                    Note ="${data.Note}"
                                    RecordStatus ="${data.RecordStatus}"
                                    RecordVersion ="${data.RecordVersion}"
-                                    class="fas fa-eye">(O)</i></td></td>
+                                    class="fas fa-eye"></i></td></td>
                               </tr>`;
             });
             table+= `</table>`;
@@ -243,7 +244,6 @@
 
                 }).catch((error)=>{
                     $('#message').html(error);
-                    console.log(error)
                 })
             })
         }

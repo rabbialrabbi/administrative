@@ -83,7 +83,7 @@
                 }
 
             }).catch((error)=>{
-                console.log(error)
+                $('#indexData').html(error)
             })
         }
 
@@ -229,7 +229,7 @@
                                    Note="${data.Note}"
                                    RecordStatus="${data.RecordStatus}"
                                    RecordVersion="${data.RecordVersion}"
-                                    class="fas fa-eye">(O)</i></td></td>
+                                    class="fas fa-eye"></i></td></td>
                               </tr>`;
             });
             table+= `</table>`;

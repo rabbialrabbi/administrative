@@ -162,6 +162,8 @@ class AreaController extends Controller
             'UpazilaCode'=>request()->UpazilaCode,
             'AreaTypeCode'=>request()->AreaTypeCode,
             'AreaCode'=>request()->AreaCode,
+            'Area_Dept_Code1'=>'Default',
+            'Area_Dept_Code2'=>'Default',
             'AreaNameEnglish'=>request()->AreaNameEnglish,
             'AreaNameBangla'=>request()->AreaNameBangla,
             'AreaImage1'=>'Default',

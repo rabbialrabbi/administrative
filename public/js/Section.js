@@ -218,4 +218,16 @@ function SectionClass(section) {
         return i;
     }
 
+    this.errorHandler = function (error) {
+        let errStatusCode = error.response.status
+        let errStatusText = error.response.statusText
+        let requestUrl = error.response.request.responseURL
+        let table = '';
+        table+= `<div style="text-align: center;transform: translateY(50%);">
+                    <h2 style="color: red">${errStatusCode + ' - '+ errStatusText}</h2>
+                    <p style="color: brown">Url: ${requestUrl}</p>
+                    </div>`;
+        return table;
+    }
+
 }

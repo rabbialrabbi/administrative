@@ -19,7 +19,7 @@ class CreateAdaDivisionTable extends Migration
             $table->string('DivisionNameEnglish');
             $table->string('DivisionNameBangla');
             $table->string('DivisionImage1');
-            $table->string('DivisionImage2');
+            $table->binary('DivisionImage2');
             $table->string('Note');
             $table->string('RecordStatus');
             $table->string('RecordVersion');

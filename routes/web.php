@@ -19,17 +19,15 @@ use App\Converter;
 */
 
 Route::get('/', function () {
-
     return redirect('/division');
 });
-
 
 Route::prefix('division')->group(function () {
     Route::view('/', 'pages.divisionPage');
     Route::get('/{currentPage}', 'DivisionController@index');
     Route::post('/create', 'DivisionController@add');
     Route::get('/show/{id}', 'DivisionController@show');
-    Route::patch('/update', 'DivisionController@update');
+    Route::post('/update', 'DivisionController@update');
     Route::delete('/{id}', 'DivisionController@destroy');
 });
 
@@ -38,7 +36,7 @@ Route::prefix('district')->group(function () {
     Route::get('/{currentPage}', 'DistrictController@index');
     Route::post('/create', 'DistrictController@add');
     Route::get('/{id}', 'DistrictController@show');
-    Route::patch('/update', 'DistrictController@update');
+    Route::post('/update', 'DistrictController@update');
     Route::delete('/{id}', 'DistrictController@destroy');
 });
 
@@ -47,7 +45,7 @@ Route::prefix('upazila')->group(function () {
     Route::get('/{currentPage}', 'UpazilaController@index');
     Route::post('/create', 'UpazilaController@add');
     Route::get('/{id}', 'UpazilaController@show');
-    Route::patch('/update', 'UpazilaController@update');
+    Route::post('/update', 'UpazilaController@update');
     Route::delete('/{id}', 'UpazilaController@destroy');
 });
 
@@ -65,7 +63,7 @@ Route::prefix('area')->group(function () {
     Route::get('/{currentPage}', 'AreaController@index');
     Route::post('/create', 'AreaController@add');
     Route::get('/{id}', 'AreaController@show');
-    Route::patch('/update', 'AreaController@update');
+    Route::post('/update', 'AreaController@update');
     Route::delete('/{id}', 'AreaController@destroy');
 });
 
@@ -87,7 +85,7 @@ Route::prefix('listitem')->group(function () {
     Route::delete('/{id}', 'ListItemController@destroy');
 });
 
-/* Vue practive */
+/* Vue practice */
 Route::prefix('vueareatype')->group(function () {
     Route::view('/', 'vue.areaType');
     Route::get('/{currentPage}', 'AreaTypeController@index');
@@ -97,7 +95,6 @@ Route::prefix('vueareatype')->group(function () {
     Route::delete('/{id}', 'AreaTypeController@destroy');
 });
 
-
 Route::prefix('data')->group(function (){
     Route::get('/divisionList/{start?}/{end?}','DataController@divisionList');
     Route::get('/all','DataController@dataList');
@@ -106,18 +103,12 @@ Route::prefix('data')->group(function (){
 
 });
 
-
-
 Route::get('/test',function (){
 
     $test = Converter::test();
     dd($test);
-
-
 });
 //Route::post('/test','DataController@test');
-
-
 
 Auth::routes();
 

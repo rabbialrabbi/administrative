@@ -20,7 +20,7 @@ class CreateAdaDistrictTable extends Migration
             $table->string('DistrictNameEnglish');
             $table->string('DistrictNameBangla');
             $table->string('DistrictImage1');
-            $table->string('DistrictImage2');
+            $table->binary('DistrictImage2');
             $table->string('Note');
             $table->string('RecordStatus');
             $table->string('RecordVersion');

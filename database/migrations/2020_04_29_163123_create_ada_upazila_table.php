@@ -21,7 +21,7 @@ class CreateAdaUpazilaTable extends Migration
             $table->string('UpazilaNameEnglish');
             $table->string('UpazilaNameBangla');
             $table->string('UpazilaImage1');
-            $table->string('UpazilaImage2');
+            $table->binary('UpazilaImage2');
             $table->string('Note');
             $table->string('RecordStatus');
             $table->string('RecordVersion');

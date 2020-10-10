@@ -7,7 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {{--    font awesome CDN--}}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
+    <!-- Latest compiled and minified CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('/css/bootstrap4.css')}}">
     <title>@yield('title')</title>
 </head>
 <body>

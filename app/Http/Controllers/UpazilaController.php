@@ -122,30 +122,72 @@ class UpazilaController extends Controller
     {
         $validation = $this->validation();
 
-        $response = DB::table('ada_upazila')->insert([
-            'UpazilaId'=>request()->UpazilaId,
-            'DivisionCode'=>request()->DivisionCode,
-            'DistrictCode'=>request()->DistrictCode,
-            'UpazilaCode'=>request()->UpazilaCode,
-            'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
-            'UpazilaNameBangla'=>request()->UpazilaNameBangla,
-            'UpazilaImage1'=>'Default',
-            'UpazilaImage2'=>'Default',
-            'Note'=>request()->Note,
-            'RecordStatus'=>request()->RecordStatus,
-            'RecordVersion'=>request()->RecordVersion,
-            'UserAccess'=>'Default',
-            'AccessDate'=>now(),
-        ]);
+        try{
+            $data = base64_encode(file_get_contents( request()->file('image')->path()));
 
+            $imgName = request()->DivisionCode.'_'.request()->DistrictCode.'_'.request()->UpazilaNameEnglish.'.'.request()->file('image')->getClientOriginalExtension();
+            request()->file('image')->storeAs('public/rsc/upazila',$imgName);
+
+            $response = DB::table('ada_upazila')->insert([
+                'UpazilaId'=>request()->UpazilaId,
+                'DivisionCode'=>request()->DivisionCode,
+                'DistrictCode'=>request()->DistrictCode,
+                'UpazilaCode'=>request()->UpazilaCode,
+                'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
+                'UpazilaNameBangla'=>request()->UpazilaNameBangla,
+                'UpazilaImage1'=>$imgName,
+                'UpazilaImage2'=>$data,
+                'Note'=>request()->Note,
+                'RecordStatus'=>request()->RecordStatus,
+                'RecordVersion'=>request()->RecordVersion,
+                'UserAccess'=>'Default',
+                'AccessDate'=>now(),
+            ]);
+
+        }catch (\Exception $e){
+            dd($e->getMessage());
+        }
 
         return 'Input Successful';
     }
 
     public function update()
     {
-        $validation = $this->validation();
+        $entity = DB::table('ada_division')
+            ->where('DivisionCode', request()->DivisionCode)->first();
 
+        if(request()->file('image')){
+            try{
+                $img = $entity->DivisionImage1;
+
+                $file = storage_path('/app/public/upazila/'.$img);
+                if(is_file($file)){
+                    unlink($file);
+                }
+                $data = base64_encode(file_get_contents( request()->file('image')->path()));
+                $imgName = request()->DivisionCode.'_'.request()->DistrictCode.'_'.request()->UpazilaNameEnglish.'.'.request()->file('image')->getClientOriginalExtension();
+                request()->file('image')->storeAs('public/rsc/upazila',$imgName);
+                $response = DB::table('ada_upazila')
+                    ->where('UpazilaCode', request()->UpazilaCode)
+                    ->update([
+                        'UpazilaId'=>request()->UpazilaId,
+                        'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
+                        'UpazilaNameBangla'=>request()->UpazilaNameBangla,
+                        'UpazilaImage1'=>$imgName,
+                        'UpazilaImage2'=>$data,
+                        'Note'=>request()->Note,
+                        'RecordStatus'=>request()->RecordStatus,
+                        'RecordVersion'=>request()->RecordVersion,
+                        'UserAccess'=>'Default',
+                        'AccessDate'=>now(),
+                    ]);
+
+                return 'Update Successful';
+
+            }catch (\Exception $e){
+                dd($e->getMessage());
+            }
+        }
 
         $response = DB::table('ada_upazila')
             ->where('UpazilaCode', request()->UpazilaCode)
@@ -153,8 +195,6 @@ class UpazilaController extends Controller
                 'UpazilaId'=>request()->UpazilaId,
                 'UpazilaNameEnglish'=>request()->UpazilaNameEnglish,
                 'UpazilaNameBangla'=>request()->UpazilaNameBangla,
-                'UpazilaImage1'=>'Default',
-                'UpazilaImage2'=>'Default',
                 'Note'=>request()->Note,
                 'RecordStatus'=>request()->RecordStatus,
                 'RecordVersion'=>request()->RecordVersion,
@@ -184,6 +224,7 @@ class UpazilaController extends Controller
             'Note'=>'required',
             'RecordStatus'=>'required',
             'RecordVersion'=>'required',
+            'image'=>'sometimes|required|image|mimes:jpg,jpeg,png'
         ]);
     }
 }

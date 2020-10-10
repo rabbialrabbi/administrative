@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Converter;
@@ -90,28 +91,79 @@ class DistrictController extends Controller
             'Note'=>'required',
             'RecordStatus'=>'required',
             'RecordVersion'=>'required',
+            'image'=>'required|image|mimes:png,jpg,jpeg'
         ]);
 
-        $response = DB::table('ada_district')->insert([
-            'DistrictId'=>request()->DistrictId,
-            'DivisionCode'=>request()->DivisionCode,
-            'DistrictCode'=>request()->DistrictCode,
-            'DistrictNameEnglish'=>request()->DistrictNameEnglish,
-            'DistrictNameBangla'=>request()->DistrictNameBangla,
-            'DistrictImage1'=>'Default',
-            'DistrictImage2'=>'Default',
-            'Note'=>request()->Note,
-            'RecordStatus'=>request()->RecordStatus,
-            'RecordVersion'=>request()->RecordVersion,
-            'UserAccess'=>'Default',
-            'AccessDate'=>now(),
-        ]);
+        try{
+            $data = base64_encode(file_get_contents( request()->file('image')->path()));
+
+            $imgName = request()->DivisionCode.'_'. request()->DistrictNameEnglish.'.'.request()->file('image')->getClientOriginalExtension();
+            request()->file('image')->storeAs('public/rsc/district',$imgName);
+
+            $response = DB::table('ada_district')->insert([
+                'DistrictId'=>request()->DistrictId,
+                'DivisionCode'=>request()->DivisionCode,
+                'DistrictCode'=>request()->DistrictCode,
+                'DistrictNameEnglish'=>request()->DistrictNameEnglish,
+                'DistrictNameBangla'=>request()->DistrictNameBangla,
+                'DistrictImage1'=>$imgName,
+                'DistrictImage2'=>$data,
+                'Note'=>request()->Note,
+                'RecordStatus'=>request()->RecordStatus,
+                'RecordVersion'=>request()->RecordVersion,
+                'UserAccess'=>'Default',
+                'AccessDate'=>now(),
+            ]);
+
+        }catch (\Exception $e){
+            dd($e->getMessage());
+        }
+
+
 
         return "Input successful";
     }
 
     public function update()
     {
+        $entity = DB::table('ada_division')
+            ->where('DivisionCode', request()->DivisionCode)->first();
+
+        if(request()->file('image')){
+            try{
+                $img = $entity->DivisionImage1;
+
+                $file = storage_path('/app/public/district/'.$img);
+                if(is_file($file)){
+                    unlink($file);
+                }
+                $data = base64_encode(file_get_contents( request()->file('image')->path()));
+                $imgName = request()->DivisionCode.'_'. request()->DistrictNameEnglish.'.'.request()->file('image')->getClientOriginalExtension();
+                request()->file('image')->storeAs('public/rsc/district',$imgName);
+
+                $response = DB::table('ada_district')
+                    ->where('DistrictCode', request()->DistrictCode)
+                    ->update([
+                        'DistrictId'=>request()->DistrictId,
+                        'DivisionCode'=>request()->DivisionCode,
+                        'DistrictNameEnglish'=>request()->DistrictNameEnglish,
+                        'DistrictNameBangla'=>request()->DistrictNameBangla,
+                        'DistrictImage1'=>$imgName,
+                        'DistrictImage2'=>$data,
+                        'Note'=>request()->Note,
+                        'RecordStatus'=>request()->RecordStatus,
+                        'RecordVersion'=>request()->RecordVersion,
+                        'UserAccess'=>'Default',
+                        'AccessDate'=>now(),
+                    ]);
+
+                return 'Update Successful';
+
+            }catch (\Exception $e){
+                echo $e->getMessage();
+            }
+        }
+
         $response = DB::table('ada_district')
             ->where('DistrictCode', request()->DistrictCode)
             ->update([
@@ -119,8 +171,6 @@ class DistrictController extends Controller
                 'DivisionCode'=>request()->DivisionCode,
                 'DistrictNameEnglish'=>request()->DistrictNameEnglish,
                 'DistrictNameBangla'=>request()->DistrictNameBangla,
-                'DistrictImage1'=>'Default',
-                'DistrictImage2'=>'Default',
                 'Note'=>request()->Note,
                 'RecordStatus'=>request()->RecordStatus,
                 'RecordVersion'=>request()->RecordVersion,

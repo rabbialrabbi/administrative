@@ -123,6 +123,11 @@
                         UpazilaNameEnglish : $(this).attr('UpazilatNameEnglish'),
                         UpazilaNameBangla : $(this).attr('UpazilaNameBangla'),
                         Note : $(this).attr('Note'),
+                        Image :{
+                            isShow:false,
+                            Image1:'upazila/'+$(this).attr("UpazilaImage1"),
+                            Image2:$(this).attr("UpazilaImage2")
+                        },
                         RecordStatus : $(this).attr('RecordStatus'),
                         RecordVersion : $(this).attr('RecordVersion'),
                     }
@@ -206,6 +211,8 @@
                                    UpazilatNameEnglish ="${data.UpazilaNameEnglish}"
                                    UpazilaNameBangla ="${data.UpazilaNameBangla}"
                                    Note ="${data.Note}"
+                                   UpazilaImage1 ="${data.UpazilaImage1}"
+                                   UpazilaImage2 ="${data.UpazilaImage2}"
                                    RecordStatus ="${data.RecordStatus}"
                                    RecordVersion ="${data.RecordVersion}"
                                     class="fas fa-eye"></i></td></td>
@@ -228,10 +235,16 @@
                 $('#addDivisionForm').submit(function (event) {
 
                     event.preventDefault();
+                    let data = new FormData();
+                    let image = document.getElementById('imageId').files[0];
 
-                    var info = $('#addDivisionForm').serialize();
+                    var info = $('#addDivisionForm').serializeArray();
+                    info.forEach(function (input) {
+                        data.append(input.name, input.value)
+                    });
+                    data.append('image',image);
 
-                    axios.post('/upazila/create',info).then((response)=>{
+                    axios.post('/upazila/create',data).then((response)=>{
                         loadPagination({
                             'currentPage':'lastPage',
                             'DivisionKey':0,
@@ -336,6 +349,11 @@ onchange="loadDataList('District',this.value);loadWindow('DivisionKey',event)">`
                                         <th>রেকর্ড ভার্সন</th>
                                         <td class="clone">:</td>
                                         <td><input type="text" name="RecordVersion"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>ছবি</th>
+                                        <td class="clone">:</td>
+                                        <td><input id="imageId" type="file" name="image"></td>
                                     </tr>
                                 </table>
 

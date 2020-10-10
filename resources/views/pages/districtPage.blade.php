@@ -112,6 +112,11 @@
                         DistrictNameEnglish : $(this).attr('DistrictNameEnglish'),
                         DistrictNameBangla : $(this).attr('DistrictNameBangla'),
                         Note : $(this).attr('Note'),
+                        Image :{
+                            isShow:false,
+                            Image1:'district/'+$(this).attr("DistrictImage1"),
+                            Image2:$(this).attr("DistrictImage2")
+                        },
                         RecordStatus : $(this).attr('RecordStatus'),
                         RecordVersion : $(this).attr('RecordVersion'),
                 }
@@ -179,6 +184,8 @@
                                    DistrictNameEnglish ="${data.DistrictNameEnglish}"
                                    DistrictNameBangla ="${data.DistrictNameBangla}"
                                    Note ="${data.Note}"
+                                   DistrictImage1 ="${data.DistrictImage1}"
+                                   DistrictImage2 ="${data.DistrictImage2}"
                                    RecordStatus ="${data.RecordStatus}"
                                    RecordVersion ="${data.RecordVersion}"
                                     class="fas fa-eye"></i></td></td>
@@ -246,6 +253,11 @@
                                         <td class="clone">:</td>
                                         <td><input type="text" name="RecordVersion"></td>
                                     </tr>
+                                    <tr>
+                                        <th>ছবি</th>
+                                        <td class="clone">:</td>
+                                        <td><input id="imageId" type="file" name="image"></td>
+                                    </tr>
                                 </table>
 
                             </div>
@@ -267,8 +279,16 @@
                 /* Ajex call for add data to database*/
                 $('#addDivisionForm').submit(function (event) {
                     event.preventDefault();
-                    var info = $('#addDivisionForm').serialize();
-                    axios.post('/district/create',info).then((response)=>{
+
+                    let data = new FormData();
+                    let image = document.getElementById('imageId').files[0];
+                    var info = $('#addDivisionForm').serializeArray();
+
+                    info.forEach(function (input) {
+                        data.append(input.name, input.value)
+                    });
+                    data.append('image',image);
+                    axios.post('/district/create',data).then((response)=>{
                         loadPagination({
                             'currentPage':'lastPage',
                             'DivisionKey':window.DivisionKey,

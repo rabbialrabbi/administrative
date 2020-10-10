@@ -155,25 +155,36 @@ class AreaController extends Controller
     {
         $validation = $this->validation();
 
-        $response = DB::table('ada_area')->insert([
-            'AreaId'=>request()->AreaId,
-            'DivisionCode'=>request()->DivisionCode,
-            'DistrictCode'=>request()->DistrictCode,
-            'UpazilaCode'=>request()->UpazilaCode,
-            'AreaTypeCode'=>request()->AreaTypeCode,
-            'AreaCode'=>request()->AreaCode,
-            'Area_Dept_Code1'=>'Default',
-            'Area_Dept_Code2'=>'Default',
-            'AreaNameEnglish'=>request()->AreaNameEnglish,
-            'AreaNameBangla'=>request()->AreaNameBangla,
-            'AreaImage1'=>'Default',
-            'AreaImage2'=>'Default',
-            'Note'=>request()->Note,
-            'RecordStatus'=>request()->RecordStatus,
-            'RecordVersion'=>request()->RecordVersion,
-            'UserAccess'=>'Default',
-            'AccessDate'=>now(),
-        ]);
+        try {
+
+            $data = base64_encode(file_get_contents(request()->file('image')->path()));
+
+            $imgName = request()->DivisionCode . '_' .request()->DistrictCode . '_' .request()->UpazilaCode . '_' .request()->AreaNameEnglish . '.' . request()->file('image')->getClientOriginalExtension();
+            request()->file('image')->storeAs('public/rsc/area', $imgName);
+
+            $response = DB::table('ada_area')->insert([
+                'AreaId'=>request()->AreaId,
+                'DivisionCode'=>request()->DivisionCode,
+                'DistrictCode'=>request()->DistrictCode,
+                'UpazilaCode'=>request()->UpazilaCode,
+                'AreaTypeCode'=>request()->AreaTypeCode,
+                'AreaCode'=>request()->AreaCode,
+                'Area_Dept_Code1'=>'Default',
+                'Area_Dept_Code2'=>'Default',
+                'AreaNameEnglish'=>request()->AreaNameEnglish,
+                'AreaNameBangla'=>request()->AreaNameBangla,
+                'AreaImage1'=>$imgName,
+                'AreaImage2'=>$data,
+                'Note'=>request()->Note,
+                'RecordStatus'=>request()->RecordStatus,
+                'RecordVersion'=>request()->RecordVersion,
+                'UserAccess'=>'Default',
+                'AccessDate'=>now(),
+            ]);
+
+        }catch (\Exception $e){
+            dd($e->getMessage());
+        }
 
 
         return 'Input Successful';
@@ -182,6 +193,43 @@ class AreaController extends Controller
     public function update()
     {
         $validation = $this->validation();
+
+        $entity = DB::table('ada_division')
+            ->where('DivisionCode', request()->DivisionCode)->first();
+
+        if(request()->file('image')){
+            try {
+                $img = $entity->DivisionImage1;
+
+                $file = storage_path('/app/public/area/' . $img);
+                if (is_file($file)) {
+                    unlink($file);
+                }
+                $data = base64_encode(file_get_contents(request()->file('image')->path()));
+                $imgName = request()->DivisionCode . '_' .request()->DistrictCode . '_' .request()->UpazilaCode . '_' .request()->AreaNameEnglish . '.' . request()->file('image')->getClientOriginalExtension();
+
+                request()->file('image')->storeAs('public/rsc/area', $imgName);
+
+                $response = DB::table('ada_area')
+                    ->where('AreaCode', request()->AreaCode)
+                    ->update([
+                        'AreaId'=>request()->AreaId,
+                        'AreaNameEnglish'=>request()->AreaNameEnglish,
+                        'AreaNameBangla'=>request()->AreaNameBangla,
+                        'AreaImage1'=>$imgName,
+                        'AreaImage2'=>$data,
+                        'Note'=>request()->Note,
+                        'RecordStatus'=>request()->RecordStatus,
+                        'RecordVersion'=>request()->RecordVersion,
+                        'UserAccess'=>'Default',
+                        'AccessDate'=>now(),
+                    ]);
+                return 'Update Successful';
+
+            }catch (\Exception $e){
+                dd($e->getMessage());
+            }
+        }
 
 
         $response = DB::table('ada_area')
@@ -223,6 +271,7 @@ class AreaController extends Controller
             'Note'=>'required',
             'RecordStatus'=>'required',
             'RecordVersion'=>'required',
+            'image'=>'required|image|mimes:jpg,jpeg,png'
         ]);
     }
 }

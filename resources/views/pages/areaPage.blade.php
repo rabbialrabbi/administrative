@@ -131,6 +131,19 @@
                             AreaNameEnglish : $(this).attr('AreaNameEnglish'),
                             AreaNameBangla : $(this).attr('AreaNameBangla'),
                             Note : $(this).attr('Note'),
+                            Image :{
+                                isShow:false,
+                                Image1:'area/'+$(this).attr("AreaImage1"),
+                                Image2:$(this).attr("AreaImage2")
+                            },
+                            DivisionImage1 :{
+                               isShow:false,
+                               DivisionImage1:$(this).attr("DivisionImage1")
+                            },
+                            DivisionImage2 :{
+                               isShow:false,
+                               DivisionImage2:$(this).attr("DivisionImage2")
+                            },
                             RecordStatus : $(this).attr('RecordStatus'),
                             RecordVersion : $(this).attr('RecordVersion')
                }
@@ -227,6 +240,8 @@
                                    AreaNameEnglish="${data.AreaNameEnglish}"
                                    AreaNameBangla="${data.AreaNameBangla}"
                                    Note="${data.Note}"
+                                   AreaImage1 ="${data.AreaImage1}"
+                                   AreaImage2 ="${data.AreaImage2}"
                                    RecordStatus="${data.RecordStatus}"
                                    RecordVersion="${data.RecordVersion}"
                                     class="fas fa-eye"></i></td></td>
@@ -251,10 +266,17 @@
                 $('#addDivisionForm').submit(function (event) {
 
                     event.preventDefault();
+                    let data = new FormData();
+                    let image = document.getElementById('imageId').files[0];
 
-                    var info = $('#addDivisionForm').serialize();
+                    var info = $('#addDivisionForm').serializeArray();
 
-                    axios.post('/area/create',info).then((response)=>{
+                    info.forEach(function (input) {
+                        data.append(input.name, input.value)
+                    });
+                    data.append('image',image);
+
+                    axios.post('/area/create',data).then((response)=>{
 
                         loadPagination({
                             'currentPage':'lastPage',
@@ -379,6 +401,11 @@
                                         <th>রেকর্ড ভার্সন</th>
                                         <td class="clone">:</td>
                                         <td><input type="text" name="RecordVersion"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>ছবি</th>
+                                        <td class="clone">:</td>
+                                        <td><input id="imageId" type="file" name="image"></td>
                                     </tr>
                                 </table>
 

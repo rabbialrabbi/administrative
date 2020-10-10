@@ -52,10 +52,31 @@ function SectionClass(section) {
         table+= this.insertHeader();
 
         table+= `<div class="row sub_table-body">
-                                <table>`
-        table+= this.generateShow(info)
+        <div class="col-6">
+                <table>`
+                table+= this.generateShow(info)
 
-                               table+=` </table>
+                 table+=` </table>
+        </div>
+        <div class="col-6">`
+        console.log(info.Image.Image2)
+
+        if (typeof info.Image !== 'undefined' && typeof info.Image.Image1 !== 'undefined' && typeof info.Image.Image2 !== 'undefined') {
+            table += `<div class="row ">
+                <div class="col-6 imgHead" >
+                    <div class="imgBody">
+                        <img width="100%" height="100%" src="/storage/rsc/${info.Image.Image1}" alt="${info.Image1}">
+                    </div>
+                </div>
+                <div class="col-6 imgHead">
+                    <div class="imgBody">
+                        <img width="100%" height="100%" src="data:image/jpg;base64,${info.Image.Image2}" alt="base64_encode" />.
+                    </div>
+
+                </div>
+            </div>`;
+        }
+            table += `</div>
                             </div>
                             <div class=" row sub_table-bottom">
                                 <div class="row sub_table-button">
@@ -88,19 +109,20 @@ function SectionClass(section) {
                       </tr>`
                 }else {
                     data = info[key];
-                    table += `<tr>
+                    if (typeof data.isShow === 'undefined' && data.isShow !== false) {
+                        table += `<tr>
                           <th>${this.tableData[key]}</th>
                           <td class="clone">:</td>
                           <td>`
-                    for (var k in data){
-                        if(i===0){
-                            table += `${data[key]}`
+                        for (var k in data) {
+                            if (i === 0) {
+                                table += `${data[key]}`
+                            }
+                            i++;
                         }
-                        i++;
-                    }
-                    table+= `</td>
+                        table += `</td>
                       </tr>`
-
+                    }
                 }
         }
         return table
@@ -124,23 +146,31 @@ function SectionClass(section) {
                           <td><input type="text" name="${key}" value="${info[key]}"></td>
                       </tr>`
                 }else {
-                    data = info[key];
-                    table += `<tr>
+                    if(typeof tableData[key] !== 'undefined'){
+                        data = info[key];
+                        table += `<tr>
                           <th>${tableData[key]}</th>
                           <td class="clone">:</td>
                           <td>`
-                    for (var k in data){
-                        if(i===0){
-                            table += `<input type="text" name="${k}" value="${data[k]}" disabled>`
-                        }else {
-                            table += `<input type="hidden" name="${k}" value="${data[k]}">`
+                        for (var k in data){
+                            if(i===0){
+                                table += `<input type="text" name="${k}" value="${data[k]}" disabled>`
+                            }else {
+                                table += `<input type="hidden" name="${k}" value="${data[k]}">`
+                            }
+                            i++;
                         }
-                        i++;
-                    }
-                    table+= `</td>
+                        table+= `</td>
                       </tr>`
+                    }
+
                 }
             }
+            table += `<tr>
+                          <th>ছবি</th>
+                          <td class="clone">:</td>
+                          <td><input id="editImageId" type="file"></td>
+                      </tr>`
             return table
         }
 
@@ -170,8 +200,16 @@ function SectionClass(section) {
             /* Ajex call for Update record*/
             $('#updateUpazila').submit(function (event) {
                 event.preventDefault();
-                let info = $('#updateUpazila').serialize();
-                axios.patch('/'+sectionName+'/update',info).then((response)=>{
+
+                let data = new FormData();
+                let image = document.getElementById('editImageId').files[0];
+                var info = $('#updateUpazila').serializeArray();
+                info.forEach(function (input) {
+                    data.append(input.name, input.value)
+                });
+                data.append('image',image);
+
+                axios.post('/'+sectionName+'/update',data).then((response)=>{
                     $('#message').html(response.data)
                     mainTableInsert(window.currentPage);
                 }).catch((error)=>{

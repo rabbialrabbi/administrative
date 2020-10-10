@@ -25,7 +25,7 @@ class CreateAdaAreaTable extends Migration
             $table->string('AreaNameEnglish');
             $table->string('AreaNameBangla');
             $table->string('AreaImage1');
-            $table->string('AreaImage2');
+            $table->binary('AreaImage2');
             $table->string('Note');
             $table->string('RecordStatus');
             $table->string('RecordVersion');

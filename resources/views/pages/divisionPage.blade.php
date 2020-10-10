@@ -110,6 +110,11 @@
                         DivisionNameEnglish :$(this).attr("DivisionNameEnglish"),
                         DivisionNameBangla :$(this).attr("DivisionNameBangla"),
                         Note :$(this).attr("Note"),
+                        Image :{
+                            isShow:false,
+                            Image1:'division/'+$(this).attr("DivisionImage1"),
+                            Image2:$(this).attr("DivisionImage2")
+                        },
                         RecordStatus :$(this).attr("RecordStatus"),
                         RecordVersion :$(this).attr("RecordVersion"),
                     }
@@ -161,6 +166,8 @@
                                    DivisionNameEnglish ="${data.DivisionNameEnglish}"
                                    DivisionNameBangla ="${data.DivisionNameBangla}"
                                    Note ="${data.Note}"
+                                   DivisionImage1 ="${data.DivisionImage1}"
+                                   DivisionImage2 ="${data.DivisionImage2}"
                                    RecordStatus ="${data.RecordStatus}"
                                    RecordVersion ="${data.RecordVersion}"
                                     class="fas fa-eye"></i></td></td>
@@ -215,6 +222,11 @@
                                         <td class="clone">:</td>
                                         <td><input type="text" name="RecordVersion"></td>
                                     </tr>
+                                    <tr>
+                                        <th>ছবি</th>
+                                        <td class="clone">:</td>
+                                        <td><input id="imageId" type="file" name="image"></td>
+                                    </tr>
                                 </table>
 
                             </div>
@@ -236,8 +248,15 @@
             /* Ajex call for add data to database*/
             $('#addDivisionForm').submit(function (event) {
                 event.preventDefault();
-                var info = $('#addDivisionForm').serialize();
-                axios.post('/division/create',info).then((response)=>{
+
+                let data = new FormData();
+                let image = document.getElementById('imageId').files[0];
+                var info = $('#addDivisionForm').serializeArray();
+                info.forEach(function (input) {
+                    data.append(input.name, input.value)
+                });
+                data.append('image',image);
+                axios.post('/division/create',data).then((response)=>{
                     loadPagination({currentPage:'lastPage'});
                     inputFormField();
                     $('#message').html(response.data);

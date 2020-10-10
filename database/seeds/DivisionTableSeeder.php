@@ -8,6 +8,7 @@ class DivisionTableSeeder extends Seeder
     /**
      * Run the database seeds.
      *
+     * @param Data $data
      * @return void
      */
     public function run(Data $data)

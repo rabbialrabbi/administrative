@@ -7,29 +7,33 @@ use Illuminate\Support\Facades\DB;
 
 class DivisionController extends Controller
 {
-    public function index($currentPage)
+    public function index()
     {
-        $dataPerPage = 10;
-        $total = DB::table('ada_division')->count();
-        $checkFraction = $total%$dataPerPage;
-
-        if($currentPage == 'lastPage'){
-            $currentPage = floor($total/$dataPerPage);
-            $firstData = $currentPage * $dataPerPage;
-            if($checkFraction){
-                $dataPerPage = $checkFraction;
-            }
-        }else{
-            $currentPage = $currentPage -1 ;
-            $firstData = $currentPage * $dataPerPage;
-        }
-
-        $division['tableData'] = DB::table('ada_division')->orderBy('DivisionId','asc')->offset($firstData)->limit($dataPerPage)->get();
-        $division['count']= ceil($total/$dataPerPage);
+        $division = DB::table('ada_division')->paginate(10);
         return $division;
+
+
+//        $dataPerPage = 10;
+//        $total = DB::table('ada_division')->count();
+//        $checkFraction = $total%$dataPerPage;
+//
+//        if($currentPage == 'lastPage'){
+//            $currentPage = floor($total/$dataPerPage);
+//            $firstData = $currentPage * $dataPerPage;
+//            if($checkFraction){
+//                $dataPerPage = $checkFraction;
+//            }
+//        }else{
+//            $currentPage = $currentPage -1 ;
+//            $firstData = $currentPage * $dataPerPage;
+//        }
+//
+//        $division['tableData'] = DB::table('ada_division')->orderBy('DivisionId','asc')->offset($firstData)->limit($dataPerPage)->get();
+//        $division['count']= ceil($total/$dataPerPage);
+//        return $division;
     }
 
-    public function add()
+    public function store()
     {
         $validation = request()->validate([
             'DivisionId'=>'required',
@@ -40,25 +44,25 @@ class DivisionController extends Controller
             'RecordStatus'=>'required',
             'RecordVersion'=>'required',
         ]);
+        $response = DB::table('ada_division')->insert([
+            'DivisionId'=>request()->DivisionId,
+            'DivisionCode'=>request()->DivisionCode,
+            'DivisionNameEnglish'=>request()->DivisionNameEnglish,
+            'DivisionNameBangla'=>request()->DivisionNameBangla,
+            'DivisionImage1'=>'Default',
+            'DivisionImage2'=>'Default',
+            'Note'=>request()->Note,
+            'RecordStatus'=>request()->RecordStatus,
+            'RecordVersion'=>request()->RecordVersion,
+            'UserAccess'=>'Default',
+            'AccessDate'=>now(),
+        ]);
+        $division = DB::table('ada_division')->paginate(10);
+        return $division;
 
-     $response = DB::table('ada_division')->insert([
-                'DivisionId'=>request()->DivisionId,
-                'DivisionCode'=>request()->DivisionCode,
-                'DivisionNameEnglish'=>request()->DivisionNameEnglish,
-                'DivisionNameBangla'=>request()->DivisionNameBangla,
-                'DivisionImage1'=>'Default',
-                'DivisionImage2'=>'Default',
-                'Note'=>request()->Note,
-                'RecordStatus'=>request()->RecordStatus,
-                'RecordVersion'=>request()->RecordVersion,
-                'UserAccess'=>'Default',
-                'AccessDate'=>now(),
-            ]);
-
-     return 'Input Successful';
     }
 
-    public function update()
+    public function update($d)
     {
         $response = DB::table('ada_division')
             ->where('DivisionCode', request()->DivisionCode)
@@ -74,7 +78,9 @@ class DivisionController extends Controller
                 'UserAccess'=>'Default',
                 'AccessDate'=>now(),
             ]);
-        return 'Update Successful';
+
+        $division = DB::table('ada_division')->paginate(10);
+        return $division;
     }
 
     public function destroy($id)

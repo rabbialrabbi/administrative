@@ -1,39 +1,39 @@
 <template>
     <table>
         <tr>
-            <th>এলাকা ধরন আই ডি</th>
+            <th>বিভাগ আই ডি</th>
             <td class="clone">:</td>
-            <slot name="id"></slot>
+            <slot name="DivisionId"></slot>
         </tr>
         <tr>
-            <th>এলাকা ধরন কোড</th>
+            <th>বিভাগ কোড</th>
             <td class="clone">:</td>
-            <slot name="code"></slot>
+            <slot name="DivisionCode"></slot>
         </tr>
         <tr>
-            <th>এলাকা ধরন নাম (ইংলিশ)</th>
+            <th>বিভাগ নাম (ইংলিশ)</th>
             <td class="clone">:</td>
-            <slot name="nameEnglish"></slot>
+            <slot name="DivisionNameEnglish"></slot>
         </tr>
         <tr>
-            <th>এলাকা ধরন নাম (বাংলা)</th>
+            <th>বিভাগ নাম (বাংলা)</th>
             <td class="clone">:</td>
-            <slot name="nameBangla"></slot>
+            <slot name="DivisionNameBangla"></slot>
         </tr>
         <tr>
             <th>নোট</th>
             <td class="clone">:</td>
-            <slot name="note"></slot>
+            <slot name="Note"></slot>
         </tr>
         <tr>
             <th>রেকর্ড স্ট্যাটাস</th>
             <td class="clone">:</td>
-            <slot name="status"></slot>
+            <slot name="RecordStatus"></slot>
         </tr>
         <tr>
             <th>রেকর্ড ভার্সন</th>
             <td class="clone">:</td>
-            <slot name="version"></slot>
+            <slot name="RecordVersion"></slot>
         </tr>
     </table>
 </template>

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import areaSubtable from "../template/areaSubtable";
+    import areaSubtable from "../template/divisionSubSection";
     export default {
         props:{
             mainTable:Function,

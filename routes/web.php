@@ -19,57 +19,60 @@
 */
 
 Route::get('/', function () {
-
-    return redirect('/division');
+    return view('home');
 });
 
 
-Route::prefix('division')->group(function () {
-    Route::view('/', 'pages.divisionPage');
-    Route::get('/{currentPage}', 'DivisionController@index');
-    Route::post('/create', 'DivisionController@add');
-    Route::get('/show/{id}', 'DivisionController@show');
-    Route::patch('/update', 'DivisionController@update');
-    Route::delete('/{id}', 'DivisionController@destroy');
-});
 
-Route::prefix('district')->group(function () {
-    Route::view('/', 'pages.districtPage');
-    Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
-    Route::get('/filter/{key}','DistrictController@filter');
-    Route::post('/create', 'DistrictController@add');
-    Route::get('/{id}', 'DistrictController@show');
-    Route::patch('/update', 'DistrictController@update');
-    Route::delete('/{id}', 'DistrictController@destroy');
-});
+Route::resource('division','DivisionController');
 
-Route::prefix('upazila')->group(function () {
-    Route::view('/', 'pages.upazilaPage');
-    Route::get('/{currentPage}/{filterKey}', 'UpazilaController@index');
-    Route::get('/filter/{key}','UpazilaController@filter');
-    Route::post('/create', 'UpazilaController@add');
-    Route::get('/{id}', 'UpazilaController@show');
-    Route::patch('/update', 'UpazilaController@update');
-    Route::delete('/{id}', 'UpazilaController@destroy');
-});
+//Route::prefix('division')->group(function () {
+//    Route::view('/', 'views.divisionPage');
+//    Route::get('/{currentPage}', 'DivisionController@index');
+//    Route::post('/create', 'DivisionController@add');
+//    Route::get('/show/{id}', 'DivisionController@show');
+//    Route::patch('/update', 'DivisionController@update');
+//    Route::delete('/{id}', 'DivisionController@destroy');
+//});
 
-Route::prefix('areatype')->group(function () {
-    Route::view('/', 'pages.areaType');
-    Route::get('/{currentPage}', 'AreaTypeController@index');
-    Route::post('/create', 'AreaTypeController@add');
-    Route::get('/show/{id}', 'AreaTypeController@show');
-    Route::patch('/update', 'AreaTypeController@update');
-    Route::delete('/{id}', 'AreaTypeController@destroy');
-});
 
-Route::prefix('vueareatype')->group(function () {
-    Route::view('/', 'vue.areaType');
-    Route::get('/{currentPage}', 'AreaTypeController@index');
-    Route::post('/create', 'AreaTypeController@add');
-    Route::get('/show/{id}', 'AreaTypeController@show');
-    Route::patch('/update', 'AreaTypeController@update');
-    Route::delete('/{id}', 'AreaTypeController@destroy');
-});
+//Route::prefix('district')->group(function () {
+//    Route::view('/', 'views.districtPage');
+//    Route::get('/{currentPage}/{filterKey}', 'DistrictController@index');
+//    Route::get('/filter/{key}','DistrictController@filter');
+//    Route::post('/create', 'DistrictController@add');
+//    Route::get('/{id}', 'DistrictController@show');
+//    Route::patch('/update', 'DistrictController@update');
+//    Route::delete('/{id}', 'DistrictController@destroy');
+//});
+
+//Route::prefix('upazila')->group(function () {
+//    Route::view('/', 'views.upazilaPage');
+//    Route::get('/{currentPage}/{filterKey}', 'UpazilaController@index');
+//    Route::get('/filter/{key}','UpazilaController@filter');
+//    Route::post('/create', 'UpazilaController@add');
+//    Route::get('/{id}', 'UpazilaController@show');
+//    Route::patch('/update', 'UpazilaController@update');
+//    Route::delete('/{id}', 'UpazilaController@destroy');
+//});
+//
+//Route::prefix('areatype')->group(function () {
+//    Route::view('/', 'views.areaType');
+//    Route::get('/{currentPage}', 'AreaTypeController@index');
+//    Route::post('/create', 'AreaTypeController@add');
+//    Route::get('/show/{id}', 'AreaTypeController@show');
+//    Route::patch('/update', 'AreaTypeController@update');
+//    Route::delete('/{id}', 'AreaTypeController@destroy');
+//});
+//
+//Route::prefix('vueareatype')->group(function () {
+//    Route::view('/', 'vue.areaType');
+//    Route::get('/{currentPage}', 'AreaTypeController@index');
+//    Route::post('/create', 'AreaTypeController@add');
+//    Route::get('/show/{id}', 'AreaTypeController@show');
+//    Route::patch('/update', 'AreaTypeController@update');
+//    Route::delete('/{id}', 'AreaTypeController@destroy');
+//});
 
 
 Route::prefix('data')->group(function (){
@@ -91,7 +94,7 @@ Route::get('/test/{show}',function (\Illuminate\Http\Request $request){
 });
 //Route::post('/test','DataController@test');
 
-
+Route::get('/test','TestController@index');
 
 Auth::routes();
 

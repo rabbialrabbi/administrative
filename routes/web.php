@@ -21,6 +21,9 @@
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/spa/{any}', function () {
+    return view('home');
+})->where('any','.*');
 
 
 

@@ -5,9 +5,9 @@
             <div class="col-2 ">
                 <div class="side-bar">
                     <h4>পরামর্শ ব্যবস্থাপনা </h4>
-                    <router-link to="/division"><p class="text-uppercase">Division</p></router-link>
-                    <router-link to="/district"><p class="text-uppercase">District</p></router-link>
-                    <router-link to="/upazila"><p class="text-uppercase">Upazila</p></router-link>
+                    <router-link to="/spa/division"><p class="text-uppercase">Division</p></router-link>
+                    <router-link to="/spa/district"><p class="text-uppercase">District</p></router-link>
+                    <router-link to="/spa/upazila"><p class="text-uppercase">Upazila</p></router-link>
                 </div>
             </div>
             <div class="col-10">

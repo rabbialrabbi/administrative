@@ -10,17 +10,17 @@ export default new VueRouter({
     mode: 'history',
     routes : [
         {
-            path:'/',
+            path:'/spa/',
             component: bodyComponent,
             name:'home'
         },
         {
-            path:'/division',
+            path:'/spa/division',
             component: divisionComponent,
             name:'division'
         },
         {
-            path:'/upazila',
+            path:'/spa/upazila',
             component: TestComponent,
             name:'upazila'
         }

@@ -16,14 +16,27 @@
             <div class="header_right-part_bottom">
                 <p>সোমবার মার্চ ০৪, ২০১৯</p>
                 <p>ব্যবহারকারিঃ জনাব এসান উদ্দিন আহমেদ</p>
-                <p>(অ্যাডমিনিস্ট্রেটর) । লগ আউট</p>
+                <p>(অ্যাডমিনিস্ট্রেটর) । <a href="" @click.prevent="Logout"> লগ আউট</a></p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import {mapState, mapActions, mapMutations} from 'vuex'
+    import router from "../../router/router";
     export default {
+        computed:{
+        },
+        methods:{
+            ...mapActions('auth',['LogOut']),
+            ...mapMutations('global',['SET_IS_ACTIVE']),
+            Logout(){
+                router.push('/login')
+                this.LogOut()
+                this.SET_IS_ACTIVE({modal: false,name: 'login'})
+            }
+        }
     }
 </script>
 

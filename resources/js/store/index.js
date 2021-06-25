@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from "vuex";
 import division from './module/division'
+import auth from "./module/auth";
+import global from "./module/global";
 Vue.use(Vuex)
 
 
@@ -25,6 +27,8 @@ export default new Vuex.Store({
         }
     },
     modules:{
-        division:division
+        division:division,
+        auth:auth,
+        global:global
     }
 })

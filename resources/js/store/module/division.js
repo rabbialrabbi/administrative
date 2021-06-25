@@ -1,4 +1,9 @@
 import toast from "../../services/Notification";
+import axios from "axios"
+import auth from "./auth";
+import authAxios from "../../_helper/axiosAuth";
+// axios.defaults.headers.common["Authorization"] = 'Bearer'+auth.state.token
+    // instance.defaults.headers.common['Authorization'] = 'Bearer'+auth.state.token
 
 export default {
     namespaced:true,
@@ -67,7 +72,7 @@ export default {
     },
     actions:{
         setDivisionData({ commit, state }){
-            axios.get('/division').then((res)=>{
+            authAxios.get('/division').then((res)=>{
                 commit('SET_DIVISION_DATA',res.data)
             }).catch((error)=>{
                 console.log(error)
@@ -75,22 +80,21 @@ export default {
         },
         changePage({ commit, state },page){
             console.log('Working')
-            axios.get('/division?page='+page).then((res)=>{
+            authAxios.get('/division?page='+page).then((res)=>{
                 commit('SET_DIVISION_DATA',res.data)
             }).catch((error)=>{
                 console.log(error)
             })
         },
         addDivision({commit,state}){
-            axios.post('/division',state.selectedDivision).then(res=>{
+            authAxios.post('/division',state.selectedDivision).then(res=>{
                 commit('SET_DIVISION_DATA',res.data)
                 commit('SET_SELECTED_DIVISION_EMPTY',res.data)
-                console.log(5415)
                 toast.success('Division add successfully')
             })
         },
         editDivision({commit,state}){
-            axios.put('/division/'+state.selectedDivision.DivisionCode+'?page='+state.divisionData.current_page,state.selectedDivision).then(res=>{
+            authAxios.put('/division/'+state.selectedDivision.DivisionCode+'?page='+state.divisionData.current_page,state.selectedDivision).then(res=>{
                 commit('SET_DIVISION_DATA',res.data)
             })
         },

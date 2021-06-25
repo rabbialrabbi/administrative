@@ -27,7 +27,7 @@ Route::get('/spa/{any}', function () {
 
 
 
-Route::resource('division','DivisionController');
+//Route::resource('division','DivisionController');
 
 //Route::prefix('division')->group(function () {
 //    Route::view('/', 'views.divisionPage');

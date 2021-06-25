@@ -1,40 +1,47 @@
 <template>
-    <div class="container-fluid">
-        <admin-head></admin-head>
-        <div class="row">
-            <div class="col-2 ">
-                <div class="side-bar">
-                    <h4>পরামর্শ ব্যবস্থাপনা </h4>
-                    <router-link to="/spa/division"><p class="text-uppercase">Division</p></router-link>
-                    <router-link to="/spa/district"><p class="text-uppercase">District</p></router-link>
-                    <router-link to="/spa/upazila"><p class="text-uppercase">Upazila</p></router-link>
-                </div>
-            </div>
-            <div class="col-10">
-                <router-view></router-view>
-            </div>
-        </div>
+    <div>
+        <login-component v-if="!token && (is_active.name==='login')"></login-component>
+        <register-component v-if="!token && (is_active.name==='register')"></register-component>
+        <app-layout v-if="token"></app-layout>
     </div>
+
 </template>
 
 <script>
-    import adminHead from './layout/header'
+
+    import LoginComponent from "../views/auth/LoginComponent";
+    import RegisterComponent from "../views/auth/RegisterComponent";
+    import AppLayout from "../views/layout/AppLayout";
     // import adminSidebar from './layout/sidebar'
     import adminBody from "./layout/body";
-    import {mapState,mapActions} from 'vuex'
+    import {mapState,mapMutations,mapActions} from 'vuex'
     export default {
         name: "app.vue",
+        computed:{
+            ...mapState('auth',['token']),
+            ...mapState('global',['is_active'])
+        },
+        created() {
+            if (!localStorage.getItem('token')){
+                this.SET_IS_ACTIVE({
+                    modal: true,
+                    name: 'login'
+                })
+            }else {
+                this.SET_TOKEN(localStorage.getItem('token'))
+            }
 
-        // created() {
-        //     this.setAdminData()
-        // },
-        // methods:{
-        //     ...mapActions(['setAdminData'])
-        // },
+        },
+        methods:{
+            ...mapMutations('global',['SET_IS_ACTIVE']),
+            ...mapMutations('auth',['SET_TOKEN'])
+        },
+
+
         components:{
-            adminHead:adminHead,
-            // adminSidebar:adminSidebar,
-            // adminBody:adminBody,
+            LoginComponent,
+            AppLayout,
+            RegisterComponent
         }
     }
 </script>
